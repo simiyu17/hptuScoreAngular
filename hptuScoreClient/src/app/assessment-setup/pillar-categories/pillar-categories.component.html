@@ -1,0 +1,107 @@
+<div class="categories-content">
+
+    <div class="categories-table-content">
+      <mat-toolbar>
+        <span>Categories</span>
+        <span class="category-toolbar-spacer"></span>
+        <button mat-raised-button (click)="openEditPillarCategoryDialog({'newCategory': 'NEW'})">
+          Add New Category
+        </button>
+      </mat-toolbar>
+  
+      <div class="categories-table">
+        <mat-form-field>
+          <mat-label>Filter by: Category Name</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Type Here" #input>
+        </mat-form-field>
+  
+        <table mat-table [dataSource]="dataSource" matSort>
+  
+          <!-- category Column -->
+          <ng-container matColumnDef="category">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Category Name </th>
+            <td mat-cell *matCellDef="let row"> {{row.category}} </td>
+          </ng-container>
+  
+          <!-- choiceOne Column -->
+          <ng-container matColumnDef="choiceOne">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Level 1 </th>
+            <td mat-cell *matCellDef="let row"> {{row.choiceOne}} </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="choiceOneScore">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Level 1 Score </th>
+            <td mat-cell *matCellDef="let row"> {{row.choiceOneScore}} </td>
+          </ng-container>
+  
+          <!-- choiceTwo Column -->
+          <ng-container matColumnDef="choiceTwo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Level 2 </th>
+            <td mat-cell *matCellDef="let row"> {{row.choiceTwo}} </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="choiceTwoScore">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Level 2 Score</th>
+            <td mat-cell *matCellDef="let row"> {{row.choiceTwoScore}} </td>
+          </ng-container>
+  
+          <!-- choiceThree Column -->
+          <ng-container matColumnDef="choiceThree">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Level 3 </th>
+            <td mat-cell *matCellDef="let row"> {{row.choiceThree}} </td>
+          </ng-container>
+
+          <!-- choiceThreeScore Column -->
+          <ng-container matColumnDef="choiceThreeScore">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Level 3 Score</th>
+            <td mat-cell *matCellDef="let row"> {{row.choiceThreeScore}} </td>
+          </ng-container>
+  
+          <!-- choiceFour Column -->
+          <ng-container matColumnDef="choiceFour">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Level 4 </th>
+            <td mat-cell *matCellDef="let row"> {{row.choiceFour}} </td>
+          </ng-container>
+
+          <!-- choiceFourScore Column -->
+          <ng-container matColumnDef="choiceFourScore">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Level 4 Score </th>
+            <td mat-cell *matCellDef="let row"> {{row.choiceFourScore}} </td>
+          </ng-container>
+
+  
+          <!-- Action Column -->
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> </th>
+            <td mat-cell *matCellDef="let row">
+              <button mat-icon-button (click)="openEditPillarCategoryDialog(row)" #tooltip="matTooltip"
+              matTooltip="Edit category" matTooltipPosition="above"
+              aria-tooltip="Button that displays and hides a tooltip triggered by other buttons">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button (click)="openEditPillarCategoryDialog(row.id)" #tooltip="matTooltip"
+                matTooltip="Delete category" matTooltipPosition="above"
+                aria-tooltip="Button that displays and hides a tooltip triggered by other buttons">
+                <mat-icon color="warn">delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+  
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  
+          <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+          </tr>
+        </table>
+  
+        <mat-paginator [pageSizeOptions]="[5, 10, 15, 20]" aria-label="Select page of categories"></mat-paginator>
+  
+  
+      </div>
+  
+    </div>
+  </div>

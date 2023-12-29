@@ -1,0 +1,29 @@
+<div class="create-new-Pillar-content">
+    <div mat-dialog-title class="form-header">
+      <h2>New Assessment Pillar</h2>
+    </div>
+    <div>
+    <form [formGroup]="createPillarForm" (ngSubmit)="onSubmitNewPillar()">
+    <div mat-dialog-content class="form-fields">
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Pillar Name</mat-label>
+          <input matInput type="text" formControlName="pillarName">
+        </mat-form-field>
+      </div>
+      <div class="form-row">  
+        <mat-form-field appearance="outline">
+          <mat-label>Pillar Order</mat-label>
+          <input matInput type="number" formControlName="pillarOrder">
+        </mat-form-field>
+      </div>
+  
+    </div>
+    <div mat-dialog-actions align="end" class="form-btns">
+      <button mat-raised-button mat-dialog-close>Cancel</button>
+      <button mat-raised-button cdkFocusInitial type="submit">Submit</button>
+    </div>
+  </form>
+  </div>
+  </div>
+  

@@ -1,0 +1,100 @@
+<mat-stepper linear #stepper>
+  <mat-step [stepControl]="firstFormGroup" [editable]="true">
+    <form [formGroup]="firstFormGroup">
+      <ng-template matStepLabel>Fill out your name</ng-template>
+      <mat-form-field>
+        <mat-label>countyCode</mat-label>
+        <input matInput formControlName="countyCode" placeholder="Last name, First name" required>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>assessmentYear</mat-label>
+        <input matInput formControlName="assessmentYear" placeholder="Last name, First name" required>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>assessmentQuarter</mat-label>
+        <input matInput formControlName="assessmentQuarter" placeholder="Last name, First name" required>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>assessmentLevel</mat-label>
+        <input matInput formControlName="assessmentLevel" placeholder="Last name, First name" required>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>countyName</mat-label>
+        <input matInput formControlName="countyName" placeholder="Last name, First name" required>
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <ng-container formArrayName="pillars">
+    <ng-container *ngFor="let pillar of pillars; let i = index">
+      <ng-container *ngFor="let pillarControl of pillarCategories.controls; let i = index">
+        <mat-step label="{{pillar.pillarName}}">
+          <form [formGroup]="pillarControl">
+            <ng-template matStepLabel>Fill out {{pillar.pillarName}} assessments</ng-template>
+            <mat-form-field>
+              <mat-label>category Name</mat-label>
+              <input matInput formControlName="category" placeholder="Ex. 1 Main St, New York, NY" required>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>choiceOne</mat-label>
+              <input matInput formControlName="choiceOne" placeholder="Ex. 1 Main St, New York, NY" required>
+            </mat-form-field>
+            <div>
+              <button mat-button matStepperPrevious>Back</button>
+              <button mat-button matStepperNext>Next</button>
+            </div>
+          </form>
+        </mat-step>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+  <mat-step>
+    <ng-template matStepLabel>Done</ng-template>
+    <p>You are now done.</p>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button (click)="stepper.reset()">Submit</button>
+    </div>
+  </mat-step>
+</mat-stepper>
+
+
+
+
+<div [ngSwitch]='isUserLoggedIn'>
+  <div class="template-home" *ngSwitchDefault><app-login></app-login></div>
+  <div class="template-home" *ngSwitchCase="true"><app-home></app-home></div>  
+</div>
+
+version: "3.8"
+services:
+  keycloak:
+    image: jboss/keycloak:latest
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      DB_VENDOR: postgres
+      DB_ADDR: keycloak-db
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_PASSWORD: keycloak
+    depends_on:
+      - keycloak-db
+    ports:
+      - 8081:8080
+
+  keycloak-db:
+    image: postgres:15.4-alpine
+    environment:
+      POSTGRES_PASSWORD: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_DB: keycloak
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5

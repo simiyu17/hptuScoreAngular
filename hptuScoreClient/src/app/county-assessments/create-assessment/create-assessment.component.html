@@ -1,0 +1,43 @@
+<mat-stepper linear #stepper>
+  <mat-step [stepControl]="firstFormGroup" [editable]="true">
+    <form [formGroup]="firstFormGroup">
+      <ng-template matStepLabel>Fill out your name</ng-template>
+      <mat-form-field>
+        <mat-label>countyCode</mat-label>
+        <input matInput formControlName="countyCode" placeholder="Last name, First name" required>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>assessmentYear</mat-label>
+        <input matInput formControlName="assessmentYear" placeholder="Last name, First name" required>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>assessmentQuarter</mat-label>
+        <input matInput formControlName="assessmentQuarter" placeholder="Last name, First name" required>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>assessmentLevel</mat-label>
+        <input matInput formControlName="assessmentLevel" placeholder="Last name, First name" required>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>countyName</mat-label>
+        <input matInput formControlName="countyName" placeholder="Last name, First name" required>
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <ng-container formArrayName="pillars">
+    <ng-container *ngFor="let pillar of pillars; let i = index">
+     
+    </ng-container>
+  </ng-container>
+  <mat-step>
+    <ng-template matStepLabel>Done</ng-template>
+    <p>You are now done.</p>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button (click)="stepper.reset()">Submit</button>
+    </div>
+  </mat-step>
+</mat-stepper>
