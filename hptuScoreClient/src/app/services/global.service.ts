@@ -8,11 +8,8 @@ export class GlobalService {
   BASE_API_URL: string = 'http://localhost:8082/api/v1';
   BASE_KEY_CLOAK_URL: string = 'http://localhost:8081/auth';
   KEY_CLOAK_CLIENT_ID: string = 'front-end-client-id';
-  KEY_CLOACK_CONF: {url: string, realm: string, clientId: string} = {
-    url: this.BASE_KEY_CLOAK_URL,
-    realm: 'hptu-score-realm',
-    clientId: this.KEY_CLOAK_CLIENT_ID
-  };
+  KEY_CLOAK_REALM: string = 'hptu-score-realm';
+ 
   HTTP_OPTIONS = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };

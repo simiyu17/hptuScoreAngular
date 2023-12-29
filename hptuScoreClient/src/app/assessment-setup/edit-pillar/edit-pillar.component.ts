@@ -1,17 +1,25 @@
 import { Component, Inject } from '@angular/core';
-import { MaterialModule } from '../../modules/material/material.module';
-import { SharedModule } from '../../modules/shared/shared.module';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PillarsService } from '../../services/pillars.service';
 import { Router } from '@angular/router';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { GlobalService } from '../../services/global.service';
 import { AssessmentPillar } from '../../models/AssessmentPillar';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-edit-pillar',
   standalone: true,
-  imports: [MaterialModule, SharedModule],
+  imports: [
+    ReactiveFormsModule, 
+    FormsModule, 
+    MatInputModule,
+    MatFormFieldModule,
+    MatDialogModule,
+    MatButtonModule
+  ],
   templateUrl: './edit-pillar.component.html',
   styleUrl: './edit-pillar.component.scss'
 })

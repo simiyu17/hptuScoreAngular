@@ -1,15 +1,22 @@
 import { Component } from '@angular/core';
-import { SharedModule } from '../../modules/shared/shared.module';
-import { MaterialModule } from '../../modules/material/material.module';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AssessmentPillar } from '../../models/AssessmentPillar';
 import { PillarsService } from '../../services/pillars.service';
 import { PillarCategory } from '../../models/PillarCategory';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-create-assessment',
   standalone: true,
-  imports: [SharedModule, MaterialModule],
+  imports: [
+    MatStepperModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatButtonModule
+  ],
   templateUrl: './create-assessment.component.html',
   styleUrl: './create-assessment.component.scss'
 })

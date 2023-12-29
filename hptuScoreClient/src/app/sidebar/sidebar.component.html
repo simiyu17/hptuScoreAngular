@@ -5,5 +5,5 @@
     </a>
     <a [routerLinkActive]="'active'" [routerLink]="['county-assessments']">Do Assessment</a>
     <a [routerLinkActive]="'active'" [routerLink]="['assessment-setup/pillars']">Configuration</a>
-    <a [routerLinkActive]="'active'" [routerLink]="['users']">Users</a>
+    <a *ngIf="isUserAdmin" [routerLinkActive]="'active'" [routerLink]="['users']">Users</a>
   </div>

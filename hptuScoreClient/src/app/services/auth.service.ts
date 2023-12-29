@@ -24,6 +24,17 @@ export class AuthService {
     });
   }*/
 
+  public setAuthToken(token : string): void {
+      localStorage.setItem('auth_token', token)
+  }
+
+  public getAuthToken(): string | null {
+    return localStorage.getItem('auth_token');
+  }
+
+  public removeAuthToken(): void {
+    localStorage.removeItem('auth_token');
+  }
 
   public getLoggedUser(): KeycloakTokenParsed | undefined {
     try {
@@ -49,11 +60,16 @@ export class AuthService {
   }
 
   public logout() : void {
+    this.removeAuthToken();
     this.keycloakService.logout(window.location.origin);
   }
 
   public redirectToProfile(): void {
     this.keycloakService.getKeycloakInstance().accountManagement();
+  }
+
+  public redirectToChangePassword() {
+    window.location.href = `${this.globalService.BASE_KEY_CLOAK_URL}/realms/${this.globalService.KEY_CLOAK_REALM}/protocol/openid-connect/auth?client_id=${this.globalService.KEY_CLOAK_CLIENT_ID}&redirect_uri=${window.location.origin}&response_type=code&scope=openid&kc_action=UPDATE_PASSWORD`;
   }
 
   public getRoles(): string[] {

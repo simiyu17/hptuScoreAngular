@@ -1,23 +1,37 @@
 import { Component, ViewChild } from '@angular/core';
-import {MatPaginator} from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import { AssessmentPillar } from '../models/AssessmentPillar';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { PillarsService } from '../services/pillars.service';
 import { CreatePillarComponent } from './create-pillar/create-pillar.component';
-import { SharedModule } from '../modules/shared/shared.module';
-import { MaterialModule } from '../modules/material/material.module';
 import { EditPillarComponent } from './edit-pillar/edit-pillar.component';
 import { ConfirmDialogModel } from '../models/ConfirmDialogModel';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
 import { GlobalService } from '../services/global.service';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-assessment-setup',
   standalone: true,
-  imports: [ SharedModule, MaterialModule],
+  imports: [
+    MatToolbarModule,
+    MatFormFieldModule,
+    MatTableModule,
+    MatTooltipModule,
+    MatIconModule,
+    MatPaginatorModule,
+    MatButtonModule, 
+    MatSortModule, 
+    MatInputModule
+  ],
   templateUrl: './assessment-setup.component.html',
   styleUrl: './assessment-setup.component.scss'
 })
@@ -57,7 +71,6 @@ export class AssessmentSetupComponent {
     this.pillarService.getAllPillars()
       .subscribe({
         next: (response) => {
-          console.log(response);
           this.pillars = response;
           this.dataSource = new MatTableDataSource(this.pillars);
           this.dataSource.paginator = this.paginator;

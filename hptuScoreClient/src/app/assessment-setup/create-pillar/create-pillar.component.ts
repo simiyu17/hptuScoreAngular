@@ -1,16 +1,24 @@
 import { Component } from '@angular/core';
 import { PillarsService } from '../../services/pillars.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { GlobalService } from '../../services/global.service';
-import { MaterialModule } from '../../modules/material/material.module';
-import { SharedModule } from '../../modules/shared/shared.module';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-create-pillar',
   standalone: true,
-  imports: [MaterialModule, SharedModule],
+  imports: [
+    ReactiveFormsModule, 
+    FormsModule, 
+    MatInputModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatDialogModule
+  ],
   templateUrl: './create-pillar.component.html',
   styleUrl: './create-pillar.component.scss'
 })

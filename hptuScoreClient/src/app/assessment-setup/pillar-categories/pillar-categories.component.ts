@@ -1,22 +1,33 @@
 import { Component, ViewChild } from '@angular/core';
-import { SharedModule } from '../../modules/shared/shared.module';
-import { MaterialModule } from '../../modules/material/material.module';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { PillarsService } from '../../services/pillars.service';
 import { ActivatedRoute } from '@angular/router';
 import { PillarCategory } from '../../models/PillarCategory';
-import { AddCategoryComponent } from './add-category/add-category.component';
 import { EditCategoryComponent } from './edit-category/edit-category.component';
-import { EditCategoryDto } from '../../dto/EditCategoryDto';
 import { NewPillarCategory } from '../../models/NewPillarCategory';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-pillar-categories',
   standalone: true,
-  imports: [SharedModule, MaterialModule],
+  imports: [
+    MatToolbarModule, 
+    MatFormFieldModule, 
+    MatInputModule,
+    MatTableModule, 
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatPaginatorModule
+  ],
   templateUrl: './pillar-categories.component.html',
   styleUrl: './pillar-categories.component.scss'
 })
@@ -44,11 +55,9 @@ export class PillarCategoriesComponent {
   }
 
   getAvailablePillarCategories() {
-    console.log(this.pillarId)
     this.pillarService.getAllCategoriesByPillarId(this.pillarId)
       .subscribe({
         next: (response) => {
-          console.log(response);
           this.categories = response;
           this.dataSource = new MatTableDataSource(this.categories);
           this.dataSource.paginator = this.paginator;
