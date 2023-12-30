@@ -1,8 +1,6 @@
 export interface CountyAssessmentStatus {
-
-    assessmentQuarter: string;
-    assessmentYear: string;
-    assessmentLevel: string;
-    countyCode: string;
-    countyName: string;
+    assessmentQuarter: string | null | undefined;
+    assessmentYear: string | null | undefined;
+    assessmentLevel: string | null | undefined;
+    countyCode: string | null | undefined;
 }

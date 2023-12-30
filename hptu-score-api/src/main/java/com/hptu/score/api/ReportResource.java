@@ -1,7 +1,9 @@
 package com.hptu.score.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hptu.score.dto.CountyDto;
 import com.hptu.score.dto.CountySummaryDto;
+import com.hptu.score.entity.AssessmentPillar;
 import com.hptu.score.service.CountyAssessmentService;
 import com.hptu.score.util.CommonUtil;
 import com.hptu.score.util.ExcelGenerator;
@@ -9,7 +11,9 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -19,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Path("api/v1/util")
 @ApplicationScoped
 public class ReportResource extends CommonUtil {
 
@@ -31,7 +36,14 @@ public class ReportResource extends CommonUtil {
     }
 
     @GET
-    @Path("/export-to-excel")
+    @Path("counties")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<CountyDto> getAvailablePillars(){
+        return getKenyanCounties();
+    }
+
+    @GET
+    @Path("export-to-excel")
     public void exportIntoExcelFile(HttpServletResponse response,
                                     @QueryParam(value = "statusId") Long statusId,
                                     @QueryParam(value = "countyName") String countyName,

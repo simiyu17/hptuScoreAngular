@@ -1,5 +1,8 @@
 package com.hptu.score.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hptu.score.dto.ApiResponseDto;
+import com.hptu.score.dto.CountyAssessmentDto2;
 import com.hptu.score.entity.CountyAssessmentStatus;
 import com.hptu.score.service.CountyAssessmentService;
 import com.hptu.score.util.CommonUtil;
@@ -34,18 +37,14 @@ public class CountyAssessmentResource extends CommonUtil {
     }
 
     @POST
-    @Path("/save-county-assessment/{pillarCount}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response saveCountAssessment(CountyAssessmentStatus newAssessment, @PathParam("pillarCount") Integer pillarCount) {
+    public Response createCountAssessment(CountyAssessmentDto2 newAssessment) {
         try {
-            newAssessment.setStatus(CountyAssessmentStatus.Status.INCOMPLETE);
-            newAssessment.setCreatedBy(getCurrentLoggedUser());
-            newAssessment.setCountyName(getCountyByCode(newAssessment.getCountyCode()));
-            CountyAssessmentStatus status = this.countyAssessmentService.saveCountyAssessment(newAssessment);
+            System.out.println(new ObjectMapper().writeValueAsString(newAssessment));
+            return Response.status(Response.Status.CREATED).entity(new ApiResponseDto(true, "County assessment was submitted!!")).build();
         } catch (Exception e) {
             return null;
         }
 
-        return null;
     }
 }

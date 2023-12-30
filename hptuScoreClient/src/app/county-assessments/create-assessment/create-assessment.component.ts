@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AssessmentPillar } from '../../models/AssessmentPillar';
 import { PillarsService } from '../../services/pillars.service';
@@ -10,9 +10,14 @@ import { MatInputModule } from '@angular/material/input';
 import { CountyAssessment } from '../../models/CountyAssessment';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatSortModule } from '@angular/material/sort';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import {MatRadioModule} from '@angular/material/radio';
+import { MatRadioModule } from '@angular/material/radio';
+import { CountyDto } from '../../dto/CountyDto';
+import { MatOptionModule } from '@angular/material/core';
+import { UtilService } from '../../services/util.service';
+import { MatSelectModule } from '@angular/material/select';
+import { CountyAssessmentDto } from '../../dto/CountyAssessmentDto';
+import { CountyAssessmentService } from '../../services/county.assessment.service';
+import { GlobalService } from '../../services/global.service';
 
 
 @Component({
@@ -27,36 +32,22 @@ import {MatRadioModule} from '@angular/material/radio';
     MatButtonModule,
     MatToolbarModule,
     MatTableModule,
-    MatRadioModule
+    MatRadioModule,
+    MatOptionModule,
+    MatSelectModule
   ],
   templateUrl: './create-assessment.component.html',
   styleUrl: './create-assessment.component.scss'
 })
-export class CreateAssessmentComponent {
+export class CreateAssessmentComponent implements OnInit {
 
   pillars: AssessmentPillar[] = []
 
-  displayedColumns: string[] = [
-    'category', 
-    'choiceScore', 
-    'scoreRemarks'
-  ];
+  counties: CountyDto[] = []
 
-  displayedColumns2: string[] = [
-    'pillarId', 
-    'choiceOne', 
-    'choiceOneScore', 
-    'choiceTwo', 
-    'choiceTwoScore', 
-    'choiceThree', 
-    'choiceThreeScore', 
-    'choiceFour', 
-    'choiceFourScore', 
-    'categoryOrder', 
-    'choiceText', 
-    'maxScore', 
-    'category', 
-    'choiceScore', 
+  displayedColumns: string[] = [
+    'category',
+    'choiceScore',
     'scoreRemarks'
   ];
 
@@ -64,23 +55,42 @@ export class CreateAssessmentComponent {
     assessmentQuarter: ['', Validators.required],
     assessmentYear: ['', Validators.required],
     assessmentLevel: ['', Validators.required],
-    countyCode: ['', Validators.required],
-    countyName: ['', Validators.required]
+    countyCode: ['', Validators.required]
   });
 
   categories?: PillarCategory[] = [];
 
   pillarAssessmentMap: Map<number, CountyAssessment[]> = new Map<number, CountyAssessment[]>;
 
-  constructor(private _formBuilder: FormBuilder, private pillarService: PillarsService) { }
+  constructor(
+    private _formBuilder: FormBuilder,
+    private pillarService: PillarsService,
+    private utilService: UtilService,
+    private countyAssessService: CountyAssessmentService,
+    private gs: GlobalService
+  ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    this.getAvailablePillars();
+    this.getAvailableCounties();
+  }
+
+  getAvailablePillars(): void {
     this.pillarService.getAllPillars()
       .subscribe({
         next: (response) => {
-          console.log(response);
           this.pillars = response;
           this.createAssessmentScorePlaceHolder(this.pillars)
+        },
+        error: (error) => { }
+      });
+  }
+
+  getAvailableCounties(): void {
+    this.utilService.getAllKenyanCounties()
+      .subscribe({
+        next: (response) => {
+          this.counties = response;
         },
         error: (error) => { }
       });
@@ -98,21 +108,33 @@ export class CreateAssessmentComponent {
             pillar.dataSource = this.categoriesToAssessment(this.categories);
             pillar.formArray = new FormArray(
               pillar.dataSource.map(
-                (x:any) =>
+                (x: any) =>
                   new FormGroup({
                     choiceScore: new FormControl(x.choiceScore),
                     scoreRemarks: new FormControl(x.scoreRemarks),
+                    pillarId: new FormControl(x.pillarId),
+                    category: new FormControl(x.category),
+                    choiceOne: new FormControl(x.choiceOne),
+                    choiceOneScore: new FormControl(x.choiceOneScore),
+                    choiceTwo: new FormControl(x.choiceTwo),
+                    choiceTwoScore: new FormControl(x.choiceTwoScore),
+                    choiceThree: new FormControl(x.choiceThree),
+                    choiceThreeScore: new FormControl(x.choiceThreeScore),
+                    choiceFour: new FormControl(x.choiceFour),
+                    choiceFourScore: new FormControl(x.choiceFourScore),
+                    categoryOrder: new FormControl(x.categoryOrder),
+                    choiceText: new FormControl(x.choiceText),
+                    maxScore: new FormControl(x.maxScore)
                   })
               )
             );
-            console.log(this.pillarAssessmentMap)
           },
           error: (error) => { }
         })
     })
   }
 
-  categoriesToAssessment(categorys: PillarCategory[]| undefined): CountyAssessment[] {
+  categoriesToAssessment(categorys: PillarCategory[] | undefined): CountyAssessment[] {
     let result: CountyAssessment[] = [];
     categorys?.forEach(cat => {
       let assess: CountyAssessment = {
@@ -144,7 +166,27 @@ export class CreateAssessmentComponent {
   }
 
   submitScores(): void {
-    console.log(this.firstFormGroup.value)
-    console.log(this.pillars[2].formArray)
+    let countyAssessmentDto: CountyAssessmentDto = {
+      assessmentStatus: {
+        assessmentQuarter: this.firstFormGroup.value.assessmentQuarter,
+        assessmentYear: this.firstFormGroup.value.assessmentYear,
+        assessmentLevel: this.firstFormGroup.value.assessmentLevel,
+        countyCode: this.firstFormGroup.value.countyCode
+      },
+      assessments: this.pillars.flatMap(p => p.formArray.value)
+    }
+    this.countyAssessService.createCountyAssessment(countyAssessmentDto)
+      .subscribe({
+        next: (response) => {
+          this.gs.openSnackBar(response.message, "Dismiss");
+        },
+        error: (error) => {
+          if (error.error.message) {
+            alert(error.error.message);
+          }
+          this.gs.openSnackBar(`An error occured ${error.error}`, "Dismiss");
+          console.log(error)
+        }
+      });
   }
 }
