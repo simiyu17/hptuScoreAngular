@@ -1,5 +1,6 @@
 export interface PillarCategory {
     id: number;
+    pillarId: number;
     category: string;
     choiceOne: string;
     choiceOneScore: number;
