@@ -11,6 +11,6 @@ export class UtilService {
   constructor(private httpClient: HttpClient, private globalService: GlobalService) { }
 
   getAllKenyanCounties(): Observable<any> {
-    return this.httpClient.get(`${this.globalService.BASE_API_URL}/util/counties`);
+    return this.httpClient.get(`${this.globalService.BASE_API_URL}/report/counties`);
   }
 }

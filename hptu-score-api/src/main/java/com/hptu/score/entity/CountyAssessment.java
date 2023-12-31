@@ -1,17 +1,22 @@
 package com.hptu.score.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+@NamedQuery(name = "County_Summary",
+        query = "select ca.pillarName, sum(ca.maxScore) as maxScore, sum(ca.choiceScore) as score from  CountyAssessment ca where ca.metaData.id = ?1 group by 1")
+@NamedQuery(name = "Pillar_Summary",
+        query = "select ca.category, sum(ca.maxScore) as maxScore, sum(ca.choiceScore) as score from  CountyAssessment ca where ca.metaData.id = ?1 and ca.pillarName = ?2 group by 1")
 @Entity
-@Table(name = "county_assessment", uniqueConstraints = { @UniqueConstraint(columnNames = { "status_id", "pillar", "category" }, name = "COUNTY_ASSESSMENT_UNIQUE")})
+@Table(name = "county_assessment", uniqueConstraints = { @UniqueConstraint(columnNames = { "meta_data_id", "pillar_name", "category" }, name = "COUNTY_ASSESSMENT_UNIQUE")})
 public class CountyAssessment extends BaseEntity {
 
     private static final long serialVersionUID = -6859602933138173920L;
 
-    @Column(name = "pillar")
-    private String pillar;
+    @Column(name = "pillar_name")
+    private String pillarName;
 
     @Column(name = "category")
     private String category;
@@ -24,17 +29,24 @@ public class CountyAssessment extends BaseEntity {
     private int maxScore;
 
     private String scoreRemarks;
+
+    public static final String PILLAR_FIELD = "pillarName";
+    public static final String CATEGORY_FIELD = "category";
+    public static final String CHOICE_SCORE_FIELD = "choiceScore";
+    public static final String MAX_SCORE_FIELD = "maxScore";
+    public static final String META_DATA_ID_FIELD = "metaData";
     
     @ManyToOne
-    @JoinColumn(name = "status_id")
-    private CountyAssessmentStatus status;
+    @JoinColumn(name = "meta_data_id")
+    @JsonIgnore
+    private CountyAssessmentMetaData metaData;
     
     public CountyAssessment() {
 	}
 
-    public CountyAssessment(String pillar, String category, String choiceText, int choiceScore, int maxScore, String scoreRemarks) {
+    public CountyAssessment(String pillarName, String category, String choiceText, int choiceScore, int maxScore, String scoreRemarks) {
 		super();
-		this.pillar = pillar;
+		this.pillarName = pillarName;
 		this.category = category;
 		this.choiceText = choiceText;
 		this.choiceScore = choiceScore;
@@ -42,12 +54,12 @@ public class CountyAssessment extends BaseEntity {
         this.scoreRemarks = scoreRemarks;
 	}
 
-	public String getPillar() {
-        return pillar;
+    public String getPillarName() {
+        return pillarName;
     }
 
-    public void setPillar(String pillar) {
-        this.pillar = pillar;
+    public void setPillarName(String pillarName) {
+        this.pillarName = pillarName;
     }
 
     public String getCategory() {
@@ -74,13 +86,13 @@ public class CountyAssessment extends BaseEntity {
         this.choiceScore = choiceScore;
     }
 
-    public CountyAssessmentStatus getStatus() {
-		return status;
-	}
+    public CountyAssessmentMetaData getMetaData() {
+        return metaData;
+    }
 
-	public void setStatus(CountyAssessmentStatus status) {
-		this.status = status;
-	}
+    public void setMetaData(CountyAssessmentMetaData metaData) {
+        this.metaData = metaData;
+    }
 
     public int getMaxScore() {
         return maxScore;
@@ -108,8 +120,8 @@ public class CountyAssessment extends BaseEntity {
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o)).append(getId(), countyAssessment.getId())
-                .append(getStatus(), countyAssessment.getStatus())
-                .append(getPillar(), countyAssessment.getPillar())
+                .append(getMetaData(), countyAssessment.getMetaData())
+                .append(getPillarName(), countyAssessment.getPillarName())
                 .append(getCategory(), countyAssessment.getCategory()).isEquals();
     }
 
@@ -117,8 +129,8 @@ public class CountyAssessment extends BaseEntity {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .appendSuper(super.hashCode())
-                .append(getId()).append(getStatus())
-                .append(getPillar())
+                .append(getId()).append(getMetaData())
+                .append(getPillarName())
                 .append(getCategory()).toHashCode();
     }
 }

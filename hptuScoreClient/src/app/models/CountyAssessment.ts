@@ -1,6 +1,7 @@
 export interface CountyAssessment {
     id?: number;
     pillarId?: number;
+    pillarName: string;
     category?: string;
     choiceOne?: string;
     choiceOneScore?: number;

@@ -1,0 +1,65 @@
+<div class="dashboard-content">
+    <div class="pillar-summary">
+        <span>Pillars</span>
+    </div>
+    <div class="main-assessment-graph">
+        <app-assessment-graph [countuAssessmentSummaryBarChartDataPoints]="countuAssessmentSummaryBarChartDataPoints"></app-assessment-graph>
+    </div>
+    <div class="main-assessment-summary-table">
+            <div class="pillars-summary-table-content">
+              <mat-toolbar>
+                <span>Pillars</span>
+                <span class="pillar-toolbar-spacer"></span>
+                <button mat-raised-button (click)="openNewPillarDialog()">
+                  Filter Dashboard
+                </button>
+              </mat-toolbar>
+          
+              <div class="pillars-summary-table">
+                <table mat-table [dataSource]="dataSource">
+          
+                  <!-- pillarName Column -->
+                  <ng-container matColumnDef="pillarName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Assessment Pillar </th>
+                    <td mat-cell *matCellDef="let row"> {{row.pillarName}} </td>
+                  </ng-container>
+          
+                  <!-- maxScore Column -->
+                  <ng-container matColumnDef="maxScore">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Max score</th>
+                    <td mat-cell *matCellDef="let row"> {{row.maxScore}} </td>
+                  </ng-container>
+
+                  <!-- choiceScore Column -->
+                  <ng-container matColumnDef="choiceScore">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Score Attained </th>
+                    <td mat-cell *matCellDef="let row"> {{row.choiceScore}} </td>
+                  </ng-container>
+
+                  <!-- scorePercent Column -->
+                  <ng-container matColumnDef="scorePercent">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> % Score </th>
+                    <td mat-cell *matCellDef="let row"> {{row.scorePercent}} </td>
+                  </ng-container>
+
+                  <!-- remark Column -->
+                  <ng-container matColumnDef="remark">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Remarks </th>
+                    <td mat-cell *matCellDef="let row"> {{row.remark}} </td>
+                  </ng-container>
+          
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          
+                  <!-- Row shown when there is no matching data. -->
+                  <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="4">No data available</td>
+                  </tr>
+                </table>          
+          
+              </div>
+          
+            </div>
+    </div>
+</div>
+

@@ -1,4 +1,4 @@
-export interface CountyAssessmentStatus {
+export interface CountyAssessmentMetaData {
     assessmentQuarter: string | null | undefined;
     assessmentYear: string | null | undefined;
     assessmentLevel: string | null | undefined;

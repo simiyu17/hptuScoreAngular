@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HomeComponent } from './home/home.component';
+import { HomeComponent } from './components/home/home.component';
 import { KeycloakProfile } from 'keycloak-js';
 import { KeycloakService } from 'keycloak-angular';
 import { Component, EventEmitter, Output } from '@angular/core';

@@ -1,0 +1,9 @@
+<div class="sidebar">
+    <a [routerLinkActive]="'active'" [routerLink]="['dashboard']">
+      <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon>
+      <p>Dashboard</p>
+    </a>
+    <a [routerLinkActive]="'active'" [routerLink]="['county-assessments']">Do Assessment</a>
+    <a [routerLinkActive]="'active'" [routerLink]="['assessment-setup/pillars']">Configuration</a>
+    <a *ngIf="isUserAdmin" [routerLinkActive]="'active'" [routerLink]="['users']">Users</a>
+  </div>

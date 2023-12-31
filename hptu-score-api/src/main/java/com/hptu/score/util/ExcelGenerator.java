@@ -126,7 +126,7 @@ public class ExcelGenerator {
         for (CountySummaryDto countySummary: countySummaryDtos) {
             Row row = sheet.createRow(rowCount++);
             int columnCount = 0;
-            createCell(row, columnCount++, countySummary.getPillar(), style, false, 0);
+            createCell(row, columnCount++, countySummary.getPillarName(), style, false, 0);
             createCell(row, columnCount++, countySummary.getMaxScore(), style, false, 0);
             createCell(row, columnCount++, countySummary.getChoiceScore(), style, false, 0);
             createCell(row, columnCount++, countySummary.getScorePercent(), style, false, 0);
@@ -207,7 +207,7 @@ public class ExcelGenerator {
 
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         for (CountySummaryDto countySummary: countySummaryDtos) {
-            dataset.setValue(countySummary.getScorePercent(), "Pillars Score", countySummary.getPillar());
+            dataset.setValue(countySummary.getScorePercent(), "Pillars Score", countySummary.getPillarName());
         }
 
 

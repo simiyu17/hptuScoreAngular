@@ -1,11 +1,16 @@
 package com.hptu.score.repository;
 
-import com.hptu.score.entity.CountyAssessmentStatus;
+import com.hptu.score.entity.CountyAssessmentMetaData;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
 
 
 @ApplicationScoped
-public interface CountyAssessmentRepository extends JpaRepository<CountyAssessmentStatus, Long> {
+public interface CountyAssessmentRepository extends JpaRepository<CountyAssessmentMetaData, Long> {
+
+    List<CountyAssessmentMetaData> findByCountyCodeAndAssessmentQuarterAndAssessmentYear(@NotBlank String countyCode, @NotBlank String assessmentQuarter, @NotBlank String assessmentYear);
 
 }

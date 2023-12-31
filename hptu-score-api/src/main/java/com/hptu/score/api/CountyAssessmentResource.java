@@ -1,12 +1,12 @@
 package com.hptu.score.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hptu.score.dto.ApiResponseDto;
-import com.hptu.score.dto.CountyAssessmentDto2;
-import com.hptu.score.entity.CountyAssessmentStatus;
+import com.hptu.score.dto.CountyAssessmentDto;
+import com.hptu.score.entity.CountyAssessmentMetaData;
 import com.hptu.score.service.CountyAssessmentService;
 import com.hptu.score.util.CommonUtil;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -25,25 +25,25 @@ public class CountyAssessmentResource extends CommonUtil {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<CountyAssessmentStatus> getAvailableAssessments(){
-        return this.countyAssessmentService.getAvailableCountyAssessmentStatuses();
+    public List<CountyAssessmentMetaData> getAvailableAssessments(){
+        return this.countyAssessmentService.getAvailableCountyAssessmentMetaDatas();
     }
 
     @GET
     @Path("{assessmentId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAssessmentById(@PathParam("assessmentId") Long assessmentId){
-        return Response.ok(this.countyAssessmentService.findCountyAssessmentStatusById(assessmentId)).build();
+        return Response.ok(this.countyAssessmentService.findCountyAssessmentMetaDataById(assessmentId)).build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createCountAssessment(CountyAssessmentDto2 newAssessment) {
+    public Response createCountAssessment(@Valid CountyAssessmentDto newAssessment) {
         try {
-            System.out.println(new ObjectMapper().writeValueAsString(newAssessment));
+            this.countyAssessmentService.createCountyAssessment(newAssessment);
             return Response.status(Response.Status.CREATED).entity(new ApiResponseDto(true, "County assessment was submitted!!")).build();
         } catch (Exception e) {
-            return null;
+            return Response.status(Response.Status.CREATED).entity(new ApiResponseDto(false, "An error occurred: "+e.getMessage())).build();
         }
 
     }

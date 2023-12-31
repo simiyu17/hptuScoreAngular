@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public class CountySummaryDto  {
-    private String pillar;
+    private String pillarName;
 
     private String category;
 
@@ -22,7 +22,7 @@ public class CountySummaryDto  {
     }
 
     public CountySummaryDto(Summary summary) {
-        this.pillar = summary.getPillar();
+        this.pillarName = summary.getPillar();
         this.category = summary.getCategory();
         this.maxScore = summary.getMaxScore();
         this.choiceScore = summary.getChoiceScore();
@@ -41,12 +41,12 @@ public class CountySummaryDto  {
         }
     }
 
-    public String getPillar() {
-        return pillar;
+    public String getPillarName() {
+        return pillarName;
     }
 
-    public void setPillar(String pillar) {
-        this.pillar = pillar;
+    public void setPillarName(String pillarName) {
+        this.pillarName = pillarName;
     }
 
     public int getMaxScore() {

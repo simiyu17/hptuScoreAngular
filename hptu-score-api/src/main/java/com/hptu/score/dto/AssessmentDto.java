@@ -1,7 +1,7 @@
 package com.hptu.score.dto;
 
 public class AssessmentDto {
-    private String pillar;
+    private String pillarName;
 
     private Long pillarId;
     private String category;
@@ -10,12 +10,12 @@ public class AssessmentDto {
     private int maxScore;
     private String scoreRemarks;
 
-    public String getPillar() {
-        return pillar;
+    public String getPillarName() {
+        return pillarName;
     }
 
-    public void setPillar(String pillar) {
-        this.pillar = pillar;
+    public void setPillarName(String pillarName) {
+        this.pillarName = pillarName;
     }
 
     public Long getPillarId() {

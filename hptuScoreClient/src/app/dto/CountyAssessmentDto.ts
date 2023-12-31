@@ -1,7 +1,7 @@
 import { CountyAssessment } from "../models/CountyAssessment";
-import { CountyAssessmentStatus } from "../models/CountyAssessmentStatus";
+import { CountyAssessmentMetaData } from "../models/CountyAssessmentStatus";
 
 export interface CountyAssessmentDto {
-    assessmentStatus: CountyAssessmentStatus;
+    assessmentMetaDataDto: CountyAssessmentMetaData;
     assessments: CountyAssessment[];
 }
