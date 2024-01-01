@@ -25,9 +25,8 @@ public interface CountyAssessmentService {
 
 	void deleteCountyAssessmentMetaData(Long assessmentId);
 
-	List<Map<String, Object>> getAssessmentCountSummaryGroupedByCategory(Long assessmentId, String pillar);
+	List<CountySummaryDto> getCountyAssessmentSummaryGroupedByCategory(Long assessmentId, String pillar);
 
-	List<Map<String, Object>> getAssessmentSummaryGroupedByPillar(Long assessmentId);
+	List<CountySummaryDto> getCountyAssessmentSummaryGroupedByPillar(Long assessmentId);
 
-	List<CountySummaryDto> getCountyAssessmentSummary(Long assessmentId);
 }

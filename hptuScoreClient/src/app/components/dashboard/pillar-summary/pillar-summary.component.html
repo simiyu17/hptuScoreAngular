@@ -1,1 +1,25 @@
-<p>pillar-summary works!</p>
+<div class="pillar-summary-carousel">
+    @for (pillar of pillarSummaries; track pillar) {
+    <div class="pillar-summary-item">
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>{{pillar.pillarName}}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="score-summary">
+                        <div class="score-attained"></div>
+                        <div class="max-score"></div>
+                    </div>
+                    <div class="graph-thumb-nail">
+                        <p-chart type="bar" [data]="data" [options]="options"></p-chart>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <button mat-raised-button (click)="openPillarDetails(pillar)">
+                View Details
+              </button>
+    </div>
+    } @empty {
+    Empty list of Pillars
+    }
+</div>

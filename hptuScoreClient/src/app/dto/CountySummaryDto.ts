@@ -1,4 +1,5 @@
 export interface CountySummaryDto {
+    metaDataId: number;
     pillarName: string;
     category: string;
     maxScore: number;

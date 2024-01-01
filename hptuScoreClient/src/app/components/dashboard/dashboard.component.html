@@ -1,6 +1,6 @@
 <div class="dashboard-content">
     <div class="pillar-summary">
-        <span>Pillars</span>
+        <app-pillar-summary [pillarSummaries]="pillarSummaries"></app-pillar-summary>
     </div>
     <div class="main-assessment-graph">
         <app-assessment-graph [countuAssessmentSummaryBarChartDataPoints]="countuAssessmentSummaryBarChartDataPoints"></app-assessment-graph>
@@ -12,6 +12,9 @@
                 <span class="pillar-toolbar-spacer"></span>
                 <button mat-raised-button (click)="openNewPillarDialog()">
                   Filter Dashboard
+                </button>
+                <button mat-raised-button (click)="exportToExcel()">
+                  Excel
                 </button>
               </mat-toolbar>
           

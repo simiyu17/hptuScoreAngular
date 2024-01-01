@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ChartModule } from 'primeng/chart';
 import {MatCardModule} from '@angular/material/card';
 
@@ -9,7 +9,7 @@ import {MatCardModule} from '@angular/material/card';
   templateUrl: './assessment-graph.component.html',
   styleUrl: './assessment-graph.component.scss'
 })
-export class AssessmentGraphComponent implements OnInit {
+export class AssessmentGraphComponent implements OnInit, OnChanges {
 
   basicData: any;
 

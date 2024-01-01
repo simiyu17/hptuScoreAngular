@@ -1,1 +1,47 @@
-<p>pillar-detailed works!</p>
+<div class="dashboard-detail-content">
+    <div class="pillar-graph">
+        <mat-card>
+            <mat-card-content>
+                <p-chart type="bar" [data]="data" [options]="options"></p-chart>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="pillar-summary-table">
+        <mat-toolbar>
+            <span>{{pillarName}} Performance Summary</span>
+            <span class="pillar-toolbar-spacer"></span>
+            <button mat-raised-button (click)="downLoad()">
+                DownLoad
+            </button>
+        </mat-toolbar>
+
+        <table mat-table [dataSource]="dataSource">
+
+            <!-- Category Name Column -->
+            <ng-container matColumnDef="category">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Category Name </th>
+                <td mat-cell *matCellDef="let row"> {{row.category}} </td>
+            </ng-container>
+
+            <!-- Score Attained Column -->
+            <ng-container matColumnDef="choiceScore">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Score Attained</th>
+                <td mat-cell *matCellDef="let row"> {{row.choiceScore}} </td>
+            </ng-container>
+
+            <!-- Max Score Column -->
+            <ng-container matColumnDef="maxScore">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Max Score </th>
+                <td mat-cell *matCellDef="let row"> {{row.maxScore}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <!-- Row shown when there is no matching data. -->
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="4">No data available</td>
+            </tr>
+        </table>
+    </div>
+</div>

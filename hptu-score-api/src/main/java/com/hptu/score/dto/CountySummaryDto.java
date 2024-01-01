@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public class CountySummaryDto  {
+
+    private Long metaDataId;
     private String pillarName;
 
     private String category;
@@ -22,6 +24,7 @@ public class CountySummaryDto  {
     }
 
     public CountySummaryDto(Summary summary) {
+        this.metaDataId = summary.getMetaDataId();
         this.pillarName = summary.getPillar();
         this.category = summary.getCategory();
         this.maxScore = summary.getMaxScore();
@@ -41,70 +44,57 @@ public class CountySummaryDto  {
         }
     }
 
-    public String getPillarName() {
-        return pillarName;
+    public Long getMetaDataId() {
+        return metaDataId;
     }
 
-    public void setPillarName(String pillarName) {
-        this.pillarName = pillarName;
+    public String getPillarName() {
+        return pillarName;
     }
 
     public int getMaxScore() {
         return maxScore;
     }
 
-    public void setMaxScore(int maxScore) {
-        this.maxScore = maxScore;
-    }
-
     public int getChoiceScore() {
         return choiceScore;
-    }
-
-    public void setChoiceScore(int choiceScore) {
-        this.choiceScore = choiceScore;
     }
 
     public BigDecimal getScorePercent() {
         return scorePercent;
     }
 
-    public void setScorePercent(BigDecimal scorePercent) {
-        this.scorePercent = scorePercent;
-    }
-
     public String getRemark() {
         return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
     }
 
     public String getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
     public static class Summary {
+
+        private final Long metaDataId;
         private String pillar;
 
-        private String category;
+        private final String category;
 
         @JsonProperty("maxscore")
-        private int maxScore;
+        private final int maxScore;
 
         @JsonProperty("score")
-        private int choiceScore;
+        private final int choiceScore;
 
-        public Summary(String pillar, String category, int maxScore, int choiceScore) {
+        public Summary(Long metaDataId, String pillar, String category, int maxScore, int choiceScore) {
+            this.metaDataId = metaDataId;
             this.pillar = pillar;
             this.category = category;
             this.maxScore = maxScore;
             this.choiceScore = choiceScore;
+        }
+
+        public Long getMetaDataId() {
+            return metaDataId;
         }
 
         public String getPillar() {
@@ -119,24 +109,12 @@ public class CountySummaryDto  {
             return maxScore;
         }
 
-        public void setMaxScore(int maxScore) {
-            this.maxScore = maxScore;
-        }
-
         public int getChoiceScore() {
             return choiceScore;
         }
 
-        public void setChoiceScore(int choiceScore) {
-            this.choiceScore = choiceScore;
-        }
-
         public String getCategory() {
             return category;
-        }
-
-        public void setCategory(String category) {
-            this.category = category;
         }
     }
 }

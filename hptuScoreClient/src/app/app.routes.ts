@@ -1,9 +1,20 @@
 import { Routes } from '@angular/router';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { UsersComponent } from './users/users.component';
 
 export const routes: Routes = [
-    {path: 'dashboard', component: DashboardComponent},
+    {
+        path : 'dashboard',
+        children : [
+            {
+                path: '',
+                loadComponent: () => import('./components/dashboard/dashboard.component').then(c => c.DashboardComponent)
+            },
+            {
+                path: ':meta-id/:pillar-name',
+                loadComponent: () => import('./components/dashboard/pillar-detailed/pillar-detailed.component').then(c => c.PillarDetailedComponent)
+            }
+        ]
+    },
     {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
     {
         path : 'assessment-setup',

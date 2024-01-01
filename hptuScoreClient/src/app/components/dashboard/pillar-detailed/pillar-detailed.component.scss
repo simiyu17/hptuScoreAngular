@@ -1,0 +1,69 @@
+div {
+    border: 1px solid black;
+}
+
+.dashboard-detail-content{
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-rows: 6fr 4fr;
+    gap: 2px;
+
+    .pillar-graph {
+        grid-row-start: 1;
+        grid-row-end: 2;
+    }
+
+    .pillar-summary-table {
+        grid-row-start: 2;
+        grid-row-end: 3;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        
+        .pillar-toolbar-spacer {
+            flex: 1 1 auto;
+        }
+        
+        .pillars-summary-table-content {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .pillars-summary-table-content mat-toolbar {
+            border-bottom: 1px #04AA6D solid;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .pillars-summary-table-content mat-toolbar button{
+            color: aliceblue;
+            background-color: #04AA6D;
+            margin: 10px auto;
+        }
+        
+        .pillars-summary-table-content .pillars-summary-table {
+            border-bottom: 1px #04AA6D solid;
+        }
+        
+        .pillars-summary-table-content .pillars-summary-table mat-form-field {
+            border-top: 1px #04AA6D solid;
+            border-radius: 4px;
+        }
+        
+        table {
+            width: 100%;
+        }
+        
+        .mat-mdc-form-field {
+            font-size: 14px;
+            width: 100%;
+        }
+        
+        td,
+        th {
+            width: 25%;
+        }
+    }
+}

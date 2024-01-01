@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DashboardService } from '../../services/dashboard.service';
 import { AssessmentGraphComponent } from './assessment-graph/assessment-graph.component';
 import { MatButtonModule } from '@angular/material/button';
+import { PillarSummaryComponent } from './pillar-summary/pillar-summary.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,6 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatTableModule,
     MatToolbarModule,
     AssessmentGraphComponent,
+    PillarSummaryComponent,
     MatButtonModule
   ],
   templateUrl: './dashboard.component.html',
@@ -24,7 +26,9 @@ export class DashboardComponent implements OnInit{
 
   displayedColumns: string[] = ['pillarName', 'maxScore', 'choiceScore', 'scorePercent', 'remark'];
   dataSource!: MatTableDataSource<CountySummaryDto>;
-  countuAssessmentSummaries?: CountySummaryDto[];
+  countuAssessmentSummaries: CountySummaryDto[] | any[] = [];
+  pillarSummaries: any[] = [];
+  metaDataId?: number;
   countuAssessmentSummaryBarChartDataPoints?: { x: string, y: number }[];
   constructor(
     public dialog: MatDialog, 
@@ -42,21 +46,16 @@ export class DashboardComponent implements OnInit{
   }
 
   getCountyAssessmentSummary() {
-    this.dashBoardService.getCountyAssessmentSummary()
+    this.dashBoardService.getCountyAssessmentSummaryByPillar()
       .subscribe({
         next: (response) => {
-          this.countuAssessmentSummaries = response;
+          this.countuAssessmentSummaries = response.summary;
+          this.pillarSummaries = response.summary
           this.dataSource = new MatTableDataSource(this.countuAssessmentSummaries);
-        },
-        error: (error) => { }
-      });
-  }
-
-  getCountyAssessmentSummaryBarDataPoints() {
-    this.dashBoardService.getCountyAssessmentSummaryBarDataPoints()
-      .subscribe({
-        next: (response) => {
-          this.countuAssessmentSummaryBarChartDataPoints = [...response];
+          this.countuAssessmentSummaryBarChartDataPoints = [...response.summaryDataPoints];
+          if(this.countuAssessmentSummaries?.length > 0){
+            this.metaDataId = this.countuAssessmentSummaries.at(0).metaDataId;
+          }
         },
         error: (error) => { }
       });
@@ -64,6 +63,9 @@ export class DashboardComponent implements OnInit{
 
   ngOnInit(): void {
     this.getCountyAssessmentSummary();
-    this.getCountyAssessmentSummaryBarDataPoints();
+  }
+
+  exportToExcel(): void {
+    this.dashBoardService.exportCountyAssessmentSummaryToExcel(this.metaDataId);
   }
 }
