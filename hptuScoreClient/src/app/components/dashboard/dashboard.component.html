@@ -13,9 +13,10 @@
                 <button mat-raised-button (click)="openNewPillarDialog()">
                   Filter Dashboard
                 </button>
-                <button mat-raised-button (click)="exportToExcel()">
-                  Excel
-                </button>
+                
+                <a mat-raised-button [href]="'data:application/octet-stream;base64,' + excelBase64String | safe" download="excel.xlsx">
+                  Export Excel
+                </a>
               </mat-toolbar>
           
               <div class="pillars-summary-table">

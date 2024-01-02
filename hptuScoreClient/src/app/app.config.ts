@@ -4,7 +4,6 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { KeycloakService } from 'keycloak-angular';
-import { AuthService } from './services/auth.service';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { httpInterceptor } from './util/http.interceptor';
 
@@ -35,7 +34,6 @@ export const appConfig: ApplicationConfig = {
       multi: true,
       deps: [KeycloakService]
     }, 
-    KeycloakService,
-    AuthService
+    KeycloakService
   ]
 };

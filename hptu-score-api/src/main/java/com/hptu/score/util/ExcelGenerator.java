@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Base64;
 
 public class ExcelGenerator {
 
@@ -245,6 +246,17 @@ public class ExcelGenerator {
         workbook.write(outputStream);
         workbook.close();
         outputStream.close();
+    }
+
+    public String generateExcelBase64String() throws IOException {
+        writeHeader();
+        write();
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        workbook.write(bos);
+        String encodedString = Base64.getEncoder().encodeToString(bos.toByteArray());
+        workbook.close();
+        bos.close();
+        return encodedString;
     }
 
     static class ChartDimension {

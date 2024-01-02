@@ -1,10 +1,7 @@
 package com.hptu.score.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hptu.score.dto.CountyAssessmentResultDetailedDto;
-import com.hptu.score.dto.CountyDto;
-import com.hptu.score.dto.CountySummaryDto;
-import com.hptu.score.dto.ReportByPillar;
+import com.hptu.score.dto.*;
 import com.hptu.score.entity.AssessmentPillar;
 import com.hptu.score.entity.BaseEntity;
 import com.hptu.score.entity.CountyAssessmentMetaData;
@@ -15,6 +12,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -81,7 +79,7 @@ public class ReportResource extends CommonUtil {
     }
 
     @GET
-    @Path("export-to-excel")
+    @Path("export-to-excel2")
     public void exportIntoExcelFile(HttpServletResponse response,
                                     @QueryParam(value = "metaDataId") Long metaDataId,
                                     @QueryParam(value = "countyName") String countyName,
@@ -104,5 +102,21 @@ public class ReportResource extends CommonUtil {
 
         ExcelGenerator generator = new ExcelGenerator(countySummaryDtos, categorySummary, analysisByPillarTableTitle);
         generator.generateExcelFile(response);
+    }
+
+    @GET
+    @Path("export-to-excel")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response exportBase64ExcelFile(@QueryParam(value = "metaDataId") Long metaDataId,
+                                          @QueryParam(value = "analysisByPillarTableTitle") String analysisByPillarTableTitle) throws IOException {
+        List<CountySummaryDto> countySummaryDtos = this.assessmentService
+                .getCountyAssessmentSummaryGroupedByPillar(metaDataId);
+        Map<String, List<CountySummaryDto>> categorySummary = new HashMap<>();
+        for (CountySummaryDto summary: countySummaryDtos){
+            categorySummary.put(summary.getPillarName(), this.assessmentService
+                    .getCountyAssessmentSummaryGroupedByCategory(metaDataId, summary.getPillarName()));
+        }
+        ExcelGenerator generator = new ExcelGenerator(countySummaryDtos, categorySummary, analysisByPillarTableTitle);
+        return Response.ok().entity(new ApiResponseDto(true, generator.generateExcelBase64String())).build();
     }
 }

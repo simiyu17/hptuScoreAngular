@@ -8,6 +8,7 @@ import { DashboardService } from '../../services/dashboard.service';
 import { AssessmentGraphComponent } from './assessment-graph/assessment-graph.component';
 import { MatButtonModule } from '@angular/material/button';
 import { PillarSummaryComponent } from './pillar-summary/pillar-summary.component';
+import {SafePipe } from '../../util/safe.pipe'
 
 @Component({
   selector: 'app-dashboard',
@@ -17,23 +18,24 @@ import { PillarSummaryComponent } from './pillar-summary/pillar-summary.componen
     MatToolbarModule,
     AssessmentGraphComponent,
     PillarSummaryComponent,
-    MatButtonModule
+    MatButtonModule,
+    SafePipe
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent implements OnInit{
+export class DashboardComponent implements OnInit {
 
   displayedColumns: string[] = ['pillarName', 'maxScore', 'choiceScore', 'scorePercent', 'remark'];
   dataSource!: MatTableDataSource<CountySummaryDto>;
   countuAssessmentSummaries: CountySummaryDto[] | any[] = [];
   pillarSummaries: any[] = [];
-  metaDataId?: number;
   countuAssessmentSummaryBarChartDataPoints?: { x: string, y: number }[];
+  excelBase64String?: string;
   constructor(
-    public dialog: MatDialog, 
-    private dashBoardService: DashboardService, 
-    ) { }
+    public dialog: MatDialog,
+    private dashBoardService: DashboardService,
+  ) { }
 
   openNewPillarDialog() {
     const dialogRef = this.dialog.open(DashboardFilterComponent);
@@ -53,8 +55,8 @@ export class DashboardComponent implements OnInit{
           this.pillarSummaries = response.summary
           this.dataSource = new MatTableDataSource(this.countuAssessmentSummaries);
           this.countuAssessmentSummaryBarChartDataPoints = [...response.summaryDataPoints];
-          if(this.countuAssessmentSummaries?.length > 0){
-            this.metaDataId = this.countuAssessmentSummaries.at(0).metaDataId;
+          if (this.countuAssessmentSummaries?.length > 0) {
+            this.exportToExcel(this.countuAssessmentSummaries.at(0).metaDataId);
           }
         },
         error: (error) => { }
@@ -65,7 +67,16 @@ export class DashboardComponent implements OnInit{
     this.getCountyAssessmentSummary();
   }
 
-  exportToExcel(): void {
-    this.dashBoardService.exportCountyAssessmentSummaryToExcel(this.metaDataId);
+  exportToExcel(metaDataId: number): void {
+    this.dashBoardService.exportCountyAssessmentSummaryToExcel(metaDataId)
+      .subscribe({
+        next: (response) => {
+          this.excelBase64String = response.message
+        },
+        error: (error) => { 
+          console.log(error)
+        }
+      });
+
   }
 }

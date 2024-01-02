@@ -1,17 +1,23 @@
 import { CommonModule } from '@angular/common';
-import { HomeComponent } from './components/home/home.component';
 import { KeycloakProfile } from 'keycloak-js';
 import { KeycloakService } from 'keycloak-angular';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from './services/auth.service';
+import { HeaderComponent } from './components/shared/header/header.component';
+import { SidebarComponent } from './components/shared/sidebar/sidebar.component';
+import { FooterComponent } from './components/shared/footer/footer.component';
+import { RouterOutlet } from '@angular/router';
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
+    RouterOutlet,
     CommonModule, 
-    HomeComponent
+    HeaderComponent, 
+    SidebarComponent, 
+    FooterComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

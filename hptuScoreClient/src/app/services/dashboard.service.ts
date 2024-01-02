@@ -23,7 +23,7 @@ export class DashboardService {
 
   exportCountyAssessmentSummaryToExcel(metaDataId?: number): Observable<any> {
     if(metaDataId){
-      return this.httpClient.get(`${this.globalService.BASE_API_URL}/report/export-to-excel?metaDataId=${metaDataId}&countyName=Nairobi&analysisByPillarTableTitle=FuckYou`);
+      return this.httpClient.get(`${this.globalService.BASE_API_URL}/report/export-to-excel?metaDataId=${metaDataId}&analysisByPillarTableTitle=FuckYou`);
     }
     return of(null)
     
