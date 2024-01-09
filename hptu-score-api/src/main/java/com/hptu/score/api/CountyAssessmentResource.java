@@ -11,6 +11,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Path("api/v1/county-assessments")
@@ -26,7 +27,14 @@ public class CountyAssessmentResource extends CommonUtil {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<CountyAssessmentMetaData> getAvailableAssessments(){
-        return this.countyAssessmentService.getAvailableCountyAssessmentMetaDatas();
+        List<CountyAssessmentMetaData> list = new ArrayList<>();
+        long limit = 15;
+        for (CountyAssessmentMetaData ass : this.countyAssessmentService.getAvailableCountyAssessmentMetaDatas()) {
+            if (limit-- == 0) break;
+            ass.setCountyName(getCountyByCode(ass.getCountyCode()));
+            list.add(ass);
+        }
+        return list;
     }
 
     @GET
@@ -46,5 +54,14 @@ public class CountyAssessmentResource extends CommonUtil {
             return Response.status(Response.Status.CREATED).entity(new ApiResponseDto(false, "An error occurred: "+e.getMessage())).build();
         }
 
+    }
+
+    @GET
+    @Path("find-one")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAssessmentById(@QueryParam("countyCode") String countyCode,
+                                      @QueryParam("assessmentYear") String assessmentYear,
+                                      @QueryParam("assessmentQuarter") String assessmentQuarter){
+        return Response.ok(this.countyAssessmentService.getCountyAssessmentByCodeYearAndQuarter(countyCode, assessmentQuarter, assessmentYear) ).build();
     }
 }

@@ -36,7 +36,7 @@ export class AppComponent {
       this.profile = await this.keycloakService.loadUserProfile();
       this.userName += this.profile.username;
     }else {
-      this.authService.login()
+      this.authService.logout()
     }
   }
 }

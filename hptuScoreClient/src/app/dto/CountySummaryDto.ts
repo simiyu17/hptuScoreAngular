@@ -6,6 +6,7 @@ export interface CountySummaryDto {
     choiceScore: number;
     scorePercent: number;
     remark: string;
+    ngClassStr?: string[];
     
 
 }

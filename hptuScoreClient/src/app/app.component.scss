@@ -3,7 +3,7 @@
     height: 100vh;
     display: grid;
     grid-template-columns: repeat(9, 1fr);
-    grid-template-rows: 50px 1fr 80px;
+    grid-template-rows: minmax(10px, 50px) 1fr minmax(10px, 50px);
     gap: 2px;
     padding: 2px;
     box-sizing: border-box;
@@ -27,7 +27,7 @@
         grid-column-start: 2;
         grid-column-end: 10;
         border: 2px solid black;
-        overflow: scroll;
+        padding: 5px;
     }
 
 

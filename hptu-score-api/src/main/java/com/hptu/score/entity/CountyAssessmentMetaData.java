@@ -5,17 +5,9 @@ import java.util.List;
 import java.util.Set;
 
 import com.hptu.score.dto.CountyAssessmentMetaDataDto;
+import jakarta.persistence.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "assessment_meta_data", uniqueConstraints = { @UniqueConstraint(columnNames = { "assess_quarter", "ass_year", "county_code" }, name = "ASSESSMENT_STATUS_UNIQUE")})
@@ -34,6 +26,9 @@ public class CountyAssessmentMetaData extends BaseEntity {
 
     @Column(name = "county_code")
     private String countyCode;
+
+	@Transient
+	private String countyName;
 
     @Enumerated(EnumType.STRING)
 	private Status status;
@@ -132,7 +127,15 @@ public class CountyAssessmentMetaData extends BaseEntity {
 	public void setAssessmentLevel(String assessmentLevel) {
 		this.assessmentLevel = assessmentLevel;
 	}
-	
+
+	public String getCountyName() {
+		return countyName;
+	}
+
+	public void setCountyName(String countyName) {
+		this.countyName = countyName;
+	}
+
 	public void addAssessments(List<CountyAssessment> assessments) {
 		assessments.forEach(as ->{
 			as.setMetaData(this);

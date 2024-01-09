@@ -1,9 +1,18 @@
 <div class="sidebar">
-    <a [routerLinkActive]="'active'" [routerLink]="['dashboard']">
-      <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon>
-      <p>Dashboard</p>
-    </a>
-    <a [routerLinkActive]="'active'" [routerLink]="['county-assessments']">Do Assessment</a>
-    <a [routerLinkActive]="'active'" [routerLink]="['assessment-setup/pillars']">Configuration</a>
-    <a *ngIf="isUserAdmin" [routerLinkActive]="'active'" [routerLink]="['users']">Users</a>
-  </div>
+  <a [routerLinkActive]="'active'" [routerLink]="['dashboard']">
+    <mat-icon>dashboard</mat-icon>
+    <span>Dashboard</span>
+  </a>
+  <a [routerLinkActive]="'active'" [routerLink]="['county-assessments']">
+    <mat-icon>casino</mat-icon>
+    <span>Assessments</span>
+  </a>
+  <a *ngIf="isUserAdmin" [routerLinkActive]="'active'" [routerLink]="['assessment-setup/pillars']">
+    <mat-icon>settings</mat-icon>
+    <span>Configuration</span>
+  </a>
+  <a *ngIf="isUserAdmin" [routerLinkActive]="'active'" [routerLink]="['users']">
+    <mat-icon>person</mat-icon>
+    <span>Users</span>
+  </a>
+</div>

@@ -1,28 +1,84 @@
-.pillar-summary-carousel {
-    width: 100%;
+.pillar-summary-items {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: wrap;
     height: 100%;
-    border: 2px solid red;
-    display: grid;
-    grid-template-columns: repeat(4, auto);
-    gap: 5px;
-    padding: 5px;
+    padding: 2px;
+    border: 1px solid rgb(240, 136, 18);
+
 
 
     .pillar-summary-item {
-        min-width: 25%;
-        height: 95%;
-        position: relative;
+        min-width: 30%;
+        max-height: 90%;
+        border: 1px solid black;
+        border-radius: 10px;
+        margin-right: 2px;
+        display: flex;
+        flex-direction: column;
+        
 
-        .score-summary {}
+        .score-summary {
+            flex-grow: 2;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            
 
-        .graph-thumb-nail {}
+            .pillar-name {
+                flex: 80%;
+                padding: 10px;
+            }
 
-        button {
-            position: absolute;
-            left: 50%;
-            top: 50%;
+            .pillar-score {
+                flex: 20%;
+            }
         }
+
+        .details-btn {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            border-top: 1px solid black;
+            border-radius: 10px;
+
+            a {
+                width: 100%;
+                height: 100%;
+                border-radius: 10px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                &:hover {
+                    background-color: #555;
+                    color: antiquewhite;
+                    cursor: pointer;
+                }
+            }
+            
+        }
+
+        
+        
     }
 
 
 }
+
+.excellent-score {
+    background-color: #04AA6D;
+}
+
+.good-score {
+    background-color: #5daa8a;
+}
+
+.average-score {
+    background-color: #966d6d;
+}
+
+.poor-score {
+    background-color: #e46060;
+}
+

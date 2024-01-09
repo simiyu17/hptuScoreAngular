@@ -4,6 +4,7 @@ import { ChartModule } from 'primeng/chart';
 import { CountySummaryDto } from '../../../dto/CountySummaryDto';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-pillar-summary',
@@ -11,7 +12,8 @@ import { Router } from '@angular/router';
   imports: [
     ChartModule, 
     MatCardModule,
-    MatButtonModule
+    MatButtonModule,
+    CommonModule
   ],
   templateUrl: './pillar-summary.component.html',
   styleUrl: './pillar-summary.component.scss'
@@ -25,7 +27,21 @@ export class PillarSummaryComponent implements OnInit {
   constructor(private router: Router){}
 
   ngOnChanges(changes: SimpleChanges) {
-    this.drawSummaryGraph()
+    this.pillarSummaries.forEach(p => {
+      p.ngClassStr = this.createPillarColor(p.remark)
+    })
+  }
+
+  createPillarColor(remark: string): string[] {
+    if(remark.includes('Excellent')){
+      return ['pillar-summary-item', 'excellent-score']
+    }else if(remark.includes('Good')){
+      return ['pillar-summary-item', 'good-score']
+    }else if(remark.startsWith('Average')){
+      return ['pillar-summary-item', 'average-score']
+    }else {
+      return ['pillar-summary-item', 'poor-score']
+    }
   }
 
   openPillarDetails(summary: CountySummaryDto): void {

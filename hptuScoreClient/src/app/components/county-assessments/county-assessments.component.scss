@@ -1,0 +1,69 @@
+.assessments-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 2px;
+
+    .create-new-assessment {
+        width: 100%;
+        flex: 30%;
+        flex-direction: column;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+
+        a {
+            border: 1px #04AA6D solid; 
+        }
+        p {
+            border: 1px red solid; 
+            color: red;
+        }
+    }
+
+    .assessments-table-content {
+        width: 100%;
+        height: 100%;
+        border: 1px #04AA6D solid;
+        flex: 70%;
+
+        mat-toolbar {
+            border-bottom: 1px #04AA6D solid;
+            margin-bottom: 20px;
+            overflow: hidden;
+
+            .assessment-toolbar-spacer {
+                flex: 1 1 auto;
+            }
+
+            button {
+                color: aliceblue;
+                background-color: #04AA6D;
+                margin: 10px auto;
+            }
+        }
+    }
+}
+
+
+.assessments-table-content .assessments-table mat-form-field {
+    border-top: 1px #04AA6D solid;
+    border-radius: 4px;
+}
+
+table {
+    width: 100%;
+}
+
+.mat-mdc-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+td,
+th {
+    width: 25%;
+}

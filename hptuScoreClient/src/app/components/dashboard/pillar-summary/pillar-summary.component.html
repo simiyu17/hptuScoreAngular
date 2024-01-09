@@ -1,23 +1,15 @@
-<div class="pillar-summary-carousel">
+<div class="pillar-summary-items">
     @for (pillar of pillarSummaries; track pillar) {
-    <div class="pillar-summary-item">
-            <mat-card>
-                <mat-card-header>
-                    <mat-card-title>{{pillar.pillarName}}</mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <div class="score-summary">
-                        <div class="score-attained"></div>
-                        <div class="max-score"></div>
-                    </div>
-                    <div class="graph-thumb-nail">
-                        <p-chart type="bar" [data]="data" [options]="options"></p-chart>
-                    </div>
-                </mat-card-content>
-            </mat-card>
-            <button mat-raised-button (click)="openPillarDetails(pillar)">
+    <div [ngClass]="pillar.ngClassStr">
+        <div class="score-summary">
+            <div class="pillar-name">{{pillar.pillarName}}</div>
+            <div class="pillar-score">{{pillar.choiceScore}}/{{pillar.maxScore}}</div>
+        </div>
+        <div class="details-btn">
+            <a (click)="openPillarDetails(pillar)">
                 View Details
-              </button>
+            </a>
+        </div>
     </div>
     } @empty {
     Empty list of Pillars
