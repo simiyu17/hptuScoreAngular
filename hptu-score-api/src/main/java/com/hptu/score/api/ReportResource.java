@@ -46,7 +46,7 @@ public class ReportResource extends CommonUtil {
     public CountyAssessmentResultDetailedDto getCountyAssessmentSummary2(@QueryParam(value = "countyCode") String countyCode,
                                                                                @QueryParam(value = "assessmentQuarter") String assessmentQuarter,
                                                                                @QueryParam(value = "assessmentYear") String assessmentYear){
-        CountyAssessmentMetaData metaData = this.assessmentService.getAvailableCountyAssessmentMetaDatas().stream().min(Comparator.comparing(BaseEntity::getDateCreated)).orElse(null);
+        CountyAssessmentMetaData metaData = this.assessmentService.getAvailableCountyAssessmentMetaDatas().stream().max(Comparator.comparing(BaseEntity::getDateCreated)).orElse(null);
         if (StringUtils.isNoneBlank(countyCode) && StringUtils.isNoneBlank(assessmentQuarter) && StringUtils.isNoneBlank(assessmentYear)){
             metaData = this.assessmentService.getCountyAssessmentByCodeYearAndQuarter(countyCode, assessmentQuarter, assessmentYear);
         }

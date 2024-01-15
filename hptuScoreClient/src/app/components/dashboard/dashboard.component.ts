@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnDestroy, OnInit } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { DashboardFilterComponent } from './dashboard-filter/dashboard-filter.component';
 import { CountySummaryDto } from '../../dto/CountySummaryDto';
@@ -7,8 +7,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { DashboardService } from '../../services/dashboard.service';
 import { AssessmentGraphComponent } from './assessment-graph/assessment-graph.component';
 import { MatButtonModule } from '@angular/material/button';
-import { PillarSummaryComponent } from './pillar-summary/pillar-summary.component';
 import {SafePipe } from '../../util/safe.pipe'
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { Router } from '@angular/router';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { UtilService } from '../../services/util.service';
+import { CountyAssessmentMetaData } from '../../models/CountyAssessmentMetaData';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,29 +24,37 @@ import {SafePipe } from '../../util/safe.pipe'
     MatTableModule,
     MatToolbarModule,
     AssessmentGraphComponent,
-    PillarSummaryComponent,
     MatButtonModule,
-    SafePipe
+    MatIconModule,
+    MatTooltipModule,
+    SafePipe,
+    MatFormFieldModule,
+    MatInputModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
 
-  displayedColumns: string[] = ['pillarName', 'maxScore', 'choiceScore', 'scorePercent', 'remark'];
+  displayedColumns: string[] = ['pillarName', 'maxScore', 'choiceScore', 'scorePercent', 'remark', 'action'];
   dataSource!: MatTableDataSource<CountySummaryDto>;
   countuAssessmentSummaries: CountySummaryDto[] | any[] = [];
   pillarSummaries: any[] = [];
   countuAssessmentSummaryBarChartDataPoints?: { x: string, y: number }[];
   excelBase64String?: string;
+  
+  filteredAssessment?: any;
   constructor(
     public dialog: MatDialog,
     private dashBoardService: DashboardService,
-  ) { }
+    private router: Router,
+    private utilService: UtilService,
+    private destroyRef: DestroyRef
+  ) {   }
 
-  openNewPillarDialog() {
+
+  openAssessmentFilterDialog() {
     const dialogRef = this.dialog.open(DashboardFilterComponent);
-
     dialogRef.afterClosed().subscribe({
       next: (res) => {
         this.getCountyAssessmentSummary();
@@ -47,8 +62,12 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  getCountyAssessmentSummary() {
-    this.dashBoardService.getCountyAssessmentSummaryByPillar()
+  getCountyAssessmentSummary = () => {
+    this.utilService.currentAssessmentData()
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe((ass?: CountyAssessmentMetaData) => {
+      this.dashBoardService.getCountyAssessmentSummaryByPillar(ass)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
           this.countuAssessmentSummaries = response.summary;
@@ -60,7 +79,8 @@ export class DashboardComponent implements OnInit {
           }
         },
         error: (error) => { }
-      });
+      })
+    })
   }
 
   ngOnInit(): void {
@@ -69,6 +89,7 @@ export class DashboardComponent implements OnInit {
 
   exportToExcel(metaDataId: number): void {
     this.dashBoardService.exportCountyAssessmentSummaryToExcel(metaDataId)
+    .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
           this.excelBase64String = response.message
@@ -78,5 +99,13 @@ export class DashboardComponent implements OnInit {
         }
       });
 
+  }
+
+  openPillarDetails(summary: CountySummaryDto): void {
+    this.router.navigateByUrl(`/dashboard/${summary.metaDataId}/${summary.pillarName}`)
+  }
+
+  ngOnDestroy(): void {
+    this.utilService.onAssessmentDataReceived()
   }
 }

@@ -1,1 +1,54 @@
-<p>dashboard-filter works!</p>
+  <div class="filter-assessment-content">
+    <div mat-dialog-title class="form-header">
+      <h2>Assessment Filter</h2>
+    </div>
+    <div>
+    <form [formGroup]="filterFormGroup" (ngSubmit)="onSubmitEditPillar()">
+    <div mat-dialog-content class="form-fields">
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+            <mat-label>Select County</mat-label>
+            <mat-select formControlName="countyCode" required>
+              @for (county of counties; track county) {
+                <mat-option [value]="county.countyCode">{{county.name}}</mat-option>
+              }
+            </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">  
+        <mat-form-field appearance="outline">
+            <mat-label>Assessment Year</mat-label>
+            <mat-select formControlName="assessmentYear" required>
+                <mat-option value="2023">2023</mat-option>
+                <mat-option value="2024">2024</mat-option>
+                <mat-option value="2025">2025</mat-option>
+                <mat-option value="2026">2026</mat-option>
+                <mat-option value="2027">2027</mat-option>
+                <mat-option value="2028">2028</mat-option>
+                <mat-option value="2029">2029</mat-option>
+                <mat-option value="2030">2030</mat-option>
+            </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">  
+        <mat-form-field appearance="outline">
+            <mat-label>Year Quarter</mat-label>
+      <mat-select formControlName="assessmentQuarter" required>
+        <mat-option value="Q1">Quarter 1</mat-option>
+        <mat-option value="Q2">Quarter 2</mat-option>
+        <mat-option value="Q3">Quarter 3</mat-option>
+        <mat-option value="Q4">Quarter 4</mat-option>
+    </mat-select>
+        </mat-form-field>
+      </div>
+  
+    </div>
+    <div mat-dialog-actions align="end" class="form-btns">
+      <button mat-raised-button mat-dialog-close>Cancel</button>
+      <button mat-raised-button cdkFocusInitial type="submit">Submit</button>
+    </div>
+  </form>
+  </div>
+  </div>

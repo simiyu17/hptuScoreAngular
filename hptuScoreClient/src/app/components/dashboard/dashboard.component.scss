@@ -6,11 +6,6 @@
     flex-direction: column;
     gap: 2px;
 
-    .pillar-summary {
-        border: 1px solid blue;
-        flex: 25%;
-        
-    }
 
     .main-assessment-graph {
         border: 1px solid red;
@@ -25,7 +20,7 @@
         align-items: center;
         border: 1px solid yellow;
         padding: 10px;
-        flex: 35%;
+        flex: 60%;
 
         .pillar-toolbar-spacer {
             flex: 1 1 auto;
@@ -68,7 +63,7 @@
 
         td,
         th {
-            width: 25%;
+            width: 20%;
         }
     }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AssessmentPillar } from '../../../models/AssessmentPillar';
 import { PillarsService } from '../../../services/pillars.service';
@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { CountyAssessment } from '../../../models/CountyAssessment';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { CountyDto } from '../../../dto/CountyDto';
 import { MatOptionModule } from '@angular/material/core';
@@ -18,6 +18,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { CountyAssessmentDto } from '../../../dto/CountyAssessmentDto';
 import { CountyAssessmentService } from '../../../services/county.assessment.service';
 import { GlobalService } from '../../../services/global.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -67,8 +68,10 @@ export class CreateAssessmentComponent implements OnInit {
     private pillarService: PillarsService,
     private utilService: UtilService,
     private countyAssessService: CountyAssessmentService,
-    private gs: GlobalService
+    private gs: GlobalService,
+    private router: Router
   ) { }
+
 
   ngOnInit(): void {
     this.getAvailablePillars();
@@ -168,7 +171,6 @@ export class CreateAssessmentComponent implements OnInit {
   }
 
   changeCapabilityChoice(e: MatRadioChange, pillar: AssessmentPillar, index: number, controlName: string): void {
-    console.log(e.source._inputElement.nativeElement.labels?.item(0).innerHTML);
     this.getControl(pillar, index, controlName).setValue(e.source._inputElement.nativeElement.labels?.item(0).innerHTML)
   }
 
@@ -185,8 +187,11 @@ export class CreateAssessmentComponent implements OnInit {
     this.countyAssessService.createCountyAssessment(countyAssessmentDto)
       .subscribe({
         next: (response) => {
-          console.log(response)
           this.gs.openSnackBar(response.message, "Dismiss");
+          if(response.success){
+            this.router.navigateByUrl('county-assessments');
+          }
+          
         },
         error: (error) => {
           if (error.error.message) {
@@ -197,4 +202,5 @@ export class CreateAssessmentComponent implements OnInit {
         }
       });
   }
+
 }

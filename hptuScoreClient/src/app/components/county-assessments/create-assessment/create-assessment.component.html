@@ -1,7 +1,7 @@
 <mat-stepper orientation="vertical" linear #stepper>
   <mat-step [stepControl]="firstFormGroup" [editable]="true">
     <form [formGroup]="firstFormGroup">
-      <ng-template matStepLabel>Fill out your name</ng-template>
+      <ng-template matStepLabel>Fill out the basic information</ng-template>
       <mat-form-field>
         <mat-label>Select County</mat-label>
         <mat-select formControlName="countyCode" required>

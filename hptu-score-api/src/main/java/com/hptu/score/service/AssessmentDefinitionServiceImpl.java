@@ -1,13 +1,12 @@
 package com.hptu.score.service;
 
 import com.hptu.score.dto.AssessmentChoiceDto;
-import com.hptu.score.entity.AssessmentPillarCategory;
 import com.hptu.score.entity.AssessmentPillar;
+import com.hptu.score.entity.AssessmentPillarCategory;
 import com.hptu.score.exception.PillarException;
 import com.hptu.score.repository.AssessmentPillarRepositoryWrapper;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -27,7 +26,7 @@ public class AssessmentDefinitionServiceImpl implements AssessmentDefinitionServ
         try {
             return this.assessmentPillarRepository.savePillar(pillar);
         } catch (Exception e){
-            throw new PillarException("Pillar Name/Order already in use!!!!", Response.Status.BAD_REQUEST.getStatusCode());
+            throw new PillarException("Pillar Name/Order already in use!!!!");
         }
     }
 
@@ -43,7 +42,7 @@ public class AssessmentDefinitionServiceImpl implements AssessmentDefinitionServ
         }
         return this.assessmentPillarRepository.savePillar(currentPillar);
     } catch (Exception e){
-        throw new PillarException("Pillar Name/Order already in use!!!!", Response.Status.BAD_REQUEST.getStatusCode());
+        throw new PillarException("Pillar Name/Order already in use!!!!");
     }
     }
 
@@ -59,7 +58,7 @@ public class AssessmentDefinitionServiceImpl implements AssessmentDefinitionServ
     @Override
     public AssessmentPillar findAssessmentPillarById(Long pillarId){
         return this.assessmentPillarRepository.findAssessmentPillarById(pillarId)
-                .orElseThrow(() -> new PillarException("No Pillar with Id", Response.Status.NOT_FOUND.getStatusCode()));
+                .orElseThrow(() -> new PillarException("No Pillar with Id"));
     }
 
     @Transactional

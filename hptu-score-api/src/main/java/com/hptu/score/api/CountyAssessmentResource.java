@@ -13,6 +13,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Path("api/v1/county-assessments")
 @ApplicationScoped
@@ -62,6 +63,10 @@ public class CountyAssessmentResource extends CommonUtil {
     public Response getAssessmentById(@QueryParam("countyCode") String countyCode,
                                       @QueryParam("assessmentYear") String assessmentYear,
                                       @QueryParam("assessmentQuarter") String assessmentQuarter){
-        return Response.ok(this.countyAssessmentService.getCountyAssessmentByCodeYearAndQuarter(countyCode, assessmentQuarter, assessmentYear) ).build();
+        var res = this.countyAssessmentService.getCountyAssessmentByCodeYearAndQuarter(countyCode, assessmentQuarter, assessmentYear);
+        if(Objects.nonNull(res)) {
+            res.setCountyName(getCountyByCode(res.getCountyCode()));
+        }
+        return Response.ok(res).build();
     }
 }

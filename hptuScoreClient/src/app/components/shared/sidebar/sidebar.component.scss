@@ -8,10 +8,15 @@
   }
   
   .sidebar a {
-    display: block;
+    display: flex;
+    flex-direction: row;
     color: black;
     padding: 16px;
     text-decoration: none;
+
+    mat-icon {
+      margin-right: 10px;
+    }
   }
    
   .sidebar a.active {

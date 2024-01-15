@@ -5,6 +5,7 @@ import com.hptu.score.dto.CountySummaryDto;
 import com.hptu.score.entity.CountyAssessment;
 import com.hptu.score.entity.CountyAssessmentMetaData;
 import com.hptu.score.entity.User;
+import com.hptu.score.exception.CountyAssessmentException;
 import com.hptu.score.repository.CountyAssessmentRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -16,6 +17,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.core.Response;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +39,15 @@ public class CountyAssessmentServiceImpl implements CountyAssessmentService {
 		CountyAssessmentMetaData metaData = CountyAssessmentMetaData.createCountyAssessmentMetaData(countyAssessmentDto.getAssessmentMetaDataDto());
 		List<CountyAssessment> assessments = countyAssessmentDto.getAssessments().stream()
 				.map(a -> new CountyAssessment(a.getPillarName(), a.getCategory(), a.getChoiceText(), a.getChoiceScore(), a.getMaxScore(), a.getScoreRemarks())).toList();
+		areAssessmentsValid(assessments);
 		metaData.addAssessments(assessments);
 		return this.assessmentRepository.save(metaData);
+	}
+
+	private void areAssessmentsValid(List<CountyAssessment> assessments){
+		if(assessments.isEmpty() || assessments.stream().anyMatch(as -> as.getChoiceScore() < 1)){
+			throw new CountyAssessmentException("Please make assessment for each category and try again");
+		}
 	}
 
 	@Override

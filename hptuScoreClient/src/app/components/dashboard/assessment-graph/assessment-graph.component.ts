@@ -18,10 +18,12 @@ export class AssessmentGraphComponent implements OnInit, OnChanges {
   @Input() countuAssessmentSummaryBarChartDataPoints?: { x: string, y: number }[];
   labelsX: string[] = [];
   dataY: number[] = [];
+  backgroundColorArray: string[] = [];
+  borderColorArray: string[] = [];
 
   ngOnChanges(changes: SimpleChanges) {
+    this.countuAssessmentSummaryBarChartDataPoints = changes['countuAssessmentSummaryBarChartDataPoints'].currentValue
     this.drawGraph()
-    //this.countuAssessmentSummaryBarChartDataPoints = changes['countuAssessmentSummaryBarChartDataPoints'].currentValue
   }
   
 
@@ -33,10 +35,28 @@ export class AssessmentGraphComponent implements OnInit, OnChanges {
     const textColor = documentStyle.getPropertyValue('--text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
     const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+
+    this.labelsX = [];
+    this.dataY = [];
+    this.backgroundColorArray = [];
+    this.borderColorArray = [];
     
     this.countuAssessmentSummaryBarChartDataPoints?.forEach(d => {
       this.labelsX.push(d.x);
       this.dataY.push(d.y);
+      if (d.y >= 80){
+        this.backgroundColorArray.push('rgba(75, 192, 192, 0.2)');
+        this.borderColorArray.push('rgb(75, 192, 192)');
+    } else if (d.y >= 65) {
+        this.backgroundColorArray.push('rgba(54, 162, 235, 0.2)');
+        this.borderColorArray.push('rgb(54, 162, 235)');
+    }else if (d.y >= 50) {
+        this.backgroundColorArray.push('rgba(153, 102, 255, 0.2)');
+        this.borderColorArray.push('rgb(153, 102, 255)');
+    }else {
+        this.backgroundColorArray.push('rgba(255, 159, 64, 0.2)');
+        this.borderColorArray.push('rgb(255, 159, 64)');
+    }
     });
 
     this.basicData = {
@@ -45,8 +65,8 @@ export class AssessmentGraphComponent implements OnInit, OnChanges {
         {
           label: 'Score attained',
           data: this.dataY,
-          backgroundColor: ['rgba(255, 159, 64, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(153, 102, 255, 0.2)'],
-          borderColor: ['rgb(255, 159, 64)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)'],
+          backgroundColor: this.backgroundColorArray,
+          borderColor: this.borderColorArray,
           borderWidth: 1
         }
       ]

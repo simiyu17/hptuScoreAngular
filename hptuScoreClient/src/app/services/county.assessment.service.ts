@@ -20,8 +20,8 @@ export class CountyAssessmentService {
     return this.httpClient.post(`${this.globalService.BASE_API_URL}/county-assessments`, JSON.stringify(assessment));
   }
 
-  getCountyAssessmentByCountyYearAndQuater(countyCode: string, assessmentYear: string, assessmentQuarter: string): Observable<any> {
-    return this.httpClient.get(`${this.globalService.BASE_API_URL}/county-assessments/find-one?countyCode=${countyCode}&assessmentYear=${assessmentYear}&assessmentQuarter=${assessmentQuarter}`);
+  getCountyAssessmentByCountyYearAndQuater(assessment: CountyAssessmentMetaData): Observable<any> {
+    return this.httpClient.get(`${this.globalService.BASE_API_URL}/county-assessments/find-one?countyCode=${assessment.countyCode}&assessmentYear=${assessment.assessmentYear}&assessmentQuarter=${assessment.assessmentQuarter}`);
   }
 
   getCountyAssessmentById(assessmentId: number): Observable<any> {

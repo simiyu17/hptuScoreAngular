@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,6 +15,8 @@ import { CountyAssessmentService } from '../../services/county.assessment.servic
 import { Router, RouterLink } from '@angular/router';
 import { PillarsService } from '../../services/pillars.service';
 import { AssessmentPillar } from '../../models/AssessmentPillar';
+import { DashboardFilterComponent } from '../dashboard/dashboard-filter/dashboard-filter.component';
+import { UtilService } from '../../services/util.service';
 
 @Component({
   selector: 'app-county-assessments',
@@ -34,7 +36,7 @@ import { AssessmentPillar } from '../../models/AssessmentPillar';
   templateUrl: './county-assessments.component.html',
   styleUrl: './county-assessments.component.scss'
 })
-export class CountyAssessmentsComponent implements OnInit {
+export class CountyAssessmentsComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['countyName', 'assessmentYear', 'assessmentQuarter', 'assessmentLevel', 'action'];
   dataSource!: MatTableDataSource<CountyAssessmentMetaData>;
@@ -49,11 +51,12 @@ export class CountyAssessmentsComponent implements OnInit {
     private assessmentService: CountyAssessmentService, 
     private router: Router, 
     private gs: GlobalService,
-    private pillarService: PillarsService
+    private pillarService: PillarsService,
+    private utilService: UtilService
     ) { }
 
 
-  getTopFiveAssessments() {
+  getTopFiveAssessments2() {
     this.assessmentService.getTopFiveCountyAssessments()
       .subscribe({
         next: (response) => {
@@ -71,19 +74,52 @@ export class CountyAssessmentsComponent implements OnInit {
       .subscribe({
         next: (response) => {
           this.pillars = response;
-          console.log(this.pillars)
           this.canPerformAssessment = this.pillars !== undefined && this.pillars.every(p => p.pillarCategoryCount > 0);
         },
         error: (error) => { }
       });
   }
 
+  getTopFiveAssessments = () => {
+    this.utilService.currentAssessmentData().subscribe((ass?: CountyAssessmentMetaData) => {
+      if(ass){
+        this.assessmentService.getCountyAssessmentByCountyYearAndQuater(ass)
+        .subscribe({
+          next: (response) => {
+            this.assessments.push(response);
+            this.dataSource = new MatTableDataSource(this.assessments);
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+          },
+          error: (error) => { }
+        });
+      }else{
+        this.getTopFiveAssessments2();
+      }
+    })
+  }
+
   ngOnInit(): void {
+    this.assessments = []
     this.getAvailablePillars();
     this.getTopFiveAssessments();
   }
 
   deleteAssessment(id: number) {
     console.log(id)
+  }
+
+  openAssessmentFilterDialog() {
+    const dialogRef = this.dialog.open(DashboardFilterComponent);
+
+    dialogRef.afterClosed().subscribe({
+      next: (res) => {
+        this.ngOnInit();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.utilService.onAssessmentDataReceived()
   }
 }
