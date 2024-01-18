@@ -1,11 +1,11 @@
 package com.hptu.score.api;
 
 import com.hptu.score.dto.ApiResponseDto;
+import com.hptu.score.dto.AuthRequestDto;
 import com.hptu.score.dto.UserDto;
 import com.hptu.score.dto.UserPassChangeDto;
 import com.hptu.score.entity.User;
 import com.hptu.score.service.UserService;
-import com.hptu.score.util.AuthTokenUtil;
 import com.hptu.score.util.CommonUtil;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -15,39 +15,62 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.List;
 import java.util.Objects;
 
-@Path("api/v1/users")
+@Path("/v1/users")
 @ApplicationScoped
 public class UserResource extends CommonUtil {
     private final UserService userService;
-    private final AuthTokenUtil authTokenUtil;
 
-    public UserResource(UserService userService, AuthTokenUtil authTokenUtil) {
+    public UserResource(UserService userService) {
         this.userService = userService;
-        this.authTokenUtil = authTokenUtil;
+    }
+
+    @GET
+    @RolesAllowed("Admin")
+    public List<User> getUsers(){
+        return userService.getAllUsers();
     }
 
     @POST
-    @Path("authenticate")
+    @Path("/authenticate")
     @PermitAll
-    public String logissn() {
+    public Response authenticate(@Valid AuthRequestDto authRequestDto) {
         userService.createDefaultUser();
-        return "login";
+        return Response.ok(userService.authenticateUser(authRequestDto)).build();
     }
 
-
-
     @POST
-    @RolesAllowed("ADMIN")
+    @RolesAllowed("Admin")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response saveUserForm(UserDto newUser) {
+    public Response saveUser(@Valid UserDto newUser) {
         this.userService.createUser(newUser);
         return Response.status(Response.Status.CREATED).entity(new ApiResponseDto(true, "User Created!!")).build();
     }
 
+
+    @PUT
+    @Path("{userId}")
+    @RolesAllowed("Admin")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateUser(@PathParam("userId") Long userId, @Valid UserDto newUser) {
+        // TODO complete update
+        return Response.status(Response.Status.CREATED).entity(new ApiResponseDto(true, "User Created!!")).build();
+    }
+
+    @GET
+    @Path("{userId}")
+    @RolesAllowed("Admin")
+    public Response getUserById(@PathParam("userId") Long userId) {
+        return Response.ok(userService.findUserById(userId)).build();
+    }
+
+
+
     @POST
     @Path("change-password")
+    @RolesAllowed("Admin")
     public Response changePassword(@Valid UserPassChangeDto userDto) {
 
         try {
@@ -78,12 +101,5 @@ public class UserResource extends CommonUtil {
 
         return Response.ok().build();
 
-    }
-
-    @GET
-    @Path("token")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getToken() {
-        return this.authTokenUtil.generateJwt();
     }
 }

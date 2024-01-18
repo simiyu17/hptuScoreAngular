@@ -1,5 +1,8 @@
 package com.hptu.score.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.hptu.score.dto.AuthRequestDto;
+import com.hptu.score.dto.AuthResponseDto;
 import com.hptu.score.dto.UserDto;
 import com.hptu.score.entity.User;
 
@@ -12,6 +15,8 @@ public interface UserService {
     User findUserById(Long userId);
 
     User findUserByUsername(String userName);
+
+    AuthResponseDto authenticateUser(AuthRequestDto authRequestDto) throws JsonProcessingException;
 
     List<User> getAllUsers();
 

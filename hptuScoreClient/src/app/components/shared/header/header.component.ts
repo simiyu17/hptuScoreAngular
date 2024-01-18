@@ -22,11 +22,11 @@ export class HeaderComponent {
   constructor(private authService: AuthService){}
 
   logout(): void {
-    this.authService.logout();
+    this.authService.doLogout();
   }
 
   changePassword() {
-    this.authService.redirectToChangePassword()
+    //this.authService.redirectToChangePassword()
   }
 
 }

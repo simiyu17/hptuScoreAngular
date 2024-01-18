@@ -6,7 +6,7 @@ import com.hptu.score.entity.AssessmentPillar;
 import com.hptu.score.entity.AssessmentPillarCategory;
 import com.hptu.score.service.AssessmentDefinitionService;
 import com.hptu.score.util.CommonUtil;
-import io.quarkus.security.Authenticated;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
@@ -18,9 +18,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-@Path("api/v1/assessment-pillars")
+@Path("/v1/assessment-pillars")
 @ApplicationScoped
-@Authenticated
 public class AssessmentDefinitionResource extends CommonUtil {
 
     private final AssessmentDefinitionService assessmentDefinitionService;
@@ -30,6 +29,7 @@ public class AssessmentDefinitionResource extends CommonUtil {
     }
 
     @GET
+    @RolesAllowed("Admin")
     @Produces(MediaType.APPLICATION_JSON)
     public List<AssessmentPillar> getAvailablePillars(){
         return this.assessmentDefinitionService.getAvailableAssessmentPillars();
@@ -37,12 +37,14 @@ public class AssessmentDefinitionResource extends CommonUtil {
 
     @GET
     @Path("{pillarId}")
+    @RolesAllowed("Admin")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAvailablePillarById(@PathParam("pillarId") Long pillarId){
         return Response.ok(this.assessmentDefinitionService.findAssessmentPillarById(pillarId)).build();
     }
 
     @POST
+    @RolesAllowed("Admin")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response savePillar(@Valid AssessmentPillar newPillar) {
         this.assessmentDefinitionService.createAssessmentPillar(newPillar);
@@ -51,6 +53,7 @@ public class AssessmentDefinitionResource extends CommonUtil {
 
     @PUT
     @Path("{pillarId}")
+    @RolesAllowed("Admin")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updatePillar(@PathParam("pillarId") Long pillarId,  AssessmentPillar pillarUpdates) {
         this.assessmentDefinitionService.updateAssessmentPillar(pillarId, pillarUpdates);
@@ -59,6 +62,7 @@ public class AssessmentDefinitionResource extends CommonUtil {
 
     @DELETE
     @Path("{pillarId}")
+    @RolesAllowed("Admin")
     public Response removePillar(@PathParam("pillarId") Long pillarId) {
             this.assessmentDefinitionService.deleteAssessmentPillar(pillarId);
             return Response.ok(new ApiResponseDto(true, "Pillar Deleted !!")).build();
@@ -66,6 +70,7 @@ public class AssessmentDefinitionResource extends CommonUtil {
 
     @POST
     @Path("{pillarId}/categories")
+    @RolesAllowed("Admin")
     public Response addCategory(@PathParam("pillarId") Long pillarId, @Valid AssessmentChoiceDto newPillarChoice) {
             try {
                 if (!isCategoryChoiceFourMaxScore(newPillarChoice)){
@@ -86,6 +91,7 @@ public class AssessmentDefinitionResource extends CommonUtil {
 
     @PUT
     @Path("{pillarId}/categories/{categoryId}")
+    @RolesAllowed("Admin")
     public Response updateCategory(@PathParam("pillarId") Long pillarId, @PathParam("categoryId") Long categoryId, AssessmentPillarCategory updatedCategory) {
         try {
             AssessmentPillar currentPillar = this.assessmentDefinitionService.findAssessmentPillarById(pillarId);
@@ -107,6 +113,7 @@ public class AssessmentDefinitionResource extends CommonUtil {
 
     @GET
     @Path("{pillarId}/categories")
+    @RolesAllowed("Admin")
     @Produces(MediaType.APPLICATION_JSON)
     public List<AssessmentChoiceDto> getAvailableCategoriesByPillarId(@PathParam("pillarId") Long pillarId){
         return this.assessmentDefinitionService.getAvailableCategoriesByPillarId(pillarId);
@@ -115,6 +122,7 @@ public class AssessmentDefinitionResource extends CommonUtil {
 
     @DELETE
     @Path("{pillarId}/categories/{categoryId}")
+    @RolesAllowed("Admin")
     public Response removeCategory(@PathParam("pillarId") Long pillarId, @PathParam("categoryId") Long categoryId) {
         try {
             AssessmentPillar currentPillar = this.assessmentDefinitionService.findAssessmentPillarById(pillarId);

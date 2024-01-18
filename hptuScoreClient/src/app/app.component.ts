@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { KeycloakProfile } from 'keycloak-js';
-import { KeycloakService } from 'keycloak-angular';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from './services/auth.service';
 import { HeaderComponent } from './components/shared/header/header.component';
 import { SidebarComponent } from './components/shared/sidebar/sidebar.component';
 import { FooterComponent } from './components/shared/footer/footer.component';
 import { RouterOutlet } from '@angular/router';
+import { LoginComponent } from './components/login/login.component';
+import { HomeComponent } from './components/home/home.component';
 
 
 @Component({
@@ -15,28 +15,23 @@ import { RouterOutlet } from '@angular/router';
   imports: [
     RouterOutlet,
     CommonModule, 
-    HeaderComponent, 
-    SidebarComponent, 
-    FooterComponent
+    LoginComponent,
+    HomeComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   isUserLoggedIn: boolean = false;
 
-  public profile: KeycloakProfile | null = null;
-
-  constructor(private keycloakService: KeycloakService, private authService: AuthService) { }
+  constructor(private authService: AuthService) { }
 
   public userName = "";
-  async ngOnInit() {
-    if (this.keycloakService.isLoggedIn() && !this.keycloakService.isTokenExpired()) {
-      this.authService.setAuthToken(await this.keycloakService.getToken());
-      this.profile = await this.keycloakService.loadUserProfile();
-      this.userName += this.profile.username;
+  ngOnInit(): void {
+    if (this.authService.isAuthenticated()) {
+      this.isUserLoggedIn = true;
     }else {
-      this.authService.logout()
+      this.authService.doLogout()
     }
   }
 }

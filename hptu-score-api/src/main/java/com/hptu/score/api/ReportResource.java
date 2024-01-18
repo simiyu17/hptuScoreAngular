@@ -8,6 +8,7 @@ import com.hptu.score.entity.CountyAssessmentMetaData;
 import com.hptu.score.service.CountyAssessmentService;
 import com.hptu.score.util.CommonUtil;
 import com.hptu.score.util.ExcelGenerator;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.*;
@@ -21,20 +22,19 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@Path("api/v1/report")
+@Path("/v1/report")
 @ApplicationScoped
 public class ReportResource extends CommonUtil {
 
     private final CountyAssessmentService assessmentService;
-    private final ObjectMapper objectMapper;
 
-    public ReportResource(CountyAssessmentService assessmentService, ObjectMapper objectMapper) {
+    public ReportResource(CountyAssessmentService assessmentService) {
         this.assessmentService = assessmentService;
-        this.objectMapper = objectMapper;
     }
 
     @GET
     @Path("counties")
+    @RolesAllowed({"Admin", "User"})
     @Produces(MediaType.APPLICATION_JSON)
     public List<CountyDto> getAvailablePillars(){
         return getKenyanCounties();
@@ -42,6 +42,7 @@ public class ReportResource extends CommonUtil {
 
     @GET
     @Path("county-assessments-summary")
+    @RolesAllowed({"Admin", "User"})
     @Produces(MediaType.APPLICATION_JSON)
     public CountyAssessmentResultDetailedDto getCountyAssessmentSummary2(@QueryParam(value = "countyCode") String countyCode,
                                                                                @QueryParam(value = "assessmentQuarter") String assessmentQuarter,
@@ -63,6 +64,7 @@ public class ReportResource extends CommonUtil {
 
     @GET
     @Path("assessments-summary-per-pillar/{metaDataId}/{pillarName}")
+    @RolesAllowed({"Admin", "User"})
     @Produces(MediaType.APPLICATION_JSON)
     public CountyAssessmentResultDetailedDto getCountyAssessmentSummary(@PathParam(value = "metaDataId") Long metaDataId,
                                                @PathParam(value = "pillarName") String pillarName){
@@ -80,6 +82,7 @@ public class ReportResource extends CommonUtil {
 
     @GET
     @Path("export-to-excel2")
+    @RolesAllowed({"Admin", "User"})
     public void exportIntoExcelFile(HttpServletResponse response,
                                     @QueryParam(value = "metaDataId") Long metaDataId,
                                     @QueryParam(value = "countyName") String countyName,
@@ -106,6 +109,7 @@ public class ReportResource extends CommonUtil {
 
     @GET
     @Path("export-to-excel")
+    @RolesAllowed({"Admin", "User"})
     @Produces(MediaType.APPLICATION_JSON)
     public Response exportBase64ExcelFile(@QueryParam(value = "metaDataId") Long metaDataId,
                                           @QueryParam(value = "analysisByPillarTableTitle") String analysisByPillarTableTitle) throws IOException {

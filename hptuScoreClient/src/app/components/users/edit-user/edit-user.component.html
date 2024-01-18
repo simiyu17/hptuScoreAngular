@@ -1,0 +1,56 @@
+<div class="create-new-user-content">
+    <div mat-dialog-title class="form-header">
+      <h2>Edit User</h2>
+    </div>
+    <div>
+    <form [formGroup]="createUserForm" (ngSubmit)="onSubmitEditUser()">
+    <div mat-dialog-content class="form-fields">
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>First Name</mat-label>
+          <input matInput type="text" formControlName="firstName">
+        </mat-form-field>
+      </div>
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Last Name</mat-label>
+          <input matInput type="text" formControlName="lastName">
+        </mat-form-field>
+      </div>
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Email Address</mat-label>
+          <input matInput type="text" formControlName="username">
+        </mat-form-field>
+      </div>
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Designation</mat-label>
+          <input matInput type="text" formControlName="designation">
+        </mat-form-field>
+      </div>
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>CellPhone Number</mat-label>
+          <input matInput type="text" formControlName="cellPhone">
+        </mat-form-field>
+      </div>
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Pillar Name</mat-label>
+          <mat-select formControlName="isAdmin" required>
+            <mat-option [value]="true">Yes, User is Admin</mat-option>
+            <mat-option [value]="false">Not Admin</mat-option>
+        </mat-select>
+        </mat-form-field>
+      </div>
+  
+    </div>
+    <div mat-dialog-actions align="end" class="form-btns">
+      <button mat-raised-button mat-dialog-close>Cancel</button>
+      <button mat-raised-button cdkFocusInitial type="submit">Submit</button>
+    </div>
+  </form>
+  </div>
+  </div>
+  

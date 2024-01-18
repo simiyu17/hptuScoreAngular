@@ -2,7 +2,6 @@ package com.hptu.score.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import org.apache.commons.lang3.StringUtils;
 
 public class UserDto {
 
@@ -22,17 +21,19 @@ public class UserDto {
     @NotBlank
     private String cellPhone;
 
-    @NotBlank
-    private String role;
+    private boolean isActive;
 
-    public UserDto(Long id, String firstname, String lastName, String username, String designation, String cellPhone, String role) {
+    private boolean isAdmin;
+
+    public UserDto(Long id, String firstname, String lastName, String username, String designation, String cellPhone, boolean isActive, boolean isAdmin) {
         this.id = id;
         this.firstname = firstname;
         this.lastName = lastName;
         this.username = username;
         this.designation = designation;
         this.cellPhone = cellPhone;
-        this.role = StringUtils.upperCase(role);
+        this.isActive = isActive;
+        this.isAdmin = isAdmin;
     }
 
     public Long getId() {
@@ -83,11 +84,19 @@ public class UserDto {
         this.cellPhone = cellPhone;
     }
 
-    public String getRole() {
-        return role;
+    public boolean isAdmin() {
+        return isAdmin;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

@@ -1,78 +1,58 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { GlobalService } from './global.service';
-import { KeycloakService } from 'keycloak-angular';
-import { KeycloakProfile, KeycloakTokenParsed } from 'keycloak-js';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { UserRole } from '../models/UserRole';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private httpClient: HttpClient, private globalService: GlobalService, private keycloakService: KeycloakService) { }
+  USER_ROLE: UserRole = UserRole.NONE;
+  AUTH_TOKEN_KEY: string = 'auth_token';
+  USER_DETAILS_KEY: string = 'user_details';
+  jwtService: JwtHelperService = new JwtHelperService();
 
-  /*login(username: string, password: string) {
-    const body = new HttpParams()
-      .set('username', username)
-      .set('password', password)
-      .set('grant_type', 'password')
-      .set('client_id', this.globalService.KEY_CLOAK_CLIENT_ID);
+  constructor(private httpClient: HttpClient, private globalService: GlobalService, private router: Router) { }
+
+  login = (authRequest: {username: string, password: string}): Observable<any> => this.httpClient.post(`${this.globalService.BASE_API_URL}/users/authenticate`, JSON.stringify(authRequest))
+
+  public setLocalStorageValue = (key : string, value: any): void => localStorage.setItem(key, value)
+
+  public getAuthToken = (): string | null => localStorage.getItem(this.AUTH_TOKEN_KEY);
+
+  public clearLocalStorageValue = (): void => localStorage.clear();
   
-    return this.httpClient.post(`${this.globalService.BASE_KEY_CLOAK_URL}/realms/your-realm/protocol/openid-connect/token`, body.toString(), {
-      headers: new HttpHeaders()
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-    });
-  }*/
+  public decodeAuthToken = (): any =>  this.getAuthToken() === null ? null : this.jwtService.decodeToken(this.getAuthToken()!);
 
-  public setAuthToken(token : string): void {
-      localStorage.setItem('auth_token', token)
+  public storeUserDetails = (token?: string) : void => {
+    if(token){
+      this.setLocalStorageValue(this.AUTH_TOKEN_KEY, token);
+      this.setLocalStorageValue(this.USER_DETAILS_KEY, this.decodeAuthToken()['user']);
+    }
+  };
+
+  public isAuthenticated = () : boolean => this.getAuthToken() !== null && !this.jwtService.isTokenExpired(this.getAuthToken());
+
+  public isUserAdmin(): boolean {
+    return (this.decodeAuthToken()['groups'] as Array<string>).includes('Admin');
   }
 
-  public getAuthToken(): string | null {
-    return localStorage.getItem('auth_token');
-  }
-
-  public removeAuthToken(): void {
-    localStorage.removeItem('auth_token');
-  }
-
-  public getLoggedUser(): KeycloakTokenParsed | undefined {
-    try {
-      const userDetails: KeycloakTokenParsed | undefined = this.keycloakService.getKeycloakInstance()
-        .idTokenParsed;
-      return userDetails;
-    } catch (e) {
-      console.error("Exception", e);
-      return undefined;
+  userRedirection(): void {
+    if(this.isAuthenticated()){
+      this.router.navigate(['']);
+    }else {
+      this.doLogout();
     }
   }
 
-  public isLoggedIn() : boolean {
-    return this.keycloakService.isLoggedIn();
-  }
 
-  public loadUserProfile() : Promise<KeycloakProfile> {
-    return this.keycloakService.loadUserProfile();
-  }
-
-  public login() : void {
-    this.keycloakService.login();
-  }
-
-  public logout() : void {
-    this.removeAuthToken();
-    this.keycloakService.logout(window.location.origin);
-  }
-
-  public redirectToProfile(): void {
-    this.keycloakService.getKeycloakInstance().accountManagement();
-  }
-
-  public redirectToChangePassword() {
-    window.location.href = `${this.globalService.BASE_KEY_CLOAK_URL}/realms/${this.globalService.KEY_CLOAK_REALM}/protocol/openid-connect/auth?client_id=${this.globalService.KEY_CLOAK_CLIENT_ID}&redirect_uri=${window.location.origin}&response_type=code&scope=openid&kc_action=UPDATE_PASSWORD`;
-  }
-
-  public getRoles(): string[] {
-    return this.keycloakService.getUserRoles();
+  doLogout(): void {
+    this.clearLocalStorageValue();
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
+    this.router.navigate(['login']));
   }
 }

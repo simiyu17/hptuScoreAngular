@@ -5,6 +5,7 @@ import com.hptu.score.dto.CountyAssessmentDto;
 import com.hptu.score.entity.CountyAssessmentMetaData;
 import com.hptu.score.service.CountyAssessmentService;
 import com.hptu.score.util.CommonUtil;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Path("api/v1/county-assessments")
+@Path("/v1/county-assessments")
 @ApplicationScoped
 public class CountyAssessmentResource extends CommonUtil {
 
@@ -26,6 +27,7 @@ public class CountyAssessmentResource extends CommonUtil {
     }
 
     @GET
+    @RolesAllowed({"Admin", "User"})
     @Produces(MediaType.APPLICATION_JSON)
     public List<CountyAssessmentMetaData> getAvailableAssessments(){
         List<CountyAssessmentMetaData> list = new ArrayList<>();
@@ -40,12 +42,14 @@ public class CountyAssessmentResource extends CommonUtil {
 
     @GET
     @Path("{assessmentId}")
+    @RolesAllowed({"Admin", "User"})
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAssessmentById(@PathParam("assessmentId") Long assessmentId){
         return Response.ok(this.countyAssessmentService.findCountyAssessmentMetaDataById(assessmentId)).build();
     }
 
     @POST
+    @RolesAllowed({"Admin", "User"})
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createCountAssessment(@Valid CountyAssessmentDto newAssessment) {
         try {
@@ -59,6 +63,7 @@ public class CountyAssessmentResource extends CommonUtil {
 
     @GET
     @Path("find-one")
+    @RolesAllowed({"Admin", "User"})
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAssessmentById(@QueryParam("countyCode") String countyCode,
                                       @QueryParam("assessmentYear") String assessmentYear,
