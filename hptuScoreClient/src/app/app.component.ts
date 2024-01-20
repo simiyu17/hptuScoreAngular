@@ -1,12 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from './services/auth.service';
-import { HeaderComponent } from './components/shared/header/header.component';
-import { SidebarComponent } from './components/shared/sidebar/sidebar.component';
-import { FooterComponent } from './components/shared/footer/footer.component';
-import { RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
+import { filter, map } from 'rxjs';
 
 
 @Component({
@@ -21,17 +19,21 @@ import { HomeComponent } from './components/home/home.component';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit{
+export class AppComponent {
   isUserLoggedIn: boolean = false;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router){
 
-  public userName = "";
-  ngOnInit(): void {
-    if (this.authService.isAuthenticated()) {
-      this.isUserLoggedIn = true;
-    }else {
-      this.authService.doLogout()
-    }
+      this.router.events.subscribe((event: any) => {
+          this.navigationInterceptor(event);
+      })
   }
+
+  private navigationInterceptor(event: Event): void {
+    if (event instanceof NavigationEnd) {
+      this.isUserLoggedIn = this.authService.isAuthenticated();
+    }
+   
+  }
+
 }

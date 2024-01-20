@@ -1,102 +1,21 @@
-.gradient-custom-2 {
-    /* fallback for old browsers */
-    background: #fccb90;
-
-    /* Chrome 10-25, Safari 5.1-6 */
-    background: -webkit-linear-gradient(to right, #ecd8ca, #ac6838, #853f0e, #4d2101);
-
-    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    background: linear-gradient(to right, #ecd8ca, #ac6838, #853f0e, #4d2101);
+.login-wrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #afbdd3;
 }
-
-@media screen and (max-width: 640px) {
-    .main-content {
-        width: 90%;
+mat-card {
+      max-width: 600px;
+      margin: 2em auto;
+      text-align: center;
     }
-
-    .company__info {
-        display: none;
+    mat-form-field {
+      display: block;
     }
-
-    .login_form {
-        border-top-left-radius: 20px;
-        border-bottom-left-radius: 20px;
-    }
-}
-
-@media screen and (min-width: 642px) and (max-width:800px) {
-    .main-content {
-        width: 70%;
-    }
-}
-
-.row>h2 {
-    color: #008080;
-}
-
-.login_form {
-    background-color: #fff;
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
-    border-top: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-}
-
-form {
-    padding: 0 2em;
-}
-
-.form__input {
+    
+   img {
     width: 100%;
-    border: 0px solid transparent;
-    border-radius: 0;
-    border-bottom: 1px solid #aaa;
-    padding: 1em .5em .5em;
-    padding-left: 0.2em;
-    outline: none;
-    margin: 1.5em auto;
-    transition: all .5s ease;
-}
-
-.form__input:focus {
-    border-bottom-color: #008080;
-    box-shadow: 0 0 5px rgba(0, 80, 80, .4);
-    border-radius: 4px;
-}
-
-.btn {
-    transition: all .5s ease;
-    width: 70%;
-    border-radius: 30px;
-    color: #4d2101;
-    font-weight: 600;
-    background-color: #fff;
-    border: 1px solid #4d2101;
-    margin: auto;
-    margin-top: 1.5em;
-    margin-bottom: 1em;
-}
-
-.btn:hover,
-.btn:focus {
-    background-color: #4d2101;
-    color: #fff;
-}
-
-.forgot-pass {
-    display: flex;
-    justify-content: center;
-}
-
-@media (min-width: 768px) {
-    .gradient-form {
-        height: 100vh !important;
-    }
-}
-
-@media (min-width: 769px) {
-    .gradient-custom-2 {
-        border-top-right-radius: .3rem;
-        border-bottom-right-radius: .3rem;
-    }
-}
+    margin-bottom: 50px;
+   } 

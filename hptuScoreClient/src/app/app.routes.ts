@@ -1,11 +1,12 @@
 import { Routes } from '@angular/router';
 import { UsersComponent } from './components/users/users.component';
 import { LoginComponent } from './components/login/login.component';
+import { AuthGuard } from './util/AuthGuard';
 
 export const routes: Routes = [
-    {path: 'login', component: LoginComponent},
     {
         path : 'dashboard',
+        canActivateChild: [AuthGuard],
         children : [
             {
                 path: '',
@@ -20,6 +21,7 @@ export const routes: Routes = [
     {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
     {
         path : 'assessment-setup',
+        canActivateChild: [AuthGuard],
         children : [
             {
                 path: 'pillars',
@@ -33,6 +35,7 @@ export const routes: Routes = [
     },
     {
         path : 'county-assessments',
+        canActivateChild: [AuthGuard],
         children : [
             {
                 path: '',
@@ -44,5 +47,5 @@ export const routes: Routes = [
             }
         ]
     }, 
-    {path: 'users', component: UsersComponent},
+    {path: 'users', component: UsersComponent, canActivate: [AuthGuard]},
 ];

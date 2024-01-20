@@ -1,53 +1,30 @@
-<section class="h-100 gradient-form" style="background-color: #a49fec;">
-    <div class="container py-5 h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-xl-10">
-          <div class="card rounded-3 text-black">
-            <div class="row g-0">
-              <div class="col-lg-6">
-                <div class="card-body p-md-5 mx-md-4">
-  
-                  <div class="text-center">
-                    <img src="assets/mohlogo.png"
-                      style="width: 185px;" alt="logo">
-                    <h4 class="mt-1 mb-5 pb-1">Sample Online Bank</h4>
-                  </div>
-  
-                  <div class="row">
-                    <form [formGroup]="userloginForm" control="" class="form-group" novalidate>
-                      <div class="row">
-                        <input #usernameRef type="text" name="username" id="username" class="form__input" placeholder="Enter email address" formControlName="username">
-                      </div>
-                      <div class="row">
-                        <input type="password" name="password" id="password" class="form__input" placeholder="Enter Password" formControlName="password">
-                      </div>
+<div class="login-wrapper">
+  <mat-card>
+    <mat-card-content>
+      <form [formGroup]="userloginForm">
+        <img src="assets/mohlogo.png" alt="Logo"/>
+        <h2>Log In</h2>
+        
+        <mat-form-field class="full-width-input">
+          <input #usernameRef matInput type="email" placeholder="Email" formControlName="username" required>
+          <mat-error>
+            Please provide a valid email address
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="full-width-input">
+          <input matInput type="password" placeholder="Password" formControlName="password" required>
+          <mat-error>
+            Please provide a password
+          </mat-error>
+        </mat-form-field>
+        <mat-error *ngIf="invalidLogin">
+          Invalid username and/or password
+        </mat-error>
+        <button mat-raised-button color="primary" (click)="onUserLoginSubmit()" [disabled]="userloginForm.invalid">Login</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
 
-                      <div *ngIf="invalidLogin" class="error">
-                        <div class="alert alert-danger">{{msg}}</div>
-                      </div>
-                
-                      <div class="row">
-                        <input type="submit" value="Submit" class="btn" (click) = "onUserLoginSubmit()">
-                      </div>
-                      <div class="forgot-pass">
-                        <a href="#" class="text-primary">Forgot Password?</a>
-                    </div>
-                    </form>
-                  </div>
   
-                </div>
-              </div>
-              <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
-                <div class="text-white px-3 py-4 p-md-5 mx-md-4">
-                  <h4 class="mb-4">We are more than just a bank</h4>
-                  <p class="small mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  

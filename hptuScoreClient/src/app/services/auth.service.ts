@@ -52,7 +52,6 @@ export class AuthService {
 
   doLogout(): void {
     this.clearLocalStorageValue();
-    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
-    this.router.navigate(['login']));
+    this.router.navigate(['']);
   }
 }

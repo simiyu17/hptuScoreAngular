@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public AuthResponseDto authenticateUser(AuthRequestDto authRequestDto) throws JsonProcessingException {
+    public AuthResponseDto authenticateUser(AuthRequestDto authRequestDto) {
         var user = findUserByUsername(authRequestDto.username());
         if(Objects.isNull(user) || !user.getPassword().equals(authRequestDto.password())){
             throw new UserNotAuthenticatedException("Invalid username and/or password!!");

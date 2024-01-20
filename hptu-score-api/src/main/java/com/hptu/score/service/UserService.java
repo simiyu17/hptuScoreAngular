@@ -16,7 +16,7 @@ public interface UserService {
 
     User findUserByUsername(String userName);
 
-    AuthResponseDto authenticateUser(AuthRequestDto authRequestDto) throws JsonProcessingException;
+    AuthResponseDto authenticateUser(AuthRequestDto authRequestDto);
 
     List<User> getAllUsers();
 

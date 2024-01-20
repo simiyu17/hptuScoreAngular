@@ -16,7 +16,7 @@
         align-items: center;
 
         a {
-            border: 1px #04AA6D solid; 
+            border: 1px #266fe4 solid; 
         }
         p {
             border: 1px red solid; 
@@ -27,11 +27,11 @@
     .assessments-table-content {
         width: 100%;
         height: 100%;
-        border: 1px #04AA6D solid;
+        border: 1px #266fe4 solid;
         flex: 70%;
 
         mat-toolbar {
-            border-bottom: 1px #04AA6D solid;
+            border-bottom: 1px #266fe4 solid;
             margin-bottom: 20px;
             overflow: hidden;
 
@@ -41,7 +41,7 @@
 
             button {
                 color: aliceblue;
-                background-color: #04AA6D;
+                background-color: #266fe4;
                 margin: 10px auto;
             }
         }
