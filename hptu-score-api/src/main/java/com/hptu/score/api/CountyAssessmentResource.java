@@ -74,4 +74,13 @@ public class CountyAssessmentResource extends CommonUtil {
         }
         return Response.ok(res).build();
     }
+
+    @DELETE
+    @Path("{assessmentId}")
+    @RolesAllowed({"Admin", "User"})
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteAssessmentById(@PathParam("assessmentId") Long assessmentId){
+        countyAssessmentService.deleteCountyAssessmentMetaData(assessmentId);
+        return Response.ok(new ApiResponseDto(true, "County assessment was submitted!!")).build();
+    }
 }

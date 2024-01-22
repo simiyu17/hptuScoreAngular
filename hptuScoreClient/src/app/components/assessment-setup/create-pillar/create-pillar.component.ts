@@ -42,7 +42,6 @@ export class CreatePillarComponent {
   }
 
   onSubmitNewPillar(): void {
-    console.log(this.createPillarForm.valid)
     if (this.createPillarForm.valid) {
       this.pillarService.createPillar(this.createPillarForm.value)
         .subscribe({
@@ -51,12 +50,7 @@ export class CreatePillarComponent {
             this.dialogRef.close();
           },
           error: (error) => {
-            console.log(error)
-            if (error.error.message) {
-              alert(error.error.message);
-            }
-            this.gs.openSnackBar(`An error occured ${error.error}`, "Dismiss");
-            console.log(error)
+            this.gs.openSnackBar(`An error occured: ${error.error.message}`, "Dismiss");
           }
         });
     }

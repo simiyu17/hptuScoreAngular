@@ -1,6 +1,6 @@
 <div class="create-new-Pillar-content">
     <div mat-dialog-title class="form-header">
-      <h2>Edit Assessment Pillar</h2>
+      <h2>{{formTitle}}</h2>
     </div>
     <div>
     <form [formGroup]="createPillarCategoryForm" (ngSubmit)="onSubmitEditPillarCategory()">
@@ -9,12 +9,18 @@
         <mat-form-field appearance="outline">
           <mat-label>Category Name</mat-label>
           <input matInput type="text" formControlName="category">
+          <mat-error>
+            Field is required
+          </mat-error>
         </mat-form-field>
       </div>
       <div class="form-row">  
         <mat-form-field appearance="outline">
           <mat-label>Category Order</mat-label>
-          <input matInput type="number" formControlName="categoryOrder">
+          <input matInput type="number" formControlName="categoryOrder" required>
+          <mat-error>
+            Min value allowed is 1
+          </mat-error>
         </mat-form-field>
       </div>
 
@@ -22,54 +28,78 @@
         <mat-form-field appearance="outline">
           <mat-label>Choice One</mat-label>
           <textarea matInput type="text" formControlName="choiceOne" cols="5"></textarea>
+          <mat-error>
+            Field is required
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
             <mat-label>Choice One Score</mat-label>
-            <input matInput type="number" formControlName="choiceOneScore">
+            <input matInput type="number" formControlName="choiceOneScore" required>
+            <mat-error>
+              Min value allowed is 1
+            </mat-error>
           </mat-form-field>
       </div>
 
       <div class="form-row">  
         <mat-form-field appearance="outline">
           <mat-label>Choice Two</mat-label>
-          <input matInput type="text" formControlName="choiceTwo">
+          <textarea matInput type="text" formControlName="choiceTwo" cols="5"></textarea>
+          <mat-error>
+            Field is required
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
             <mat-label>Choice Two Score</mat-label>
-            <input matInput type="number" formControlName="choiceTwoScore">
+            <input matInput type="number" formControlName="choiceTwoScore" required>
+            <mat-error>
+              Min value allowed is 1
+            </mat-error>
           </mat-form-field>
       </div>
 
       <div class="form-row">  
         <mat-form-field appearance="outline">
           <mat-label>Choice Three</mat-label>
-          <input matInput type="text" formControlName="choiceThree">
+          <textarea matInput type="text" formControlName="choiceThree" cols="5"></textarea>
+          <mat-error>
+            Field is required
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
             <mat-label>Choice Three Score</mat-label>
-            <input matInput type="number" formControlName="choiceThreeScore">
+            <input matInput type="number" formControlName="choiceThreeScore" required>
+            <mat-error>
+              Min value allowed is 1
+            </mat-error>
           </mat-form-field>
       </div>
 
       <div class="form-row">  
         <mat-form-field appearance="outline">
           <mat-label>Choice Four</mat-label>
-          <input matInput type="text" formControlName="choiceFour">
+          <textarea matInput type="text" formControlName="choiceFour" cols="5"></textarea>
+          <mat-error>
+            Field is required
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
             <mat-label>Choice Four Score</mat-label>
-            <input matInput type="number" formControlName="choiceFourScore">
+            <input matInput type="number" formControlName="choiceFourScore" required>
+            <mat-error>
+              Min value allowed is 1
+            </mat-error>
           </mat-form-field>
       </div>
   
     </div>
     <div mat-dialog-actions align="end" class="form-btns">
       <button mat-raised-button mat-dialog-close>Cancel</button>
-      <button mat-raised-button cdkFocusInitial type="submit">Submit</button>
+      <button mat-raised-button cdkFocusInitial type="submit" [disabled]="createPillarCategoryForm.invalid">{{formBtnText}}</button>
     </div>
   </form>
   </div>

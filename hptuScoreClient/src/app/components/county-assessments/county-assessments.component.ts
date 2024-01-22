@@ -17,6 +17,8 @@ import { PillarsService } from '../../services/pillars.service';
 import { AssessmentPillar } from '../../models/AssessmentPillar';
 import { DashboardFilterComponent } from '../dashboard/dashboard-filter/dashboard-filter.component';
 import { UtilService } from '../../services/util.service';
+import { ConfirmDialogModel } from '../../models/ConfirmDialogModel';
+import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-county-assessments',
@@ -105,8 +107,26 @@ export class CountyAssessmentsComponent implements OnInit, OnDestroy {
     this.getTopFiveAssessments();
   }
 
-  deleteAssessment(id: number) {
-    console.log(id)
+  deleteAssessment(assessmentId: number): void {
+    const dialogData = new ConfirmDialogModel("Confirm", `Are you sure you want to delete this category?`);
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: "400px",
+      data: dialogData
+    });
+
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      if(dialogResult){
+        this.assessmentService.deleteCountyAssessmentById(assessmentId)
+        .subscribe({
+          next: (response) => {
+            this.gs.openSnackBar(response.message, "Dismiss");
+            this.getTopFiveAssessments()
+          },
+          error: (error) => { 
+          }
+        });
+      }
+    });
   }
 
   openAssessmentFilterDialog() {

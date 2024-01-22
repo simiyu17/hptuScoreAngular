@@ -14,6 +14,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { PillarCategory } from '../../../models/PillarCategory';
 import { PillarsService } from '../../../services/pillars.service';
 import { NewPillarCategory } from '../../../models/NewPillarCategory';
+import { ConfirmDialogModel } from '../../../models/ConfirmDialogModel';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
+import { GlobalService } from '../../../services/global.service';
 
 @Component({
   selector: 'app-pillar-categories',
@@ -42,7 +45,12 @@ export class PillarCategoriesComponent {
 
   pillarId?: any;
   categories?: PillarCategory[];
-  constructor(public dialog: MatDialog, private pillarService: PillarsService, private router: ActivatedRoute) { }
+  constructor(
+    public dialog: MatDialog, 
+    private pillarService: PillarsService, 
+    private router: ActivatedRoute,
+    private gs: GlobalService
+    ) { }
 
   openEditPillarCategoryDialog(category: PillarCategory | NewPillarCategory) {
     const dialogRef = this.dialog.open(EditCategoryComponent, {data: {category: category, pillarId: this.pillarId}});
@@ -67,10 +75,6 @@ export class PillarCategoriesComponent {
       });
   }
 
-  ngAfterViewInit() {
-    
-  }
-
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -83,5 +87,27 @@ export class PillarCategoriesComponent {
   ngOnInit(): void {
     this.pillarId = this.router.snapshot.paramMap.get('id');
     this.getAvailablePillarCategories();
+  }
+
+  deletePillarCategory(categoryId: number): void {
+    const dialogData = new ConfirmDialogModel("Confirm", `Are you sure you want to delete this category?`);
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: "400px",
+      data: dialogData
+    });
+
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      if(dialogResult){
+        this.pillarService.deletePillarCategoryById(this.pillarId, categoryId)
+        .subscribe({
+          next: (response) => {
+            this.gs.openSnackBar(response.message, "Dismiss");
+            this.getAvailablePillarCategories()
+          },
+          error: (error) => { 
+          }
+        });
+      }
+    });
   }
 }

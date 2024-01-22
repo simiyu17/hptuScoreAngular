@@ -15,8 +15,6 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
 
 @Path("/v1/assessment-pillars")
 @ApplicationScoped
@@ -55,7 +53,7 @@ public class AssessmentDefinitionResource extends CommonUtil {
     @Path("{pillarId}")
     @RolesAllowed("Admin")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updatePillar(@PathParam("pillarId") Long pillarId,  AssessmentPillar pillarUpdates) {
+    public Response updatePillar(@PathParam("pillarId") Long pillarId, @Valid  AssessmentPillar pillarUpdates) {
         this.assessmentDefinitionService.updateAssessmentPillar(pillarId, pillarUpdates);
         return Response.ok(new ApiResponseDto(true, "Pillar Created!!")).build();
     }
@@ -71,6 +69,7 @@ public class AssessmentDefinitionResource extends CommonUtil {
     @POST
     @Path("{pillarId}/categories")
     @RolesAllowed("Admin")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response addCategory(@PathParam("pillarId") Long pillarId, @Valid AssessmentChoiceDto newPillarChoice) {
             try {
                 if (!isCategoryChoiceFourMaxScore(newPillarChoice)){
@@ -92,19 +91,20 @@ public class AssessmentDefinitionResource extends CommonUtil {
     @PUT
     @Path("{pillarId}/categories/{categoryId}")
     @RolesAllowed("Admin")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response updateCategory(@PathParam("pillarId") Long pillarId, @PathParam("categoryId") Long categoryId, AssessmentPillarCategory updatedCategory) {
         try {
-            AssessmentPillar currentPillar = this.assessmentDefinitionService.findAssessmentPillarById(pillarId);
-            Set<AssessmentPillarCategory> pillarChoices = currentPillar.getAssessmentChoices();
+            var currentPillar = this.assessmentDefinitionService.findAssessmentPillarById(pillarId);
+            var pillarChoices = currentPillar.getAssessmentChoices();
 
-            Optional<AssessmentPillarCategory> choiceToUpdate = pillarChoices.stream().filter(c -> Objects.equals(c.getId(), categoryId)).findFirst();
+            var choiceToUpdate = pillarChoices.stream().filter(c -> Objects.equals(c.getId(), categoryId)).findFirst();
             if(choiceToUpdate.isPresent()){
                 AssessmentPillarCategory category = choiceToUpdate.get();
                 category.setCategory(updatedCategory.getCategory());
                 //:TODO Complete the update method
                 this.assessmentDefinitionService.createAssessmentPillar(currentPillar);
             }
-            return Response.ok(new ApiResponseDto(true, "Successfully Done!!")).build();
+            return Response.ok(new ApiResponseDto(true, "Successfully Updated!!")).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ApiResponseDto(true, "An Error Occurred!!")).build();
         }
@@ -123,18 +123,19 @@ public class AssessmentDefinitionResource extends CommonUtil {
     @DELETE
     @Path("{pillarId}/categories/{categoryId}")
     @RolesAllowed("Admin")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response removeCategory(@PathParam("pillarId") Long pillarId, @PathParam("categoryId") Long categoryId) {
         try {
-            AssessmentPillar currentPillar = this.assessmentDefinitionService.findAssessmentPillarById(pillarId);
-            Set<AssessmentPillarCategory> pillarChoices = currentPillar.getAssessmentChoices();
+            var currentPillar = this.assessmentDefinitionService.findAssessmentPillarById(pillarId);
+            var pillarChoices = currentPillar.getAssessmentChoices();
 
-            Optional<AssessmentPillarCategory> choiceToremove = pillarChoices.stream().filter(c -> Objects.equals(c.getId(), categoryId)).findFirst();
-            if(choiceToremove.isPresent()){
-                pillarChoices.remove(choiceToremove.get());
+            var choiceToRemove = pillarChoices.stream().filter(c -> Objects.equals(c.getId(), categoryId)).findFirst();
+            if(choiceToRemove.isPresent()){
+                pillarChoices.remove(choiceToRemove.get());
                 currentPillar.setAssessmentChoices(pillarChoices);
                 this.assessmentDefinitionService.createAssessmentPillar(currentPillar);
             }
-            return Response.ok("Successfully Done!!").build();
+            return Response.ok(new ApiResponseDto(true, "Successfully Deleted!!")).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), "An Error Occurred!!").build();
         }

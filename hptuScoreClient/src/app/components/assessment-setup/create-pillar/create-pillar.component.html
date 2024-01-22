@@ -9,12 +9,18 @@
         <mat-form-field appearance="outline">
           <mat-label>Pillar Name</mat-label>
           <input matInput type="text" formControlName="pillarName">
+          <mat-error>
+            Name is required
+          </mat-error>
         </mat-form-field>
       </div>
       <div class="form-row">  
         <mat-form-field appearance="outline">
           <mat-label>Pillar Order</mat-label>
-          <input matInput type="number" formControlName="pillarOrder">
+          <input matInput type="number" min="1" formControlName="pillarOrder">
+          <mat-error>
+            Min value allowed is 1
+          </mat-error>
         </mat-form-field>
       </div>
   

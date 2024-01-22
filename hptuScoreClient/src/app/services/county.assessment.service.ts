@@ -27,4 +27,8 @@ export class CountyAssessmentService {
   getCountyAssessmentById(assessmentId: number): Observable<any> {
     return this.httpClient.get(`${this.globalService.BASE_API_URL}/county-assessments/${assessmentId}`);
   }
+
+  deleteCountyAssessmentById(assessmentId: number): Observable<any> {
+    return this.httpClient.delete(`${this.globalService.BASE_API_URL}/county-assessments/${assessmentId}`);
+  }
 }

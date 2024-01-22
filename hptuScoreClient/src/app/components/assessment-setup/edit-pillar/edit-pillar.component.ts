@@ -39,12 +39,11 @@ export class EditPillarComponent {
   createNewPillarForm(): void {
     this.createPillarForm = this.fb.group({
       pillarName: [this.data.pillarName, Validators.required],
-      pillarOrder: [this.data.pillarOrder, Validators.required]
+      pillarOrder: [this.data.pillarOrder, Validators.min(1)]
     });
   }
 
   onSubmitEditPillar(): void {
-    console.log(this.createPillarForm.valid)
     if (this.createPillarForm.valid) {
       this.pillarService.updatePillarById(this.data.id, this.createPillarForm.value)
         .subscribe({
@@ -53,12 +52,7 @@ export class EditPillarComponent {
             this.dialogRef.close();
           },
           error: (error) => {
-            console.log(error)
-            if (error.error.message) {
-              alert(error.error.message);
-            }
-            this.gs.openSnackBar(`An error occured ${error.error}`, "Dismiss");
-            console.log(error)
+            this.gs.openSnackBar(`An error occured: ${error.error.message}`, "Dismiss");
           }
         });
     }
