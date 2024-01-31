@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GlobalService } from '../../services/global.service';
 import { AuthService } from '../../services/auth.service';
@@ -25,26 +25,23 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent implements AfterViewInit {
+export class LoginComponent implements OnInit {
 
   userloginForm: FormGroup = this.fb.group({});
   invalidLogin = false;
   msg: string = "";
-  authResponse?: {success: boolean, message: string, authToken: string}
-  @ViewChild('usernameRef') usernameElementRef: ElementRef = {} as ElementRef;
+  authResponse?: { success: boolean, message: string, authToken: string }
   constructor(private fb: FormBuilder, private us: UserService, private gs: GlobalService, private router: Router, private authService: AuthService) {
     this.createUserloginForm();
   }
 
-  ngAfterViewInit(): void {
-    this.usernameElementRef.nativeElement.focus();
-  }
 
   createUserloginForm(): void {
     this.userloginForm = this.fb.group({
       username: [null, Validators.email],
       password: [null, Validators.required]
     });
+
   }
 
   onUserLoginSubmit(): void {
@@ -53,7 +50,7 @@ export class LoginComponent implements AfterViewInit {
         this.authResponse = response
         this.authService.storeUserDetails(this.authResponse?.authToken);
         this.authService.userRedirection();
-        
+
       }, error: (error: HttpErrorResponse) => {
         this.invalidLogin = true;
       }

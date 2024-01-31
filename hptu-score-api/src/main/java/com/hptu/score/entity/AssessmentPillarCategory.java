@@ -2,6 +2,7 @@ package com.hptu.score.entity;
 
 import com.hptu.score.dto.AssessmentChoiceDto;
 import jakarta.persistence.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -152,6 +153,43 @@ public class AssessmentPillarCategory extends BaseEntity {
                 assessmentChoiceDto.choiceTwo(), assessmentChoiceDto.choiceTwoScore(), assessmentChoiceDto.choiceThree(),
                 assessmentChoiceDto.choiceThreeScore(), assessmentChoiceDto.choiceFour(), assessmentChoiceDto.choiceFourScore(),
                 assessmentChoiceDto.categoryOrder());
+    }
+
+    public void updateCategory(AssessmentPillarCategory categoryUpdate){
+        if(!StringUtils.equals(categoryUpdate.getCategory(), this.category)){
+            this.category = categoryUpdate.getCategory();
+        }
+        if(categoryUpdate.getCategoryOrder() !=  this.categoryOrder){
+            this.categoryOrder = categoryUpdate.getCategoryOrder();
+        }
+
+        if(!StringUtils.equals(categoryUpdate.getChoiceOne(), this.choiceOne)){
+            this.choiceOne = categoryUpdate.getChoiceOne();
+        }
+        if(categoryUpdate.getChoiceOneScore() !=  this.choiceOneScore){
+            this.choiceOneScore = categoryUpdate.getChoiceOneScore();
+        }
+
+        if(!StringUtils.equals(categoryUpdate.getChoiceTwo(), this.choiceTwo)){
+            this.choiceTwo = categoryUpdate.getChoiceTwo();
+        }
+        if(categoryUpdate.getChoiceTwoScore()!=  this.choiceTwoScore){
+            this.choiceTwoScore = categoryUpdate.getChoiceTwoScore();
+        }
+
+        if(!StringUtils.equals(categoryUpdate.getChoiceThree(), this.choiceThree)){
+            this.choiceThree = categoryUpdate.getChoiceThree();
+        }
+        if(categoryUpdate.getChoiceThreeScore()!=  this.choiceThreeScore){
+            this.choiceThreeScore = categoryUpdate.getChoiceThreeScore();
+        }
+
+        if(!StringUtils.equals(categoryUpdate.getChoiceFour(), this.choiceFour)){
+            this.choiceFour = categoryUpdate.getChoiceFour();
+        }
+        if(categoryUpdate.getChoiceFourScore() !=  this.choiceFourScore){
+            this.choiceFourScore = categoryUpdate.getChoiceFourScore();
+        }
     }
 
     @Override

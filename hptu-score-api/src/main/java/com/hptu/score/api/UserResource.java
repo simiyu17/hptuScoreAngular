@@ -54,9 +54,9 @@ public class UserResource extends CommonUtil {
     @Path("{userId}")
     @RolesAllowed("Admin")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateUser(@PathParam("userId") Long userId, @Valid UserDto newUser) {
-        // TODO complete update
-        return Response.status(Response.Status.CREATED).entity(new ApiResponseDto(true, "User Created!!")).build();
+    public Response updateUser(@PathParam("userId") Long userId, UserDto newUser) {
+        this.userService.updateUser(userId, newUser);
+        return Response.ok(new ApiResponseDto(true, "User Updated !!")).build();
     }
 
     @GET

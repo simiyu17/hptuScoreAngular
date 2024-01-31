@@ -2,8 +2,10 @@ package com.hptu.score.entity;
 
 import com.hptu.score.dto.UserDto;
 import jakarta.persistence.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import io.quarkus.elytron.security.common.BcryptUtil;
 
 @Entity
 @Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = { "email_address" }, name = "EMAIL_UNIQUE")})
@@ -42,7 +44,7 @@ public class User extends BaseEntity {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
-        this.password = username;
+        this.password = BcryptUtil.bcryptHash(username);
         this.designation = designation;
         this.cellPhone = cellPhone;
         this.isActive = isActive;
@@ -106,7 +108,28 @@ public class User extends BaseEntity {
     }
 
     public static User createUser(UserDto userDto){
-        return new User(userDto.getFirstname(), userDto.getLastName(), userDto.getUsername(), userDto.getDesignation(), userDto.getCellPhone(), userDto.isActive(), userDto.isAdmin());
+        return new User(userDto.getFirstName(), userDto.getLastName(), userDto.getUsername(), userDto.getDesignation(), userDto.getCellPhone(), userDto.isActive(), userDto.isAdmin());
+    }
+
+    public void updateUser(UserDto userDto){
+        if(!StringUtils.equals(userDto.getFirstName(), this.firstName)){
+            this.firstName = userDto.getFirstName();
+        }
+        if(!StringUtils.equals(userDto.getLastName(), this.lastName)){
+            this.lastName = userDto.getFirstName();
+        }
+        if(!StringUtils.equals(userDto.getDesignation(), this.designation)){
+            this.designation = userDto.getDesignation();
+        }
+        if(!StringUtils.equals(userDto.getCellPhone(), this.cellPhone)){
+            this.cellPhone = userDto.getCellPhone();
+        }
+        if(userDto.isActive() != this.isActive){
+            this.isActive = userDto.isActive();
+        }
+        if(userDto.isAdmin() != this.isAdmin){
+            this.isAdmin = userDto.isAdmin();
+        }
     }
 
     @Override

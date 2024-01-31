@@ -2,11 +2,11 @@
   <mat-card>
     <mat-card-content>
       <form [formGroup]="userloginForm">
-        <img src="assets/mohlogo.png" alt="Logo"/>
+        <img src="assets/mohlogo.png" alt="Logo" />
         <h2>Log In</h2>
-        
+
         <mat-form-field class="full-width-input">
-          <input #usernameRef matInput type="email" placeholder="Email" formControlName="username" required>
+          <input matInput type="email" placeholder="Email" formControlName="username" autocomplete="off" required>
           <mat-error>
             Please provide a valid email address
           </mat-error>
@@ -20,11 +20,9 @@
         <mat-error *ngIf="invalidLogin">
           Invalid username and/or password
         </mat-error>
-        <button mat-raised-button color="primary" (click)="onUserLoginSubmit()" [disabled]="userloginForm.invalid">Login</button>
+        <button mat-raised-button color="primary" (click)="onUserLoginSubmit()"
+          [disabled]="userloginForm.invalid">Login</button>
       </form>
     </mat-card-content>
   </mat-card>
 </div>
-
-  
-  

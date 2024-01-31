@@ -100,8 +100,7 @@ public class AssessmentDefinitionResource extends CommonUtil {
             var choiceToUpdate = pillarChoices.stream().filter(c -> Objects.equals(c.getId(), categoryId)).findFirst();
             if(choiceToUpdate.isPresent()){
                 AssessmentPillarCategory category = choiceToUpdate.get();
-                category.setCategory(updatedCategory.getCategory());
-                //:TODO Complete the update method
+                category.updateCategory(updatedCategory);
                 this.assessmentDefinitionService.createAssessmentPillar(currentPillar);
             }
             return Response.ok(new ApiResponseDto(true, "Successfully Updated!!")).build();

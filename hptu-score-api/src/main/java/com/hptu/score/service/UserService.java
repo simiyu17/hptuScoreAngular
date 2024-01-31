@@ -12,6 +12,8 @@ public interface UserService {
 
     User createUser(UserDto user);
 
+    User updateUser(Long userId, UserDto user);
+
     User findUserById(Long userId);
 
     User findUserByUsername(String userName);

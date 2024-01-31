@@ -9,6 +9,7 @@ import com.hptu.score.exception.UserNotAuthenticatedException;
 import com.hptu.score.exception.UserNotFoundException;
 import com.hptu.score.repository.UserRepository;
 import com.hptu.score.util.AuthTokenUtil;
+import io.quarkus.elytron.security.common.BcryptUtil;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
@@ -29,7 +30,25 @@ public class UserServiceImpl implements UserService{
     @Transactional
     @Override
     public User createUser(UserDto user) {
-        return this.userRepository.save(User.createUser(user));
+        try {
+            return this.userRepository.save(User.createUser(user));
+        }catch (Exception e){
+            throw new IllegalArgumentException(e);
+        }
+
+    }
+
+    @Transactional
+    @Override
+    public User updateUser(Long userId, UserDto user) {
+        var currentUser = this.findUserById(userId);
+        try {
+            currentUser.updateUser(user);
+            return this.userRepository.save(currentUser);
+        }catch (Exception e){
+            throw new IllegalArgumentException(e);
+        }
+
     }
 
     @Override
@@ -46,11 +65,9 @@ public class UserServiceImpl implements UserService{
     @Override
     public AuthResponseDto authenticateUser(AuthRequestDto authRequestDto) {
         var user = findUserByUsername(authRequestDto.username());
-        if(Objects.isNull(user) || !user.getPassword().equals(authRequestDto.password())){
+        if(Objects.isNull(user) || !BcryptUtil.matches(authRequestDto.password(), user.getPassword())){
             throw new UserNotAuthenticatedException("Invalid username and/or password!!");
         }
-        // TODO hash passwords and compare them
-
         return new AuthResponseDto(true, "User Authenticated!!", authTokenUtil.generateJwt(user));
     }
 

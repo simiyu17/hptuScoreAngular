@@ -7,7 +7,7 @@ public class UserDto {
 
     private Long id;
     @NotBlank
-    private String firstname;
+    private String firstName;
 
     @NotBlank
     private String lastName;
@@ -25,9 +25,9 @@ public class UserDto {
 
     private boolean isAdmin;
 
-    public UserDto(Long id, String firstname, String lastName, String username, String designation, String cellPhone, boolean isActive, boolean isAdmin) {
+    public UserDto(Long id, String firstName, String lastName, String username, String designation, String cellPhone, boolean isActive, boolean isAdmin) {
         this.id = id;
-        this.firstname = firstname;
+        this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.designation = designation;
@@ -44,12 +44,12 @@ public class UserDto {
         this.id = id;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setFirstName(String firstname) {
+        this.firstName = firstname;
     }
 
     public String getLastName() {
