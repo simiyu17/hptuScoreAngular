@@ -53,6 +53,7 @@ export class LoginComponent implements OnInit {
 
       }, error: (error: HttpErrorResponse) => {
         this.invalidLogin = true;
+        this.gs.openSnackBar(`An error occured: ${error.error.message}`, "Dismiss");
       }
     });
   }
