@@ -76,7 +76,7 @@ export class CountyAssessmentsComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           this.pillars = response;
-          this.canPerformAssessment = this.pillars !== undefined && this.pillars.every(p => p.pillarCategoryCount > 0);
+          this.canPerformAssessment = this.pillars !== undefined && this.pillars.length > 0 && this.pillars.every(p => p.pillarCategoryCount > 0);
         },
         error: (error) => { }
       });

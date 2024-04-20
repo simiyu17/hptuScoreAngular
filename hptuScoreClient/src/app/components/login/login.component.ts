@@ -28,7 +28,6 @@ import { MatButtonModule } from '@angular/material/button';
 export class LoginComponent implements OnInit {
 
   userloginForm: FormGroup = this.fb.group({});
-  invalidLogin = false;
   msg: string = "";
   authResponse?: { success: boolean, message: string, authToken: string }
   constructor(private fb: FormBuilder, private us: UserService, private gs: GlobalService, private router: Router, private authService: AuthService) {
@@ -52,7 +51,6 @@ export class LoginComponent implements OnInit {
         this.authService.userRedirection();
 
       }, error: (error: HttpErrorResponse) => {
-        this.invalidLogin = true;
         this.gs.openSnackBar(`An error occured: ${error.error.message}`, "Dismiss");
       }
     });

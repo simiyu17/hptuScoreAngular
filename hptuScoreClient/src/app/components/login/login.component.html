@@ -17,9 +17,6 @@
             Please provide a password
           </mat-error>
         </mat-form-field>
-        <mat-error *ngIf="invalidLogin">
-          Invalid username and/or password
-        </mat-error>
         <button mat-raised-button color="primary" (click)="onUserLoginSubmit()"
           [disabled]="userloginForm.invalid">Login</button>
       </form>

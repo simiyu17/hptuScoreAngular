@@ -43,7 +43,7 @@ export class AuthService {
 
   userRedirection(): void {
     if(this.isAuthenticated()){
-      this.router.navigate(['']);
+      this.router.navigateByUrl("/dashboard");
     }else {
       this.doLogout();
     }
@@ -52,6 +52,6 @@ export class AuthService {
 
   doLogout(): void {
     this.clearLocalStorageValue();
-    this.router.navigate(['']);
+    this.router.navigateByUrl("/login");
   }
 }
