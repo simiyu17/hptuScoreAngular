@@ -5,7 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({ providedIn: 'root' })
 export class GlobalService {
-  BASE_API_URL: string = 'http://localhost:8082/hptu-service/api/v1';
+  BASE_API_URL: string = 'http://localhost:8089/hptu-service/api/v1';
   BASE_KEY_CLOAK_URL: string = 'http://localhost:8081/auth';
   KEY_CLOAK_CLIENT_ID: string = 'front-end-client-id';
   KEY_CLOAK_REALM: string = 'hptu-score-realm';

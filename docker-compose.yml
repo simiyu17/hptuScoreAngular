@@ -1,30 +1,42 @@
-version: "3.8"
+version: '3.9'
 services:
-  keycloak:
-    image: jboss/keycloak:latest
-    environment:
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: admin
-      DB_VENDOR: postgres
-      DB_ADDR: keycloak-db
-      DB_DATABASE: keycloak
-      DB_USER: keycloak
-      DB_PASSWORD: keycloak
-    depends_on:
-      - keycloak-db
-    ports:
-      - 8081:8080
-
-  keycloak-db:
+  postgres_hptu_db:
+    container_name: postgres_hptu_db
     image: postgres:15.4-alpine
     environment:
-      POSTGRES_PASSWORD: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_DB: keycloak
+      - POSTGRES_PASSWORD=S3cretHptu
+      - POSTGRES_USER=hptu_user
+      - POSTGRES_DB=hptu_score
+    networks:
+      - hptu-app-network
     volumes:
-      - ./postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres']
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - /data/hptuAngulardata:/var/lib/postgresql/data
+  hptu_app:
+    container_name: hptu_app
+    image: juliangeniuz/hptu-score-api:v2
+    restart: on-failure
+    networks:
+      - hptu-app-network
+    environment:
+      - POSTGRESQL_HOST=postgres_db
+      - POSTGRESQL_PORT=5432
+      - POSTGRESQL_USER=hptu_user
+      - POSTGRESQL_PASSWORD=S3cretHptu
+      - POSTGRESQL_DATABASE=hptu_score
+    depends_on:
+      - postgres_hptu_db
+    ports:
+      - "8089:8089"
+  hptu_app_ui:
+    container_name: hptu_app_ui
+    image: juliangeniuz/hptu-score-client:v2h
+    restart: on-failure
+    networks:
+      - hptu-app-network
+    depends_on:
+      - hptu_app
+    ports:
+      - "8082:80"
+networks:
+  hptu-app-network:
+    driver: bridge
