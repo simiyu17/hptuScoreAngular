@@ -2,7 +2,7 @@
 FROM node:lts as build
 
 ADD ./package.json /tmp/package.json
-RUN cd /tmp && npm install
+RUN cd /tmp && npm config set fetch-retry-mintimeout 600000 && npm config set fetch-retry-maxtimeout 1200000 && npm install
 RUN mkdir -p /usr/local/app && cp -a /tmp/node_modules /usr/local/app/
 
 WORKDIR /usr/local/app

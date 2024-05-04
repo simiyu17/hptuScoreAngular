@@ -13,12 +13,12 @@ services:
       - /data/hptuAngulardata:/var/lib/postgresql/data
   hptu_app:
     container_name: hptu_app
-    image: juliangeniuz/hptu-score-api:v2
+    image: juliangeniuz/hptu-score-api:v1
     restart: on-failure
     networks:
       - hptu-app-network
     environment:
-      - POSTGRESQL_HOST=postgres_db
+      - POSTGRESQL_HOST=postgres_hptu_db
       - POSTGRESQL_PORT=5432
       - POSTGRESQL_USER=hptu_user
       - POSTGRESQL_PASSWORD=S3cretHptu
@@ -29,7 +29,7 @@ services:
       - "8089:8089"
   hptu_app_ui:
     container_name: hptu_app_ui
-    image: juliangeniuz/hptu-score-client:v2h
+    image: juliangeniuz/hptu-score-client:v1
     restart: on-failure
     networks:
       - hptu-app-network
@@ -37,6 +37,8 @@ services:
       - hptu_app
     ports:
       - "8082:80"
+    environment:
+      - API_BASE_URL=http://hptu_app:8089/hptu-service/api/v1
 networks:
   hptu-app-network:
     driver: bridge
