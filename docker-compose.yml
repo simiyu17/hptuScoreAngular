@@ -26,7 +26,7 @@ services:
     depends_on:
       - postgres_hptu_db
     ports:
-      - "8089:8089"
+      - "8082:8089"
   hptu_app_ui:
     container_name: hptu_app_ui
     image: juliangeniuz/hptu-score-client:v1
@@ -36,7 +36,7 @@ services:
     depends_on:
       - hptu_app
     ports:
-      - "8082:80"
+      - "3000:80"
     environment:
       - API_BASE_URL=http://hptu_app:8089/hptu-service/api/v1
 networks:
