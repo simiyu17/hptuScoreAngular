@@ -9,6 +9,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -81,6 +82,7 @@ public class AssessmentDefinitionServiceImpl implements AssessmentDefinitionServ
                 .map(c -> new AssessmentChoiceDto(c.getId(), c.getCategory(), c.getChoiceOne(),
                         c.getChoiceOneScore(), c.getChoiceTwo(), c.getChoiceTwoScore(), c.getChoiceThree(), c.getChoiceThreeScore(),
                         c.getChoiceFour(), c.getChoiceFourScore(), c.getCategoryOrder()))
+                .sorted(Comparator.comparingInt(AssessmentChoiceDto::categoryOrder))
                 .toList() : List.of();
     }
 

@@ -16,7 +16,7 @@ import java.util.Set;
 @Table(name = "assessment_pillars", uniqueConstraints = {
         @UniqueConstraint(columnNames = { "pillar_name"}, name = "PILLAR_UNIQUE"),
         @UniqueConstraint(columnNames = { "pillar_order"}, name = "PILLAR_ORDER_UNIQUE")})
-public class AssessmentPillar extends BaseEntity {
+public class AssessmentPillar extends BaseEntity implements Comparable<AssessmentPillar>{
 
     private static final long serialVersionUID = -191798283482066618L;
 
@@ -111,7 +111,10 @@ public class AssessmentPillar extends BaseEntity {
     public int getPillarCategoryCount() {
         return this.getAssessmentChoices().size();
     }
-    
-    
 
+
+    @Override
+    public int compareTo(AssessmentPillar o) {
+        return Integer.compare(this.getPillarOrder(), o.getPillarOrder());
+    }
 }
