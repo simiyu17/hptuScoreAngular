@@ -92,7 +92,7 @@ public class AssessmentDefinitionResource extends CommonUtil {
     @Path("{pillarId}/categories/{categoryId}")
     @RolesAllowed("Admin")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateCategory(@PathParam("pillarId") Long pillarId, @PathParam("categoryId") Long categoryId, AssessmentPillarCategory updatedCategory) {
+    public Response updateCategory(@PathParam("pillarId") Long pillarId, @PathParam("categoryId") Long categoryId, AssessmentChoiceDto updatedCategory) {
         try {
             var currentPillar = this.assessmentDefinitionService.findAssessmentPillarById(pillarId);
             var pillarChoices = currentPillar.getAssessmentChoices();
@@ -114,8 +114,8 @@ public class AssessmentDefinitionResource extends CommonUtil {
     @Path("{pillarId}/categories")
     @RolesAllowed("Admin")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<AssessmentChoiceDto> getAvailableCategoriesByPillarId(@PathParam("pillarId") Long pillarId){
-        return this.assessmentDefinitionService.getAvailableCategoriesByPillarId(pillarId);
+    public List<AssessmentChoiceDto> getAvailableCategoriesByPillarId(@PathParam("pillarId") Long pillarId, @QueryParam("quarter") String quarter){
+        return this.assessmentDefinitionService.getAvailableCategoriesByPillarId(pillarId, quarter);
     }
 
 

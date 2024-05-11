@@ -7,6 +7,11 @@ package com.hptu.score.util;
 
 import com.hptu.score.dto.CountyDto;
 import com.hptu.score.entity.User;
+import com.hptu.score.service.UserService;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.InternalServerErrorException;
+import jakarta.ws.rs.core.SecurityContext;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
@@ -19,9 +24,21 @@ public abstract class CommonUtil {
 
     protected org.slf4j.Logger log = LoggerFactory.getLogger(getClass());
 
-    public User getCurrentLoggedUser() {
-        User u = null;
-        return u;
+    @Inject
+    JsonWebToken jsonWebToken;
+    @Inject
+    UserService userService;
+
+    public User getCurrentLoggedUser(SecurityContext ctx) {
+        String username;
+        if (Objects.isNull(ctx.getUserPrincipal())){
+            return null;
+        }else if (!ctx.getUserPrincipal().getName().equals(jsonWebToken.getName())) {
+            throw new InternalServerErrorException("Principal and JsonWebToken names do not match");
+        } else {
+            username = ctx.getUserPrincipal().getName();
+        }
+        return userService.findUserByUsername(username);
     }
 
     protected List<CountyDto> getKenyanCounties(){

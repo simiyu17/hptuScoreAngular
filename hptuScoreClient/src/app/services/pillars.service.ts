@@ -39,7 +39,10 @@ export class PillarsService {
 
 
 
-  getAllCategoriesByPillarId(pillarId: any): Observable<any> {
+  getAllCategoriesByPillarId(pillarId: any, selectedQuarter: string | null): Observable<any> {
+    if(selectedQuarter){
+      return this.httpClient.get(`${this.globalService.BASE_API_URL}/assessment-pillars/${pillarId}/categories?quarter=${selectedQuarter}`);
+    }
     return this.httpClient.get(`${this.globalService.BASE_API_URL}/assessment-pillars/${pillarId}/categories`);
   }
 

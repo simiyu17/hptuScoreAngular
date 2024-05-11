@@ -49,6 +49,10 @@ export class AuthService {
     }
   }
 
+  redirectToChangePassword(): void{
+    this.router.navigateByUrl("/change-password");
+  }
+
 
   doLogout(): void {
     this.clearLocalStorageValue();

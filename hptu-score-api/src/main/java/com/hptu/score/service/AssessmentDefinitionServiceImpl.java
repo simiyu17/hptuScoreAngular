@@ -9,6 +9,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -76,14 +77,21 @@ public class AssessmentDefinitionServiceImpl implements AssessmentDefinitionServ
     }
 
     @Override
-    public List<AssessmentChoiceDto> getAvailableCategoriesByPillarId(Long pillarId) {
+    public List<AssessmentChoiceDto> getAvailableCategoriesByPillarId(Long pillarId, String quarter) {
         AssessmentPillar pillar = this.findAssessmentPillarById(pillarId);
-        return Objects.nonNull(pillar) ? pillar.getAssessmentChoices().stream()
+        List<AssessmentChoiceDto> choices = Objects.nonNull(pillar) ? pillar.getAssessmentChoices().stream()
                 .map(c -> new AssessmentChoiceDto(c.getId(), c.getCategory(), c.getChoiceOne(),
                         c.getChoiceOneScore(), c.getChoiceTwo(), c.getChoiceTwoScore(), c.getChoiceThree(), c.getChoiceThreeScore(),
-                        c.getChoiceFour(), c.getChoiceFourScore(), c.getCategoryOrder()))
+                        c.getChoiceFour(), c.getChoiceFourScore(), c.getCategoryOrder(),
+                        StringUtils.isBlank(c.getAllowedQuarters()) ? List.of() : new ArrayList<>(List.of(c.getAllowedQuarters().replace("[", "").replace("]", "").replaceAll("\\s+", "").split(",")))))
                 .sorted(Comparator.comparingInt(AssessmentChoiceDto::categoryOrder))
                 .toList() : List.of();
+        if (StringUtils.isNotBlank(quarter) && !choices.isEmpty()){
+            choices = choices.stream()
+                    .filter(c -> c.allowedQuarters().contains(quarter))
+                    .toList();
+        }
+        return choices;
     }
 
     @Override

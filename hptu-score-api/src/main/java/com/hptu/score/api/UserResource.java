@@ -12,8 +12,10 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 
 import java.util.List;
 import java.util.Objects;
@@ -71,35 +73,10 @@ public class UserResource extends CommonUtil {
     @POST
     @Path("change-password")
     @RolesAllowed("Admin")
-    public Response changePassword(@Valid UserPassChangeDto userDto) {
-
-        try {
-            User u = getCurrentLoggedUser();
-
-            if (Objects.isNull(u)) {
-                //return "redirect:/changepassword?error=You must be logged in to change password!";
-            }
-
-
-           /* if (!passwordEncoder.matches(userDto.getPassword(), u.getPassword())) {
-                return "redirect:/changepassword?error=Wrong Current Password!";
-            }
-
-            if (!userDto.getNewPass().equals(userDto.getPassConfirm())) {
-                return "redirect:/changepassword?error=Make sure new password matches its confirmation!";
-            }
-            if (passwordEncoder.matches(userDto.getNewPass(), u.getPassword())) {
-                return "redirect:/changepassword?error=You can not use same password as current!";
-            }
-            u.setPassword(this.passwordEncoder.encode(userDto.getNewPass()));*/
-            //u.setForceChangePass(false);
-            //this.userService.createUser(u);
-            //return "redirect:/logout";
-        } catch (Exception e) {
-            //return "redirect:/changepassword?error=An error Occured!!!";
-        }
-
-        return Response.ok().build();
+    public Response changePassword(@Valid UserPassChangeDto userDto, @Context SecurityContext ctx) {
+            User u = getCurrentLoggedUser(ctx);
+            this.userService.updateUserPassword(u, userDto);
+            return Response.ok(new ApiResponseDto(true, "User Password Updated !!")).build();
 
     }
 }

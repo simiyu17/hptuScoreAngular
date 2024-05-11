@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
@@ -7,6 +7,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { PillarsService } from '../../../../services/pillars.service';
 import { GlobalService } from '../../../../services/global.service';
 import { EditCategoryDto } from '../../../../dto/EditCategoryDto';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-edit-category',
@@ -17,16 +19,21 @@ import { EditCategoryDto } from '../../../../dto/EditCategoryDto';
     MatInputModule,
     MatFormFieldModule,
     MatDialogModule,
-    MatButtonModule
+    MatButtonModule,
+    MatOptionModule,
+    MatSelectModule
   ],
   templateUrl: './edit-category.component.html',
   styleUrl: './edit-category.component.scss'
 })
-export class EditCategoryComponent {
+export class EditCategoryComponent implements OnInit{
 
   formTitle: string = 'Edit Category';
   formBtnText: string = 'Update';
   createPillarCategoryForm: FormGroup = this.fb.group({});
+
+  quartersList: {value: string, display: string}[] = []; 
+  selected: string[] = []
 
   constructor(private fb: FormBuilder, 
     private pillarService: PillarsService, 
@@ -34,6 +41,9 @@ export class EditCategoryComponent {
     private gs: GlobalService,
     @Inject(MAT_DIALOG_DATA) public data: EditCategoryDto) {
     this.createNewPillarForm()
+  }
+  ngOnInit(): void {
+    this.quartersList = this.gs.assessmentQuarters()
   }
 
   createNewPillarForm(): void {
@@ -43,6 +53,7 @@ export class EditCategoryComponent {
       this.createPillarCategoryForm = this.fb.group({
         category: ['', Validators.required],
         categoryOrder: ['', Validators.min(1)],
+        allowedQuarters: ['', Validators.length > 0],
         choiceOne: ['', Validators.required],
         choiceOneScore: ['', Validators.min(1)],
         choiceTwo: ['', Validators.required],
@@ -54,9 +65,11 @@ export class EditCategoryComponent {
       });
     }else {
       const currentCategory = this.data.category;
+      this.data.allowedQuarters = currentCategory.allowedQuarters;
       this.createPillarCategoryForm = this.fb.group({
         category: [currentCategory.category, Validators.required],
         categoryOrder: [currentCategory.categoryOrder, Validators.min(1)],
+        allowedQuarters: [currentCategory.allowedQuarters, Validators.length > 0],
         choiceOne: [currentCategory.choiceOne, Validators.required],
         choiceOneScore: [currentCategory.choiceOneScore, Validators.min(1)],
         choiceTwo: [currentCategory.choiceTwo, Validators.required],
@@ -66,6 +79,7 @@ export class EditCategoryComponent {
         choiceFour: [currentCategory.choiceFour, Validators.required],
         choiceFourScore: [currentCategory.choiceFourScore, Validators.min(1)]
       });
+      this.selected = this.data.allowedQuarters
     }
     
   }

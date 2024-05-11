@@ -20,7 +20,7 @@ public interface AssessmentDefinitionService {
 
     List<AssessmentPillar> getAvailableAssessmentPillars();
 
-    List<AssessmentChoiceDto> getAvailableCategoriesByPillarId(Long pillarId);
+    List<AssessmentChoiceDto> getAvailableCategoriesByPillarId(Long pillarId, String quarter);
 
     void deleteAssessmentPillar(Long pillarId);
 }

@@ -3,6 +3,8 @@ package com.hptu.score.dto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.List;
+
 public record AssessmentChoiceDto (
         Long id,
         @NotBlank
@@ -24,5 +26,6 @@ public record AssessmentChoiceDto (
         @Min(1)
         int choiceFourScore,
         @Min(1)
-        int categoryOrder
+        int categoryOrder,
+        List<String> allowedQuarters
 ){}

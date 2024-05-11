@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hptu.score.dto.AuthRequestDto;
 import com.hptu.score.dto.AuthResponseDto;
 import com.hptu.score.dto.UserDto;
+import com.hptu.score.dto.UserPassChangeDto;
 import com.hptu.score.entity.User;
 import com.hptu.score.exception.UserNotAuthenticatedException;
 import com.hptu.score.exception.UserNotFoundException;
@@ -12,6 +13,7 @@ import com.hptu.score.util.AuthTokenUtil;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -49,6 +51,19 @@ public class UserServiceImpl implements UserService{
             throw new IllegalArgumentException(e);
         }
 
+    }
+
+
+    @Override
+    public User updateUserPassword(User user, UserPassChangeDto userPassChangeDto) {
+        if(Objects.isNull(user) || !BcryptUtil.matches(userPassChangeDto.password(), user.getPassword())){
+            throw new UserNotAuthenticatedException("Invalid current password!!");
+        }
+        if (!StringUtils.equals(userPassChangeDto.newPass(), userPassChangeDto.passConfirm())){
+            throw new UserNotAuthenticatedException("New password must match with confirmation password!!");
+        }
+        user.setPassword(userPassChangeDto.newPass());
+        return this.userRepository.save(user);
     }
 
     @Override

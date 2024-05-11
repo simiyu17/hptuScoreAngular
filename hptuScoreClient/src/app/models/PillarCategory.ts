@@ -2,6 +2,7 @@ export interface PillarCategory {
     id: number;
     pillarId: number;
     category: string;
+    allowedQuarters: string[]
     choiceOne: string;
     choiceOneScore: number;
     choiceTwo: string;

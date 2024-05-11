@@ -63,7 +63,7 @@ export class PillarCategoriesComponent {
   }
 
   getAvailablePillarCategories() {
-    this.pillarService.getAllCategoriesByPillarId(this.pillarId)
+    this.pillarService.getAllCategoriesByPillarId(this.pillarId, null)
       .subscribe({
         next: (response) => {
           this.categories = response;

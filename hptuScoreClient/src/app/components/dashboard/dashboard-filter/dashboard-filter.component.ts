@@ -34,6 +34,8 @@ export class DashboardFilterComponent implements OnInit {
  
 
   counties: CountyDto[] = []
+  quartersList: {value: string, display: string}[] = []; 
+  assessmentYearsList: {value: string, display: string}[] = []; 
 
   filterFormGroup: FormGroup = this._formBuilder.group({}); 
 
@@ -67,6 +69,8 @@ export class DashboardFilterComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.quartersList = this.gs.assessmentQuarters()
+    this.assessmentYearsList = this.gs.assessmentYears();
     this.getAvailableCounties();
   }
 

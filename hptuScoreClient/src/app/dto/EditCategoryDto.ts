@@ -3,5 +3,6 @@ import { PillarCategory } from "../models/PillarCategory";
 
 export interface EditCategoryDto {
     category: PillarCategory | NewPillarCategory;
-    pillarId: number
+    pillarId: number;
+    allowedQuarters: string[]
 }

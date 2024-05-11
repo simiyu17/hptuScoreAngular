@@ -26,7 +26,7 @@ export class HeaderComponent {
   }
 
   changePassword() {
-    //this.authService.redirectToChangePassword()
+    this.authService.redirectToChangePassword()
   }
 
 }

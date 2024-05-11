@@ -26,6 +26,20 @@
 
       <div class="form-row">  
         <mat-form-field appearance="outline">
+          <mat-label>Select Allowed Quarters For This Category</mat-label>
+          <mat-select placeholder="Allowed Quarters" formControlName="allowedQuarters" multiple [(ngModel)]="this.selected">
+            @for (quarter of quartersList; track quarter) {
+              <mat-option [value]="quarter.value">{{quarter.display}}</mat-option>
+            }
+          </mat-select>
+          <mat-error>
+            Min value allowed is 1
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">  
+        <mat-form-field appearance="outline">
           <mat-label>Choice One</mat-label>
           <textarea matInput type="text" formControlName="choiceOne" cols="5"></textarea>
           <mat-error>

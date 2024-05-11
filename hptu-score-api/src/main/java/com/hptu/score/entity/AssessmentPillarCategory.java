@@ -6,6 +6,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "assessment_pillar_categories", uniqueConstraints = {
         @UniqueConstraint(columnNames = { "pillar_id", "category" }, name = "ASSESSMENT_UNIQUE"),
@@ -48,12 +51,14 @@ public class AssessmentPillarCategory extends BaseEntity {
     @Column(name = "category_order")
     private int categoryOrder;
 
+    private String allowedQuarters;
+
     public AssessmentPillarCategory() {
     }
   
 
     private AssessmentPillarCategory(String category, String choiceOne, int choiceOneScore, String choiceTwo, int choiceTwoScore,
-                                     String choiceThree, int choiceThreeScore, String choiceFour, int choiceFourScore, int categoryOrder) {
+                                     String choiceThree, int choiceThreeScore, String choiceFour, int choiceFourScore, int categoryOrder, List<String> allowedQuarters) {
         this.category = category;
         this.choiceOne = choiceOne;
         this.choiceOneScore = choiceOneScore;
@@ -64,6 +69,7 @@ public class AssessmentPillarCategory extends BaseEntity {
         this.choiceFour = choiceFour;
         this.choiceFourScore = choiceFourScore;
         this.categoryOrder = categoryOrder;
+        this.allowedQuarters = allowedQuarters.toString();
     }
     
     
@@ -80,115 +86,86 @@ public class AssessmentPillarCategory extends BaseEntity {
         return category;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
     public String getChoiceOne() {
         return choiceOne;
-    }
-
-    public void setChoiceOne(String choiceOne) {
-        this.choiceOne = choiceOne;
     }
 
     public int getChoiceOneScore() {
         return choiceOneScore;
     }
 
-    public void setChoiceOneScore(int choiceOneScore) {
-        this.choiceOneScore = choiceOneScore;
-    }
-
     public String getChoiceTwo() {
         return choiceTwo;
-    }
-
-    public void setChoiceTwo(String choiceTwo) {
-        this.choiceTwo = choiceTwo;
     }
 
     public int getChoiceTwoScore() {
         return choiceTwoScore;
     }
 
-    public void setChoiceTwoScore(int choiceTwoScore) {
-        this.choiceTwoScore = choiceTwoScore;
-    }
-
     public String getChoiceThree() {
         return choiceThree;
-    }
-
-    public void setChoiceThree(String choiceThree) {
-        this.choiceThree = choiceThree;
     }
 
     public int getChoiceThreeScore() {
         return choiceThreeScore;
     }
 
-    public void setChoiceThreeScore(int choiceThreeScore) {
-        this.choiceThreeScore = choiceThreeScore;
-    }
-
     public String getChoiceFour() {
         return choiceFour;
-    }
-
-    public void setChoiceFour(String choiceFour) {
-        this.choiceFour = choiceFour;
     }
 
     public int getChoiceFourScore() {
         return choiceFourScore;
     }
 
-    public void setChoiceFourScore(int choiceFourScore) {
-        this.choiceFourScore = choiceFourScore;
+    public String getAllowedQuarters() {
+        return allowedQuarters;
     }
 
     public static AssessmentPillarCategory createAssessmentChoice(AssessmentChoiceDto assessmentChoiceDto){
         return new AssessmentPillarCategory(assessmentChoiceDto.category(), assessmentChoiceDto.choiceOne(), assessmentChoiceDto.choiceOneScore(),
                 assessmentChoiceDto.choiceTwo(), assessmentChoiceDto.choiceTwoScore(), assessmentChoiceDto.choiceThree(),
                 assessmentChoiceDto.choiceThreeScore(), assessmentChoiceDto.choiceFour(), assessmentChoiceDto.choiceFourScore(),
-                assessmentChoiceDto.categoryOrder());
+                assessmentChoiceDto.categoryOrder(), assessmentChoiceDto.allowedQuarters());
     }
 
-    public void updateCategory(AssessmentPillarCategory categoryUpdate){
-        if(!StringUtils.equals(categoryUpdate.getCategory(), this.category)){
-            this.category = categoryUpdate.getCategory();
+    public void updateCategory(AssessmentChoiceDto categoryUpdate){
+        if(!StringUtils.equals(categoryUpdate.category(), this.category)){
+            this.category = categoryUpdate.category();
         }
-        if(categoryUpdate.getCategoryOrder() !=  this.categoryOrder){
-            this.categoryOrder = categoryUpdate.getCategoryOrder();
-        }
-
-        if(!StringUtils.equals(categoryUpdate.getChoiceOne(), this.choiceOne)){
-            this.choiceOne = categoryUpdate.getChoiceOne();
-        }
-        if(categoryUpdate.getChoiceOneScore() !=  this.choiceOneScore){
-            this.choiceOneScore = categoryUpdate.getChoiceOneScore();
+        if(categoryUpdate.categoryOrder() !=  this.categoryOrder){
+            this.categoryOrder = categoryUpdate.categoryOrder();
         }
 
-        if(!StringUtils.equals(categoryUpdate.getChoiceTwo(), this.choiceTwo)){
-            this.choiceTwo = categoryUpdate.getChoiceTwo();
+        if(!StringUtils.equals(categoryUpdate.choiceOne(), this.choiceOne)){
+            this.choiceOne = categoryUpdate.choiceOne();
         }
-        if(categoryUpdate.getChoiceTwoScore()!=  this.choiceTwoScore){
-            this.choiceTwoScore = categoryUpdate.getChoiceTwoScore();
-        }
-
-        if(!StringUtils.equals(categoryUpdate.getChoiceThree(), this.choiceThree)){
-            this.choiceThree = categoryUpdate.getChoiceThree();
-        }
-        if(categoryUpdate.getChoiceThreeScore()!=  this.choiceThreeScore){
-            this.choiceThreeScore = categoryUpdate.getChoiceThreeScore();
+        if(categoryUpdate.choiceOneScore() !=  this.choiceOneScore){
+            this.choiceOneScore = categoryUpdate.choiceOneScore();
         }
 
-        if(!StringUtils.equals(categoryUpdate.getChoiceFour(), this.choiceFour)){
-            this.choiceFour = categoryUpdate.getChoiceFour();
+        if(!StringUtils.equals(categoryUpdate.choiceTwo(), this.choiceTwo)){
+            this.choiceTwo = categoryUpdate.choiceTwo();
         }
-        if(categoryUpdate.getChoiceFourScore() !=  this.choiceFourScore){
-            this.choiceFourScore = categoryUpdate.getChoiceFourScore();
+        if(categoryUpdate.choiceTwoScore()!=  this.choiceTwoScore){
+            this.choiceTwoScore = categoryUpdate.choiceTwoScore();
+        }
+
+        if(!StringUtils.equals(categoryUpdate.choiceThree(), this.choiceThree)){
+            this.choiceThree = categoryUpdate.choiceThree();
+        }
+        if(categoryUpdate.choiceThreeScore()!=  this.choiceThreeScore){
+            this.choiceThreeScore = categoryUpdate.choiceThreeScore();
+        }
+
+        if(!StringUtils.equals(categoryUpdate.choiceFour(), this.choiceFour)){
+            this.choiceFour = categoryUpdate.choiceFour();
+        }
+        if(categoryUpdate.choiceFourScore() !=  this.choiceFourScore){
+            this.choiceFourScore = categoryUpdate.choiceFourScore();
+        }
+        if(!categoryUpdate.allowedQuarters().isEmpty()){
+            this.allowedQuarters = categoryUpdate.allowedQuarters().toString();
         }
     }
 

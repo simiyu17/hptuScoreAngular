@@ -62,6 +62,8 @@ export class CreateAssessmentComponent implements OnInit {
   categories?: PillarCategory[] = [];
 
   pillarAssessmentMap: Map<number, CountyAssessment[]> = new Map<number, CountyAssessment[]>;
+  quartersList: {value: string, display: string}[] = []; 
+  assessmentYearsList: {value: string, display: string}[] = []; 
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -74,6 +76,8 @@ export class CreateAssessmentComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.quartersList = this.gs.assessmentQuarters()
+    this.assessmentYearsList = this.gs.assessmentYears();
     this.getAvailablePillars();
     this.getAvailableCounties();
   }
@@ -83,7 +87,7 @@ export class CreateAssessmentComponent implements OnInit {
       .subscribe({
         next: (response) => {
           this.pillars = response;
-          this.createAssessmentScorePlaceHolder(this.pillars)
+          this.createAssessmentScorePlaceHolder(this.pillars, null)
         },
         error: (error) => { }
       });
@@ -100,9 +104,9 @@ export class CreateAssessmentComponent implements OnInit {
   }
 
 
-  createAssessmentScorePlaceHolder(pillars: AssessmentPillar[]): void {
+  createAssessmentScorePlaceHolder(pillars: AssessmentPillar[], quarter: string | null): void {
     pillars.forEach(pillar => {
-      this.pillarService.getAllCategoriesByPillarId(pillar.id)
+      this.pillarService.getAllCategoriesByPillarId(pillar.id, quarter)
         .subscribe({
           next: (response) => {
             this.categories = response;
@@ -201,6 +205,11 @@ export class CreateAssessmentComponent implements OnInit {
           console.log(error)
         }
       });
+  }
+
+  selectedQuarterChanged(){
+    const selectedQuarter = this.firstFormGroup.controls['assessmentQuarter'].value;
+    this.createAssessmentScorePlaceHolder(this.pillars, selectedQuarter)
   }
 
 }
