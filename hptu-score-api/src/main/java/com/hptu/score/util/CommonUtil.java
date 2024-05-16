@@ -48,11 +48,11 @@ public abstract class CommonUtil {
         return countyDtos;
     }
 
-    protected String getCountyByCode(String code){
+    public static String getCountyByCode(String code){
         return getKenyanCountiesMap().get(code);
     }
 
-    protected Map<String, String> getKenyanCountiesMap(){
+    public static Map<String, String> getKenyanCountiesMap(){
         Map<String, String> map = new HashMap<>();
         map.put("001", "Mombasa");
         map.put("002", "Kwale");

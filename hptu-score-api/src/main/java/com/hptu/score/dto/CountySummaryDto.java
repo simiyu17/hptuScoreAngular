@@ -7,7 +7,6 @@ import java.math.RoundingMode;
 
 public class CountySummaryDto  {
 
-    private Long metaDataId;
     private String pillarName;
 
     private String category;
@@ -24,11 +23,14 @@ public class CountySummaryDto  {
     }
 
     public CountySummaryDto(Summary summary) {
-        this.metaDataId = summary.getMetaDataId();
         this.pillarName = summary.getPillar();
         this.category = summary.getCategory();
         this.maxScore = summary.getMaxScore();
         this.choiceScore = summary.getChoiceScore();
+        if (summary.getCountiesNumber() > 1){
+            this.maxScore = (new BigDecimal(this.choiceScore)).divide(new BigDecimal(summary.getCountiesNumber()), 4, RoundingMode.HALF_UP).intValue();
+            this.choiceScore = (new BigDecimal(this.choiceScore)).divide(new BigDecimal(summary.getCountiesNumber()), 4, RoundingMode.HALF_UP).intValue();
+        }
         BigDecimal nom = new BigDecimal(this.choiceScore);
         BigDecimal den = new BigDecimal(this.maxScore);
         BigDecimal p100 = new BigDecimal(100);
@@ -42,10 +44,6 @@ public class CountySummaryDto  {
         }else {
             this.remark = "Below Average";
         }
-    }
-
-    public Long getMetaDataId() {
-        return metaDataId;
     }
 
     public String getPillarName() {
@@ -74,7 +72,6 @@ public class CountySummaryDto  {
 
     public static class Summary {
 
-        private final Long metaDataId;
         private String pillar;
 
         private final String category;
@@ -85,16 +82,14 @@ public class CountySummaryDto  {
         @JsonProperty("score")
         private final int choiceScore;
 
-        public Summary(Long metaDataId, String pillar, String category, int maxScore, int choiceScore) {
-            this.metaDataId = metaDataId;
+        private final int countiesNumber;
+
+        public Summary(String pillar, String category, int maxScore, int choiceScore, int countiesNumber) {
             this.pillar = pillar;
             this.category = category;
             this.maxScore = maxScore;
             this.choiceScore = choiceScore;
-        }
-
-        public Long getMetaDataId() {
-            return metaDataId;
+            this.countiesNumber = countiesNumber;
         }
 
         public String getPillar() {
@@ -115,6 +110,10 @@ public class CountySummaryDto  {
 
         public String getCategory() {
             return category;
+        }
+
+        public int getCountiesNumber() {
+            return countiesNumber;
         }
     }
 }

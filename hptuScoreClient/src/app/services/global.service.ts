@@ -5,7 +5,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({ providedIn: 'root' })
 export class GlobalService {
-  BASE_API_URL: string = 'http://localhost:8089/hptu-service/api/v1';
+  API_HOST = '20.254.141.197';
+  API_PORT = '5441';
+  BASE_API_URL: string = `http://${this.API_HOST}:${this.API_PORT}/hptu-service/api/v1`;
+  BASE_API_URL_V2: string = `http://${this.API_HOST}:${this.API_PORT}/hptu-service/api/v2`;
   BASE_KEY_CLOAK_URL: string = 'http://localhost:8081/auth';
   KEY_CLOAK_CLIENT_ID: string = 'front-end-client-id';
   KEY_CLOAK_REALM: string = 'hptu-score-realm';
@@ -35,7 +38,7 @@ export class GlobalService {
   }
 
   assessmentQuarters(): {value: string, display: string}[]{
-    return [{value:'Q1', display: 'Quarter 1'}, {value:'Q2', display: 'Quarter 2'}, {value:'Q3', display: 'Quarter 3'}, {value:'Q4', display: 'Quarter 4'}];
+    return [{value:'Q1', display: 'Jan - Mar'}, {value:'Q2', display: 'Apr - June'}, {value:'Q3', display: 'Jul - Sep'}, {value:'Q4', display: 'Oct - Dec'}];
   }
 
   assessmentYears(): {value: string, display: string}[]{

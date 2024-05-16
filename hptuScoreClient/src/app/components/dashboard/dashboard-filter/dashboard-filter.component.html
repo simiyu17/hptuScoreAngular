@@ -5,17 +5,7 @@
     <div>
     <form [formGroup]="filterFormGroup" (ngSubmit)="onSubmitEditPillar()">
     <div mat-dialog-content class="mat-typography">
-      <div class="form-row">
-        <mat-form-field appearance="outline">
-            <mat-label>Select County</mat-label>
-            <mat-select formControlName="countyCode" required>
-              @for (county of counties; track county) {
-                <mat-option [value]="county.countyCode">{{county.name}}</mat-option>
-              }
-            </mat-select>
-        </mat-form-field>
-      </div>
-
+      
       <div class="form-row">  
         <mat-form-field appearance="outline">
             <mat-label>Assessment Year</mat-label>
@@ -30,11 +20,22 @@
       <div class="form-row">  
         <mat-form-field appearance="outline">
             <mat-label>Year Quarter</mat-label>
-      <mat-select formControlName="assessmentQuarter" required>
+      <mat-select formControlName="assessmentQuarter">
         @for (quarter of quartersList; track quarter) {
           <mat-option [value]="quarter.value">{{quarter.display}}</mat-option>
         }
     </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+            <mat-label>Select County</mat-label>
+            <mat-select formControlName="countyCode">
+              @for (county of counties; track county) {
+                <mat-option [value]="county.countyCode">{{county.name}}</mat-option>
+              }
+            </mat-select>
         </mat-form-field>
       </div>
   

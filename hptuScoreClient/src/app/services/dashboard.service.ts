@@ -13,9 +13,9 @@ export class DashboardService {
 
   getCountyAssessmentSummaryByPillar = (assessment?: CountyAssessmentMetaData): Observable<any> => {
     if(assessment && assessment.countyCode && assessment.assessmentQuarter && assessment.assessmentYear){
-      return this.httpClient.get(`${this.globalService.BASE_API_URL}/report/county-assessments-summary?countyCode=${assessment.countyCode}&assessmentQuarter=${assessment.assessmentQuarter}&assessmentYear=${assessment.assessmentYear}`);
+      return this.httpClient.get(`${this.globalService.BASE_API_URL_V2}/report/county-assessments-summary?countyCode=${assessment.countyCode}&assessmentQuarter=${assessment.assessmentQuarter}&assessmentYear=${assessment.assessmentYear}`);
     }
-    return this.httpClient.get(`${this.globalService.BASE_API_URL}/report/county-assessments-summary`);
+    return this.httpClient.get(`${this.globalService.BASE_API_URL_V2}/report/county-assessments-summary`);
   }
 
   getCountyAssessmentSummaryByCategory(metaDataId: number, pillarName: string): Observable<any> {

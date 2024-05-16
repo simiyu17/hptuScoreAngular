@@ -1,8 +1,6 @@
 package com.hptu.score.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hptu.score.dto.*;
-import com.hptu.score.entity.AssessmentPillar;
 import com.hptu.score.entity.BaseEntity;
 import com.hptu.score.entity.CountyAssessmentMetaData;
 import com.hptu.score.service.CountyAssessmentService;
@@ -10,7 +8,6 @@ import com.hptu.score.util.CommonUtil;
 import com.hptu.score.util.ExcelGenerator;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -18,8 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Path("/v1/report")
@@ -44,7 +39,7 @@ public class ReportResource extends CommonUtil {
     @Path("county-assessments-summary")
     @RolesAllowed({"Admin", "User"})
     @Produces(MediaType.APPLICATION_JSON)
-    public CountyAssessmentResultDetailedDto getCountyAssessmentSummary2(@QueryParam(value = "countyCode") String countyCode,
+    public CountyAssessmentResultDetailedDto getCountyAssessmentSummary(@QueryParam(value = "countyCode") String countyCode,
                                                                                @QueryParam(value = "assessmentQuarter") String assessmentQuarter,
                                                                                @QueryParam(value = "assessmentYear") String assessmentYear){
         CountyAssessmentMetaData metaData = this.assessmentService.getAvailableCountyAssessmentMetaDatas().stream().max(Comparator.comparing(BaseEntity::getDateCreated)).orElse(null);
@@ -59,14 +54,14 @@ public class ReportResource extends CommonUtil {
             summaryDataPoints = countySummaryDtos.stream()
                     .map(s -> new ReportByPillar.PillarDataPointModel(s.getPillarName(), s.getScorePercent())).toList();
         }
-        return new CountyAssessmentResultDetailedDto(countySummaryDtos, summaryDataPoints);
+        return new CountyAssessmentResultDetailedDto(countySummaryDtos, summaryDataPoints, "");
     }
 
     @GET
     @Path("assessments-summary-per-pillar/{metaDataId}/{pillarName}")
     @RolesAllowed({"Admin", "User"})
     @Produces(MediaType.APPLICATION_JSON)
-    public CountyAssessmentResultDetailedDto getCountyAssessmentSummary(@PathParam(value = "metaDataId") Long metaDataId,
+    public CountyAssessmentResultDetailedDto getCountyAssessmentSummaryPerPillar(@PathParam(value = "metaDataId") Long metaDataId,
                                                @PathParam(value = "pillarName") String pillarName){
         CountyAssessmentMetaData metaData = this.assessmentService.getAvailableCountyAssessmentMetaDatas().stream().min(Comparator.comparing(BaseEntity::getDateCreated)).orElse(null);
         List<CountySummaryDto> countySummaryDtos = new ArrayList<>();
@@ -77,35 +72,9 @@ public class ReportResource extends CommonUtil {
             summaryDataPoints = countySummaryDtos.stream()
                     .map(s -> new ReportByPillar.PillarDataPointModel(s.getCategory(), BigDecimal.valueOf(s.getChoiceScore()))).toList();
         }
-        return new CountyAssessmentResultDetailedDto(countySummaryDtos, summaryDataPoints);
+        return new CountyAssessmentResultDetailedDto(countySummaryDtos, summaryDataPoints, "");
     }
 
-    @GET
-    @Path("export-to-excel2")
-    @RolesAllowed({"Admin", "User"})
-    public void exportIntoExcelFile(HttpServletResponse response,
-                                    @QueryParam(value = "metaDataId") Long metaDataId,
-                                    @QueryParam(value = "countyName") String countyName,
-                                    @QueryParam(value = "analysisByPillarTableTitle") String analysisByPillarTableTitle) throws IOException {
-        response.setContentType("application/octet-stream");
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-        String currentDateTime = dateFormatter.format(new Date());
-
-        String headerKey = "Content-Disposition";
-        String headerValue = String.format("attachment; filename=%s-summary-%s.xlsx", countyName, currentDateTime);
-        response.setHeader(headerKey, headerValue);
-
-        List<CountySummaryDto> countySummaryDtos = this.assessmentService
-                .getCountyAssessmentSummaryGroupedByPillar(metaDataId);
-        Map<String, List<CountySummaryDto>> categorySummary = new HashMap<>();
-        for (CountySummaryDto summary: countySummaryDtos){
-            categorySummary.put(summary.getPillarName(), this.assessmentService
-                    .getCountyAssessmentSummaryGroupedByCategory(metaDataId, summary.getPillarName()));
-        }
-
-        ExcelGenerator generator = new ExcelGenerator(countySummaryDtos, categorySummary, analysisByPillarTableTitle);
-        generator.generateExcelFile(response);
-    }
 
     @GET
     @Path("export-to-excel")
