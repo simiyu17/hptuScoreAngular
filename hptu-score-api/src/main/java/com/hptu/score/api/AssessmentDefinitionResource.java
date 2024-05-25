@@ -27,7 +27,7 @@ public class AssessmentDefinitionResource extends CommonUtil {
     }
 
     @GET
-    @RolesAllowed("Admin")
+    @RolesAllowed(ROLE_ADMIN)
     @Produces(MediaType.APPLICATION_JSON)
     public List<AssessmentPillar> getAvailablePillars(){
         return this.assessmentDefinitionService.getAvailableAssessmentPillars();
@@ -35,14 +35,14 @@ public class AssessmentDefinitionResource extends CommonUtil {
 
     @GET
     @Path("{pillarId}")
-    @RolesAllowed("Admin")
+    @RolesAllowed(ROLE_ADMIN)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAvailablePillarById(@PathParam("pillarId") Long pillarId){
         return Response.ok(this.assessmentDefinitionService.findAssessmentPillarById(pillarId)).build();
     }
 
     @POST
-    @RolesAllowed("Admin")
+    @RolesAllowed(ROLE_ADMIN)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response savePillar(@Valid AssessmentPillar newPillar) {
         this.assessmentDefinitionService.createAssessmentPillar(newPillar);
@@ -51,7 +51,7 @@ public class AssessmentDefinitionResource extends CommonUtil {
 
     @PUT
     @Path("{pillarId}")
-    @RolesAllowed("Admin")
+    @RolesAllowed(ROLE_ADMIN)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updatePillar(@PathParam("pillarId") Long pillarId, @Valid  AssessmentPillar pillarUpdates) {
         this.assessmentDefinitionService.updateAssessmentPillar(pillarId, pillarUpdates);
@@ -60,7 +60,7 @@ public class AssessmentDefinitionResource extends CommonUtil {
 
     @DELETE
     @Path("{pillarId}")
-    @RolesAllowed("Admin")
+    @RolesAllowed(ROLE_ADMIN)
     public Response removePillar(@PathParam("pillarId") Long pillarId) {
             this.assessmentDefinitionService.deleteAssessmentPillar(pillarId);
             return Response.ok(new ApiResponseDto(true, "Pillar Deleted !!")).build();
@@ -68,7 +68,7 @@ public class AssessmentDefinitionResource extends CommonUtil {
 
     @POST
     @Path("{pillarId}/categories")
-    @RolesAllowed("Admin")
+    @RolesAllowed(ROLE_ADMIN)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addCategory(@PathParam("pillarId") Long pillarId, @Valid AssessmentChoiceDto newPillarChoice) {
             try {
@@ -90,7 +90,7 @@ public class AssessmentDefinitionResource extends CommonUtil {
 
     @PUT
     @Path("{pillarId}/categories/{categoryId}")
-    @RolesAllowed("Admin")
+    @RolesAllowed(ROLE_ADMIN)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateCategory(@PathParam("pillarId") Long pillarId, @PathParam("categoryId") Long categoryId, AssessmentChoiceDto updatedCategory) {
         try {
@@ -112,7 +112,7 @@ public class AssessmentDefinitionResource extends CommonUtil {
 
     @GET
     @Path("{pillarId}/categories")
-    @RolesAllowed("Admin")
+    @RolesAllowed(ROLE_ADMIN)
     @Produces(MediaType.APPLICATION_JSON)
     public List<AssessmentChoiceDto> getAvailableCategoriesByPillarId(@PathParam("pillarId") Long pillarId, @QueryParam("quarter") String quarter){
         return this.assessmentDefinitionService.getAvailableCategoriesByPillarId(pillarId, quarter);
@@ -121,7 +121,7 @@ public class AssessmentDefinitionResource extends CommonUtil {
 
     @DELETE
     @Path("{pillarId}/categories/{categoryId}")
-    @RolesAllowed("Admin")
+    @RolesAllowed(ROLE_ADMIN)
     @Produces(MediaType.APPLICATION_JSON)
     public Response removeCategory(@PathParam("pillarId") Long pillarId, @PathParam("categoryId") Long categoryId) {
         try {

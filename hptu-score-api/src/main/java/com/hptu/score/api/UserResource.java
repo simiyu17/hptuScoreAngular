@@ -5,7 +5,6 @@ import com.hptu.score.dto.AuthRequestDto;
 import com.hptu.score.dto.UserDto;
 import com.hptu.score.dto.UserPassChangeDto;
 import com.hptu.score.entity.User;
-import com.hptu.score.service.UserService;
 import com.hptu.score.util.CommonUtil;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -18,19 +17,13 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 
 import java.util.List;
-import java.util.Objects;
 
 @Path("/v1/users")
 @ApplicationScoped
 public class UserResource extends CommonUtil {
-    private final UserService userService;
-
-    public UserResource(UserService userService) {
-        this.userService = userService;
-    }
 
     @GET
-    @RolesAllowed("Admin")
+    @RolesAllowed(ROLE_ADMIN)
     public List<User> getUsers(){
         return userService.getAllUsers();
     }
@@ -44,7 +37,7 @@ public class UserResource extends CommonUtil {
     }
 
     @POST
-    @RolesAllowed("Admin")
+    @RolesAllowed(ROLE_ADMIN)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response saveUser(@Valid UserDto newUser) {
         this.userService.createUser(newUser);
@@ -54,7 +47,7 @@ public class UserResource extends CommonUtil {
 
     @PUT
     @Path("{userId}")
-    @RolesAllowed("Admin")
+    @RolesAllowed(ROLE_ADMIN)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateUser(@PathParam("userId") Long userId, UserDto newUser) {
         this.userService.updateUser(userId, newUser);
@@ -63,7 +56,7 @@ public class UserResource extends CommonUtil {
 
     @GET
     @Path("{userId}")
-    @RolesAllowed("Admin")
+    @RolesAllowed(ROLE_ADMIN)
     public Response getUserById(@PathParam("userId") Long userId) {
         return Response.ok(userService.findUserById(userId)).build();
     }
@@ -72,7 +65,7 @@ public class UserResource extends CommonUtil {
 
     @POST
     @Path("change-password")
-    @RolesAllowed("Admin")
+    @RolesAllowed({ROLE_ADMIN, ROLE_USER})
     public Response changePassword(@Valid UserPassChangeDto userDto, @Context SecurityContext ctx) {
             User u = getCurrentLoggedUser(ctx);
             this.userService.updateUserPassword(u, userDto);

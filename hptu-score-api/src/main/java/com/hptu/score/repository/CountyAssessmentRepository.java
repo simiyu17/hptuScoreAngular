@@ -11,6 +11,6 @@ import java.util.List;
 @ApplicationScoped
 public interface CountyAssessmentRepository extends JpaRepository<CountyAssessmentMetaData, Long> {
 
-    List<CountyAssessmentMetaData> findByCountyCodeAndAssessmentQuarterAndAssessmentYear(@NotBlank String countyCode, @NotBlank String assessmentQuarter, @NotBlank String assessmentYear);
+    List<CountyAssessmentMetaData> findByCountyCodeAndAssessmentQuarterAndAssessmentYear(String countyCode, String assessmentQuarter, String assessmentYear);
 
 }

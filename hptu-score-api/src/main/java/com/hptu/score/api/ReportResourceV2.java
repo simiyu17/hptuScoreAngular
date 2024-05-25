@@ -10,16 +10,12 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,41 +32,28 @@ public class ReportResourceV2 extends CommonUtil {
 
     @GET
     @Path("county-assessments-summary")
-    @RolesAllowed({"Admin", "User"})
+    @RolesAllowed({ROLE_ADMIN, ROLE_USER})
     @Produces(MediaType.APPLICATION_JSON)
     public CountyAssessmentResultDetailedDto getCountyAssessmentSummary(@QueryParam(value = "countyCode") String countyCode,
                                                                         @QueryParam(value = "assessmentQuarter") String assessmentQuarter,
-                                                                        @QueryParam(value = "assessmentYear") String assessmentYear){
-        return this.assessmentService.getAssessmentPerformanceSummary(assessmentYear, countyCode, assessmentQuarter, null, true);
-    }
-
-    @GET
-    @Path("assessments-summary-per-pillar/{pillarName}")
-    @RolesAllowed({"Admin", "User"})
-    @Produces(MediaType.APPLICATION_JSON)
-    public CountyAssessmentResultDetailedDto getCountyAssessmentSummaryPerPillar(@PathParam(value = "pillarName") String pillarName,
-                                                                                 @QueryParam(value = "countyCode") String countyCode,
-                                                                                 @QueryParam(value = "assessmentQuarter") String assessmentQuarter,
-                                                                                 @QueryParam(value = "assessmentYear") String assessmentYear){
-        return this.assessmentService.getAssessmentPerformanceSummary(assessmentYear, countyCode, assessmentQuarter, pillarName, false);
+                                                                        @QueryParam(value = "assessmentYear") String assessmentYear,
+                                                                        @QueryParam(value = "pillarName") String pillarName){
+        return this.assessmentService.getAssessmentPerformanceSummary(assessmentYear, null, null, pillarName);
     }
 
     @GET
     @Path("county-assessments-summary-excel")
-    @RolesAllowed({"Admin", "User"})
+    @RolesAllowed({ROLE_ADMIN, ROLE_USER})
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCountyAssessmentSummaryToExcel(@QueryParam(value = "countyCode") String countyCode,
                                                                         @QueryParam(value = "assessmentQuarter") String assessmentQuarter,
                                                                         @QueryParam(value = "assessmentYear") String assessmentYear) throws IOException {
-        if (StringUtils.isBlank(assessmentYear)){
-            assessmentYear = String.valueOf(LocalDate.now(ZoneId.systemDefault()).getYear());
-        }
-        final var assessmentSummary = this.assessmentService.getAssessmentPerformanceSummary(assessmentYear, countyCode, assessmentQuarter, null, true);
+        final var assessmentSummary = this.assessmentService.getAssessmentPerformanceSummary(assessmentYear, countyCode, assessmentQuarter, null);
 
         final var countySummaryDtos = assessmentSummary.summary();
         Map<String, List<CountySummaryDto>> categorySummary = new HashMap<>();
         for (CountySummaryDto summary: countySummaryDtos){
-            final var pillarSummary = this.assessmentService.getAssessmentPerformanceSummary(assessmentYear, countyCode, assessmentQuarter, summary.getPillarName(), false);
+            final var pillarSummary = this.assessmentService.getAssessmentPerformanceSummary(assessmentYear, countyCode, assessmentQuarter, summary.getPillarName());
             categorySummary.put(summary.getPillarName(), pillarSummary.summary());
         }
         final var generator = new ExcelGenerator(countySummaryDtos, categorySummary, assessmentSummary.summaryTitle());
@@ -80,7 +63,7 @@ public class ReportResourceV2 extends CommonUtil {
 
     @GET
     @Path("export-to-excel")
-    @RolesAllowed({"Admin", "User"})
+    @RolesAllowed({ROLE_ADMIN, ROLE_USER})
     @Produces(MediaType.APPLICATION_JSON)
     public Response exportBase64ExcelFile(@QueryParam(value = "metaDataId") Long metaDataId,
                                           @QueryParam(value = "analysisByPillarTableTitle") String analysisByPillarTableTitle) throws IOException {

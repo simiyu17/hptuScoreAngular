@@ -35,6 +35,7 @@ public class CountyAssessment extends BaseEntity {
     public static final String CHOICE_SCORE_FIELD = "choiceScore";
     public static final String MAX_SCORE_FIELD = "maxScore";
     public static final String META_DATA_ID_FIELD = "metaData";
+    public static final String COUNTY_CODE_FIELD = "countyCode";
     
     @ManyToOne
     @JoinColumn(name = "meta_data_id")

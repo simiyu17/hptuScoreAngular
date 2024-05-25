@@ -65,8 +65,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   getCountyAssessmentSummary = () => {
     this.utilService.currentAssessmentData()
     .pipe(takeUntilDestroyed(this.destroyRef))
-    .subscribe((ass?: CountyAssessmentMetaData) => {
-      this.dashBoardService.getCountyAssessmentSummaryByPillar(ass)
+    .subscribe((ass: CountyAssessmentMetaData) => {
+      this.dashBoardService.getCountyAssessmentSummaryByPillar(ass, null)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
@@ -75,7 +75,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.dataSource = new MatTableDataSource(this.countuAssessmentSummaries);
           this.countuAssessmentSummaryBarChartDataPoints = [...response.summaryDataPoints];
           if (this.countuAssessmentSummaries?.length > 0) {
-            this.exportToExcel(this.countuAssessmentSummaries.at(0).metaDataId);
+            this.exportToExcel(ass);
           }
         },
         error: (error) => { }
@@ -87,8 +87,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.getCountyAssessmentSummary();
   }
 
-  exportToExcel(metaDataId: number): void {
-    this.dashBoardService.exportCountyAssessmentSummaryToExcel(metaDataId)
+  exportToExcel(ass?: CountyAssessmentMetaData): void {
+    this.dashBoardService.exportCountyAssessmentSummaryToExcelV2(ass)
     .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
@@ -102,7 +102,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   openPillarDetails(summary: CountySummaryDto): void {
-    this.router.navigateByUrl(`/dashboard/${summary.metaDataId}/${summary.pillarName}`)
+    //this.router.navigateByUrl(`/dashboard/${summary.pillarName}`)
+    
+
+    this.utilService.currentAssessmentData()
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe((ass: CountyAssessmentMetaData | null) => {
+      console.log(ass)
+      this.router.navigate(['/dashboard/pillar-summary'], {queryParams: {
+        assessmentYear: ass ? ass.assessmentYear : null, 
+        assessmentQuarter: ass?.assessmentQuarter, 
+        countyCode: ass?.countyCode, 
+        pillarName: summary.pillarName
+      }})
+    })
   }
 
   ngOnDestroy(): void {

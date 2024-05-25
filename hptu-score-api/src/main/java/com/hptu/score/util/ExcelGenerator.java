@@ -3,6 +3,8 @@ package com.hptu.score.util;
 import com.hptu.score.dto.CountySummaryDto;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.util.IOUtils;
@@ -27,6 +29,7 @@ import java.util.Base64;
 
 public class ExcelGenerator {
 
+    private Log log = LogFactory.getLog(ExcelGenerator.class);
     List<CountySummaryDto> countySummaryDtos;
     Map<String, List<CountySummaryDto>> categorySummary;
 
@@ -57,6 +60,7 @@ public class ExcelGenerator {
     }
 
     private void writePillarHeading(String pillar, int rowNum) {
+        log.info(pillar);
         Row pillarRow = sheet.createRow(rowNum);
         pillarRow.setHeight((short) 500);
         CellStyle pillarStyle = workbook.createCellStyle();

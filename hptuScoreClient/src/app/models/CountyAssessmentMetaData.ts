@@ -1,8 +1,8 @@
 export interface CountyAssessmentMetaData {
     id?: number
-    assessmentQuarter: string | null | undefined;
-    assessmentYear: string | null | undefined;
-    assessmentLevel: string | null | undefined;
-    countyCode: string | null | undefined;
+    assessmentQuarter: string | null;
+    assessmentYear: string | null;
+    assessmentLevel: string | null;
+    countyCode: string | null;
     countyName?: string;
 }

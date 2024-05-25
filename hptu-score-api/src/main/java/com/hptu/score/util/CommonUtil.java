@@ -25,9 +25,12 @@ public abstract class CommonUtil {
     protected org.slf4j.Logger log = LoggerFactory.getLogger(getClass());
 
     @Inject
-    JsonWebToken jsonWebToken;
+    protected JsonWebToken jsonWebToken;
     @Inject
-    UserService userService;
+    protected UserService userService;
+
+    protected static final String ROLE_ADMIN = "Admin";
+    protected static final String ROLE_USER = "User";
 
     public User getCurrentLoggedUser(SecurityContext ctx) {
         String username;

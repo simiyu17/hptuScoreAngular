@@ -14,7 +14,7 @@ export const routes: Routes = [
                 loadComponent: () => import('./components/dashboard/dashboard.component').then(c => c.DashboardComponent)
             },
             {
-                path: ':meta-id/:pillar-name',
+                path: 'pillar-summary',
                 loadComponent: () => import('./components/dashboard/pillar-detailed/pillar-detailed.component').then(c => c.PillarDetailedComponent)
             }
         ]

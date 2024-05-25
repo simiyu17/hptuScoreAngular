@@ -51,9 +51,9 @@ export class DashboardFilterComponent implements OnInit {
 
   createFIlterForm(): void {
     this.filterFormGroup = this._formBuilder.group({
-      assessmentQuarter: ['', Validators.required],
+      assessmentQuarter: [''],
       assessmentYear: ['', Validators.required],
-      countyCode: ['', Validators.required]
+      countyCode: ['']
     }); 
   }
 

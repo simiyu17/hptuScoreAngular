@@ -181,10 +181,10 @@ export class CreateAssessmentComponent implements OnInit {
   submitScores(): void {
     let countyAssessmentDto: CountyAssessmentDto = {
       assessmentMetaDataDto: {
-        assessmentQuarter: this.firstFormGroup.value.assessmentQuarter,
-        assessmentYear: this.firstFormGroup.value.assessmentYear,
-        assessmentLevel: this.firstFormGroup.value.assessmentLevel,
-        countyCode: this.firstFormGroup.value.countyCode
+        assessmentQuarter: this.firstFormGroup.value.assessmentQuarter ? this.firstFormGroup.value.assessmentQuarter : null,
+        assessmentYear: this.firstFormGroup.value.assessmentYear ? this.firstFormGroup.value.assessmentYear : null,
+        assessmentLevel: this.firstFormGroup.value.assessmentLevel ? this.firstFormGroup.value.assessmentLevel : null,
+        countyCode: this.firstFormGroup.value.countyCode ? this.firstFormGroup.value.countyCode : null
       },
       assessments: this.pillars.flatMap(p => p.formArray.value)
     }

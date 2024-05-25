@@ -29,7 +29,7 @@ public class ReportResource extends CommonUtil {
 
     @GET
     @Path("counties")
-    @RolesAllowed({"Admin", "User"})
+    @RolesAllowed({ROLE_ADMIN, ROLE_USER})
     @Produces(MediaType.APPLICATION_JSON)
     public List<CountyDto> getAvailablePillars(){
         return getKenyanCounties();
@@ -37,7 +37,7 @@ public class ReportResource extends CommonUtil {
 
     @GET
     @Path("county-assessments-summary")
-    @RolesAllowed({"Admin", "User"})
+    @RolesAllowed({ROLE_ADMIN, ROLE_USER})
     @Produces(MediaType.APPLICATION_JSON)
     public CountyAssessmentResultDetailedDto getCountyAssessmentSummary(@QueryParam(value = "countyCode") String countyCode,
                                                                                @QueryParam(value = "assessmentQuarter") String assessmentQuarter,
@@ -59,7 +59,7 @@ public class ReportResource extends CommonUtil {
 
     @GET
     @Path("assessments-summary-per-pillar/{metaDataId}/{pillarName}")
-    @RolesAllowed({"Admin", "User"})
+    @RolesAllowed({ROLE_ADMIN, ROLE_USER})
     @Produces(MediaType.APPLICATION_JSON)
     public CountyAssessmentResultDetailedDto getCountyAssessmentSummaryPerPillar(@PathParam(value = "metaDataId") Long metaDataId,
                                                @PathParam(value = "pillarName") String pillarName){
@@ -78,7 +78,7 @@ public class ReportResource extends CommonUtil {
 
     @GET
     @Path("export-to-excel")
-    @RolesAllowed({"Admin", "User"})
+    @RolesAllowed({ROLE_ADMIN, ROLE_USER})
     @Produces(MediaType.APPLICATION_JSON)
     public Response exportBase64ExcelFile(@QueryParam(value = "metaDataId") Long metaDataId,
                                           @QueryParam(value = "analysisByPillarTableTitle") String analysisByPillarTableTitle) throws IOException {

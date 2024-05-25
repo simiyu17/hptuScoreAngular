@@ -27,7 +27,7 @@ public class CountyAssessmentResource extends CommonUtil {
     }
 
     @GET
-    @RolesAllowed({"Admin", "User"})
+    @RolesAllowed({ROLE_ADMIN, ROLE_USER})
     @Produces(MediaType.APPLICATION_JSON)
     public List<CountyAssessmentMetaData> getAvailableAssessments(){
         List<CountyAssessmentMetaData> list = new ArrayList<>();
@@ -42,28 +42,28 @@ public class CountyAssessmentResource extends CommonUtil {
 
     @GET
     @Path("{assessmentId}")
-    @RolesAllowed({"Admin", "User"})
+    @RolesAllowed({ROLE_ADMIN, ROLE_USER})
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAssessmentById(@PathParam("assessmentId") Long assessmentId){
         return Response.ok(this.countyAssessmentService.findCountyAssessmentMetaDataById(assessmentId)).build();
     }
 
     @POST
-    @RolesAllowed({"Admin", "User"})
+    @RolesAllowed({ROLE_ADMIN, ROLE_USER})
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createCountAssessment(@Valid CountyAssessmentDto newAssessment) {
         try {
             this.countyAssessmentService.createCountyAssessment(newAssessment);
             return Response.status(Response.Status.CREATED).entity(new ApiResponseDto(true, "County assessment was submitted!!")).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.CREATED).entity(new ApiResponseDto(false, "An error occurred: "+e.getMessage())).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ApiResponseDto(false, "An error occurred: "+e.getMessage())).build();
         }
 
     }
 
     @GET
     @Path("find-one")
-    @RolesAllowed({"Admin", "User"})
+    @RolesAllowed({ROLE_ADMIN, ROLE_USER})
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAssessmentById(@QueryParam("countyCode") String countyCode,
                                       @QueryParam("assessmentYear") String assessmentYear,
@@ -77,7 +77,7 @@ public class CountyAssessmentResource extends CommonUtil {
 
     @DELETE
     @Path("{assessmentId}")
-    @RolesAllowed({"Admin", "User"})
+    @RolesAllowed({ROLE_ADMIN, ROLE_USER})
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteAssessmentById(@PathParam("assessmentId") Long assessmentId){
         countyAssessmentService.deleteCountyAssessmentMetaData(assessmentId);

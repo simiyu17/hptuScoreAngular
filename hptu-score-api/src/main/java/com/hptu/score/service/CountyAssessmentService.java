@@ -33,5 +33,5 @@ public interface CountyAssessmentService {
 
 	CountyAssessmentResultDetailedDto getAssessmentSummary(String countyCode, String assessmentQuarter, String assessmentYear);
 
-	CountyAssessmentResultDetailedDto getAssessmentPerformanceSummary(@NotBlank String assessmentYear, String countyCode, String assessmentQuarter, String pillar, boolean groupByPillar);
+	CountyAssessmentResultDetailedDto getAssessmentPerformanceSummary(String assessmentYear, String countyCode, String assessmentQuarter, String pillar);
 }

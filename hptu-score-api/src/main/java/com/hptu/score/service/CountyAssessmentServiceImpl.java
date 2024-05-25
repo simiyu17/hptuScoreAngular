@@ -12,7 +12,6 @@ import com.hptu.score.exception.CountyAssessmentException;
 import com.hptu.score.repository.CountyAssessmentRepository;
 import com.hptu.score.util.CommonUtil;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Tuple;
 import jakarta.persistence.TypedQuery;
@@ -21,7 +20,6 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
@@ -32,26 +30,33 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
+import static com.hptu.score.entity.CountyAssessment.COUNTY_CODE_FIELD;
+
 @ApplicationScoped
 public class CountyAssessmentServiceImpl implements CountyAssessmentService {
 	
 	private final CountyAssessmentRepository assessmentRepository;
-	@Inject
-	EntityManager entityManager;
+
+	private final EntityManager entityManager;
 	
-	public CountyAssessmentServiceImpl(CountyAssessmentRepository assessmentRepository) {
+	public CountyAssessmentServiceImpl(CountyAssessmentRepository assessmentRepository, EntityManager entityManager) {
 		this.assessmentRepository = assessmentRepository;
-	}
+        this.entityManager = entityManager;
+    }
 
 	@Transactional
 	@Override
 	public CountyAssessmentMetaData createCountyAssessment(CountyAssessmentDto countyAssessmentDto){
+		try{
 		CountyAssessmentMetaData metaData = CountyAssessmentMetaData.createCountyAssessmentMetaData(countyAssessmentDto.getAssessmentMetaDataDto());
 		List<CountyAssessment> assessments = countyAssessmentDto.getAssessments().stream()
 				.map(a -> new CountyAssessment(a.getPillarName(), a.getCategory(), a.getChoiceText(), a.getChoiceScore(), a.getMaxScore(), a.getScoreRemarks())).toList();
 		areAssessmentsValid(assessments);
 		metaData.addAssessments(assessments);
 		return this.assessmentRepository.save(metaData);
+	}catch (Exception e){
+		throw new CountyAssessmentException("Error: "+e.getMessage());
+	}
 	}
 
 	private void areAssessmentsValid(List<CountyAssessment> assessments){
@@ -62,18 +67,26 @@ public class CountyAssessmentServiceImpl implements CountyAssessmentService {
 
 	@Override
 	public CountyAssessmentMetaData addCountyAssessmentDetails(Long assessmentId, List<CountyAssessment> assessments) {
+		try{
 		CountyAssessmentMetaData status = this.findCountyAssessmentMetaDataById(assessmentId);
 		status.addAssessments(assessments);
 		return this.assessmentRepository.save(status);
+	}catch (Exception e){
+		throw new CountyAssessmentException("Error: "+e.getMessage());
+	}
 	}
 
 	@Transactional
 	@Override
 	public void clearCountyAssessments(Long assessmentId, User user) {
+		try{
 		CountyAssessmentMetaData status = this.findCountyAssessmentMetaDataById(assessmentId);
 		status.getAssessments().clear();
 		status.setStatus(CountyAssessmentMetaData.Status.INCOMPLETE);
 		status.setLastModifiedBy(user);
+	}catch (Exception e){
+		throw new CountyAssessmentException("Error: "+e.getMessage());
+	}
 	}
 
 	@Override
@@ -101,6 +114,7 @@ public class CountyAssessmentServiceImpl implements CountyAssessmentService {
 
 	@Override
 	public List<CountySummaryDto> getCountyAssessmentSummaryGroupedByCategory(Long assessmentId, String pillar) {
+		try{
 		List<CountySummaryDto> result = new ArrayList<>();
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Tuple> query = criteriaBuilder.createQuery(Tuple.class);
@@ -113,10 +127,14 @@ public class CountyAssessmentServiceImpl implements CountyAssessmentService {
 		TypedQuery<Tuple> typedQuery = entityManager.createQuery(query.where(predicates));
 		typedQuery.getResultList().forEach(t -> result.add(new CountySummaryDto(new CountySummaryDto.Summary("", t.get(0, String.class), t.get(1, Integer.class), t.get(2, Integer.class), 1))));
 		return  result;
+	}catch (Exception e){
+		throw new CountyAssessmentException("Error: "+e.getMessage());
+	}
 	}
 
 	@Override
 	public List<CountySummaryDto> getCountyAssessmentSummaryGroupedByPillar(Long assessmentId) {
+		try{
 		List<CountySummaryDto> result = new ArrayList<>();
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Tuple> query = criteriaBuilder.createQuery(Tuple.class);
@@ -128,10 +146,14 @@ public class CountyAssessmentServiceImpl implements CountyAssessmentService {
 		TypedQuery<Tuple> typedQuery = entityManager.createQuery(query.where(predicates));
 		typedQuery.getResultList().forEach(t -> result.add(new CountySummaryDto(new CountySummaryDto.Summary(t.get(0, String.class), "", t.get(1, Integer.class), t.get(2, Integer.class), 1))));
 		return  result;
+	}catch (Exception e){
+		throw new CountyAssessmentException("Error: "+e.getMessage());
+	}
 	}
 
 	@Override
 	public CountyAssessmentResultDetailedDto getAssessmentSummary(String countyCode, String assessmentQuarter, String assessmentYear) {
+		try{
 		if (StringUtils.isBlank(assessmentYear)){
 			assessmentYear = String.valueOf(LocalDate.now(ZoneId.systemDefault()).getYear());
 		}
@@ -147,14 +169,18 @@ public class CountyAssessmentServiceImpl implements CountyAssessmentService {
 					.map(s -> new ReportByPillar.PillarDataPointModel(s.getPillarName(), s.getScorePercent())).toList();
 		}
 		return new CountyAssessmentResultDetailedDto(countySummaryDtos, summaryDataPoints, "");
+	}catch (Exception e){
+		throw new CountyAssessmentException("Error: "+e.getMessage());
+	}
 	}
 
 	@Override
-	public CountyAssessmentResultDetailedDto getAssessmentPerformanceSummary(String assessmentYear, String countyCode, String assessmentQuarter, String pillar, boolean groupByPillar) {
+	public CountyAssessmentResultDetailedDto getAssessmentPerformanceSummary(String assessmentYear, String countyCode, String assessmentQuarter, String pillar) {
 		try {
 			if (StringUtils.isBlank(assessmentYear)){
 				assessmentYear = String.valueOf(LocalDate.now(ZoneId.systemDefault()).getYear());
 			}
+			var groupByPillar = StringUtils.isBlank(pillar);
 			List<CountySummaryDto> countySummaryDtos = new ArrayList<>();
 			CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 			CriteriaQuery<Tuple> query = criteriaBuilder.createQuery(Tuple.class);
@@ -181,7 +207,7 @@ public class CountyAssessmentServiceImpl implements CountyAssessmentService {
 				predicateList.add(criteriaBuilder.equal(assessmentRoot.get(CountyAssessment.PILLAR_FIELD), pillar));
 			}
 			if (StringUtils.isNotBlank(countyCode)){
-				predicateList.add(criteriaBuilder.equal(assessmentRoot.get(CountyAssessment.META_DATA_ID_FIELD).get("countyCode"), countyCode));
+				predicateList.add(criteriaBuilder.equal(assessmentRoot.get(CountyAssessment.META_DATA_ID_FIELD).get(COUNTY_CODE_FIELD), countyCode));
 				summaryTitle = String.format("Assessment Summary For %s County,  Year %s", CommonUtil.getCountyByCode(countyCode), assessmentYear);
 				countyNumber = 1;
 			}
@@ -209,8 +235,8 @@ public class CountyAssessmentServiceImpl implements CountyAssessmentService {
 			CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 			CriteriaQuery<Tuple> query = criteriaBuilder.createQuery(Tuple.class);
 			Root<CountyAssessmentMetaData> assessmentRoot = query.from(CountyAssessmentMetaData.class);
-			query.groupBy(assessmentRoot.get("countyCode"));
-			query.multiselect(assessmentRoot.get("countyCode"), criteriaBuilder.sum(assessmentRoot.get("id")));
+			query.groupBy(assessmentRoot.get(COUNTY_CODE_FIELD));
+			query.multiselect(assessmentRoot.get(COUNTY_CODE_FIELD), criteriaBuilder.count(assessmentRoot.get("id")));
 			List<Predicate> predicateList = new ArrayList<>();
 			predicateList.add(criteriaBuilder.equal(assessmentRoot.get("assessmentYear"), assessmentYear));
 			if (StringUtils.isNotBlank(assessmentQuarter)){
