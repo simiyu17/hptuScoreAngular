@@ -13,7 +13,7 @@ export class UtilService {
 
   constructor(private httpClient: HttpClient, private globalService: GlobalService) { }
 
-  getAllKenyanCounties = (): Observable<any> => this.httpClient.get(`${this.globalService.BASE_API_URL}/report/counties`);
+  getAllKenyanCounties = (): Observable<any> => this.httpClient.get(`${this.globalService.BASE_API_URL}/reports/counties`);
 
   currentAssessmentData = (): Observable<CountyAssessmentMetaData> => this.filteredAssessment.asObservable();
 

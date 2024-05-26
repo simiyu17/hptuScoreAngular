@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,13 +41,13 @@ public class AssessmentDefinitionController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponseDto> savePillar(@Valid AssessmentPillar newPillar) {
+    public ResponseEntity<ApiResponseDto> savePillar(@Valid @RequestBody AssessmentPillar newPillar) {
         this.assessmentDefinitionService.createAssessmentPillar(newPillar);
         return new ResponseEntity<>(new ApiResponseDto(true, "Pillar Created!!"), HttpStatus.CREATED);
     }
 
     @PutMapping("{pillarId}")
-    public ResponseEntity<ApiResponseDto> updatePillar(@PathVariable("pillarId") Long pillarId, @Valid  AssessmentPillar pillarUpdates) {
+    public ResponseEntity<ApiResponseDto> updatePillar(@PathVariable("pillarId") Long pillarId, @Valid  @RequestBody AssessmentPillar pillarUpdates) {
         this.assessmentDefinitionService.updateAssessmentPillar(pillarId, pillarUpdates);
         return new ResponseEntity<>(new ApiResponseDto(true, "Pillar Updated!!"), HttpStatus.OK);
     }
@@ -58,7 +59,7 @@ public class AssessmentDefinitionController {
     }
 
     @PostMapping("{pillarId}/categories")
-    public ResponseEntity<ApiResponseDto> addCategory(@PathVariable("pillarId") Long pillarId, @Valid AssessmentChoiceDto newPillarChoice) {
+    public ResponseEntity<ApiResponseDto> addCategory(@PathVariable("pillarId") Long pillarId, @Valid @RequestBody AssessmentChoiceDto newPillarChoice) {
         try {
             if (!isCategoryChoiceFourMaxScore(newPillarChoice)){
                 return new ResponseEntity<>(new ApiResponseDto(false, "Category choice 4 must contain the max score !!!!!"), HttpStatus.BAD_REQUEST);
@@ -77,7 +78,7 @@ public class AssessmentDefinitionController {
     }
 
     @PutMapping("{pillarId}/categories/{categoryId}")
-    public ResponseEntity<ApiResponseDto> updateCategory(@PathVariable("pillarId") Long pillarId, @PathVariable("categoryId") Long categoryId, AssessmentChoiceDto updatedCategory) {
+    public ResponseEntity<ApiResponseDto> updateCategory(@PathVariable("pillarId") Long pillarId, @PathVariable("categoryId") Long categoryId, @Valid @RequestBody AssessmentChoiceDto updatedCategory) {
         try {
             var currentPillar = this.assessmentDefinitionService.findAssessmentPillarById(pillarId);
             var pillarChoices = currentPillar.getAssessmentChoices();
@@ -96,7 +97,7 @@ public class AssessmentDefinitionController {
     }
 
     @GetMapping("{pillarId}/categories")
-    public ResponseEntity<List<AssessmentChoiceDto>>  getAvailableCategoriesByPillarId(@PathVariable("pillarId") Long pillarId, @RequestParam("quarter") String quarter){
+    public ResponseEntity<List<AssessmentChoiceDto>>  getAvailableCategoriesByPillarId(@PathVariable("pillarId") Long pillarId, @RequestParam(value = "quarter", required = false) String quarter){
         return new ResponseEntity<>(this.assessmentDefinitionService.getAvailableCategoriesByPillarId(pillarId, quarter), HttpStatus.OK);
     }
 

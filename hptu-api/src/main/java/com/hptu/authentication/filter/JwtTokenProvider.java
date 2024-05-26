@@ -4,7 +4,10 @@ import com.hptu.authentication.domain.AppUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.function.Function;
 
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +52,7 @@ public class JwtTokenProvider {
                 .subject(user.getUsername())
                 .claim("user_id", user.getId())
                 .claim("user_full_name", user.getUserFullName())
-                .claim("user_role", user.getRole())
+                .claim("roles", new HashSet<>(Collections.singletonList(user.getRole())))
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.SECRET.getBytes())

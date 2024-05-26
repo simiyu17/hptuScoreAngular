@@ -38,7 +38,7 @@ export class AuthService {
   public isAuthenticated = () : boolean => this.getAuthToken() !== null && !this.jwtService.isTokenExpired(this.getAuthToken());
 
   public isUserAdmin(): boolean {
-    return (this.decodeAuthToken()['groups'] as Array<string>).includes('Admin');
+    return (this.decodeAuthToken()['roles'] as Array<string>).includes('Admin');
   }
 
   userRedirection(): void {

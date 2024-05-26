@@ -51,10 +51,11 @@ export class LoginComponent implements OnInit {
         this.authService.userRedirection();
 
       }, error: (error: HttpErrorResponse) => {
-        if(error.status != 401){
+        console.log(error.error)
+        if(error.status != 401 && error.status != 403){
           this.gs.openSnackBar("No connection to server ", "Dismiss");
         } else {
-          this.gs.openSnackBar(`An error occured: ${error.error.message}`, "Dismiss");
+          this.gs.openSnackBar(`An error occured: ${error.error.detail}`, "Dismiss");
         }        
       }
     });

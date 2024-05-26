@@ -18,7 +18,7 @@ public abstract class CommonUtil implements ApplicationContextAware {
 
     protected org.slf4j.Logger log = LoggerFactory.getLogger(getClass());
 
-    protected List<CountyDto> getKenyanCounties(){
+    public static List<CountyDto> getKenyanCounties(){
         List<CountyDto> countyDtos = new ArrayList<>();
         getKenyanCountiesMap().forEach((key1, value) -> countyDtos.add(new CountyDto(key1, value)));
         countyDtos.sort(Comparator.comparing(CountyDto::name));

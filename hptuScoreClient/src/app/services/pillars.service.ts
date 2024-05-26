@@ -15,24 +15,24 @@ export class PillarsService {
 
 
   getAllPillars(): Observable<any> {
-    return this.httpClient.get(`${this.globalService.BASE_API_URL}/assessment-pillars`);
+    return this.httpClient.get(`${this.globalService.BASE_API_URL}/assessment-definitions`);
   }
 
   createPillar(pillar: AssessmentPillar): Observable<any> {
-    return this.httpClient.post(`${this.globalService.BASE_API_URL}/assessment-pillars`, JSON.stringify(pillar));
+    return this.httpClient.post(`${this.globalService.BASE_API_URL}/assessment-definitions`, JSON.stringify(pillar));
   }
 
   updatePillarById(pillarId: number, udatedPillar: AssessmentPillar): Observable<any> {
-    return this.httpClient.put(`${this.globalService.BASE_API_URL}/assessment-pillars/${pillarId}`, JSON.stringify(udatedPillar));
+    return this.httpClient.put(`${this.globalService.BASE_API_URL}/assessment-definitions/${pillarId}`, JSON.stringify(udatedPillar));
   }
 
 
   getPillarById(pillarId: number): Observable<any> {
-    return this.httpClient.get(`${this.globalService.BASE_API_URL}/assessment-pillars/${pillarId}`);
+    return this.httpClient.get(`${this.globalService.BASE_API_URL}/assessment-definitions/${pillarId}`);
   }
 
   deletePillarById(pillarId: number): Observable<any> {
-    return this.httpClient.delete(`${this.globalService.BASE_API_URL}/assessment-pillars/${pillarId}`);
+    return this.httpClient.delete(`${this.globalService.BASE_API_URL}/assessment-definitions/${pillarId}`);
   }
 
 
@@ -41,25 +41,25 @@ export class PillarsService {
 
   getAllCategoriesByPillarId(pillarId: any, selectedQuarter: string | null): Observable<any> {
     if(selectedQuarter){
-      return this.httpClient.get(`${this.globalService.BASE_API_URL}/assessment-pillars/${pillarId}/categories?quarter=${selectedQuarter}`);
+      return this.httpClient.get(`${this.globalService.BASE_API_URL}/assessment-definitions/${pillarId}/categories?quarter=${selectedQuarter}`);
     }
-    return this.httpClient.get(`${this.globalService.BASE_API_URL}/assessment-pillars/${pillarId}/categories`);
+    return this.httpClient.get(`${this.globalService.BASE_API_URL}/assessment-definitions/${pillarId}/categories`);
   }
 
   createPillarCategory(pillarId: number, category: PillarCategory): Observable<any> {
-    return this.httpClient.post(`${this.globalService.BASE_API_URL}/assessment-pillars/${pillarId}/categories`, JSON.stringify(category));
+    return this.httpClient.post(`${this.globalService.BASE_API_URL}/assessment-definitions/${pillarId}/categories`, JSON.stringify(category));
   }
 
   updatePillarCategoryById(pillarId: number, categoryId: number, udatedCategory: PillarCategory): Observable<any> {
-    return this.httpClient.put(`${this.globalService.BASE_API_URL}/assessment-pillars/${pillarId}/categories/${categoryId}`, JSON.stringify(udatedCategory));
+    return this.httpClient.put(`${this.globalService.BASE_API_URL}/assessment-definitions/${pillarId}/categories/${categoryId}`, JSON.stringify(udatedCategory));
   }
 
 
   getPillarCategoryById(pillarId: number, categoryId: number): Observable<any> {
-    return this.httpClient.get(`${this.globalService.BASE_API_URL}/assessment-pillars/${pillarId}/categories/${categoryId}`);
+    return this.httpClient.get(`${this.globalService.BASE_API_URL}/assessment-definitions/${pillarId}/categories/${categoryId}`);
   }
 
   deletePillarCategoryById(pillarId: number, categoryId: number): Observable<any> {
-    return this.httpClient.delete(`${this.globalService.BASE_API_URL}/assessment-pillars/${pillarId}/categories/${categoryId}`);
+    return this.httpClient.delete(`${this.globalService.BASE_API_URL}/assessment-definitions/${pillarId}/categories/${categoryId}`);
   }
 }

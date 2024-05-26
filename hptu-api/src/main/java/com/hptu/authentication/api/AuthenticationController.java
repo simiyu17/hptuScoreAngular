@@ -20,7 +20,7 @@ public class AuthenticationController {
 
     private final UserService userService;
 
-    @PostMapping("api/v1/authenticate")
+    @PostMapping("api/v1/users/authenticate")
     public ResponseEntity<AuthResponseDto> authenticateUser(@Valid @RequestBody AuthRequestDto jwtRequest){
         return new ResponseEntity<>(userService.authenticateUser(jwtRequest), HttpStatus.OK);
     }

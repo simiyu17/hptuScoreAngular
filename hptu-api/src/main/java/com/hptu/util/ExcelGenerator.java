@@ -74,7 +74,6 @@ public class ExcelGenerator {
     }
 
     private void writePillarHeading(String pillar, int rowNum) {
-        log.info(pillar);
         Row pillarRow = sheet.createRow(rowNum);
         pillarRow.setHeight((short) 500);
         CellStyle pillarStyle = workbook.createCellStyle();
