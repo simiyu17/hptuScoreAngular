@@ -1,0 +1,80 @@
+
+<form [formGroup]="questionSummaryForm" (ngSubmit)="onSubmit()">
+    <mat-card>
+      <mat-card-title>Question Summary Form</mat-card-title>
+      <mat-card-content>
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Summary</mat-label>
+            <input matInput formControlName="summary">
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill">
+            <mat-label>Minimum Previous Question Score</mat-label>
+            <input matInput formControlName="minimumPreviousQuestionScore" type="number">
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill">
+            <mat-label>Question Order Number</mat-label>
+            <input matInput formControlName="questionOrderNumber" type="number">
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill">
+            <mat-label>Functionality ID</mat-label>
+            <input matInput formControlName="functionalityId" type="number">
+          </mat-form-field>
+        </div>
+  
+        <div formArrayName="questions">
+          <div *ngFor="let question of questions.controls; let i = index" [formGroupName]="i">
+            <mat-divider></mat-divider>
+            <mat-card-title>Question {{ i + 1 }}</mat-card-title>
+  
+            <mat-form-field appearance="fill">
+              <mat-label>HPTU Question</mat-label>
+              <input matInput formControlName="hptuQuestion">
+            </mat-form-field>
+  
+            <mat-form-field appearance="fill">
+              <mat-label>Score</mat-label>
+              <input matInput formControlName="score" type="number">
+            </mat-form-field>
+  
+            <mat-form-field appearance="fill">
+              <mat-label>Question Order</mat-label>
+              <input matInput formControlName="questionOrder" type="number">
+            </mat-form-field>
+          </div>
+  
+          <button mat-raised-button color="primary" type="button" (click)="addQuestion()">Add Question</button>
+        </div>
+  
+        <div formArrayName="scoreSummaries">
+          <div *ngFor="let scoreSummary of scoreSummaries.controls; let i = index" [formGroupName]="i">
+            <mat-divider></mat-divider>
+            <mat-card-title>Score Summary {{ i + 1 }}</mat-card-title>
+  
+            <mat-form-field appearance="fill">
+              <mat-label>From</mat-label>
+              <input matInput formControlName="from" type="number">
+            </mat-form-field>
+  
+            <mat-form-field appearance="fill">
+              <mat-label>To</mat-label>
+              <input matInput formControlName="to" type="number">
+            </mat-form-field>
+  
+            <mat-form-field appearance="fill">
+              <mat-label>Summary Color</mat-label>
+              <input matInput formControlName="summaryColor">
+            </mat-form-field>
+          </div>
+  
+          <button mat-raised-button color="primary" type="button" (click)="addScoreSummary()">Add Score Summary</button>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" type="submit">Submit</button>
+      </mat-card-actions>
+    </mat-card>
+  </form>

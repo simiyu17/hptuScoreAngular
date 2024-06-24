@@ -6,8 +6,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.util.List;
+import org.mapstruct.NullValueMappingStrategy;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
 public interface ScoreSummarySetUpMapper {
 
     @Mapping(target = "questionSummaryId", expression = "java(scoreSummarySetUp.getQuestionSummary().getId())")

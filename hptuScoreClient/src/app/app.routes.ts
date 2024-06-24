@@ -31,6 +31,14 @@ export const routes: Routes = [
             {
                 path: 'pillars/:id/categories',
                 loadComponent: () => import('./components/assessment-setup/pillar-categories/pillar-categories.component').then(c => c.PillarCategoriesComponent)
+            },
+            {
+                path: 'functionalities/:id',
+                loadComponent: () => import('./components/assessment-setup/question-summary-list/question-summary-list.component').then(c => c.QuestionSummaryListComponent)
+            },
+            {
+                path: 'functionalities/:id/add-summary-question',
+                loadComponent: () => import('./components/assessment-setup/add-question-summary/add-question-summary.component').then(c => c.AddQuestionSummaryComponent)
             }
         ]
     },

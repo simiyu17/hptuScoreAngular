@@ -18,6 +18,10 @@ import { PillarsService } from '../../services/pillars.service';
 import { GlobalService } from '../../services/global.service';
 import { ConfirmDialogModel } from '../../models/ConfirmDialogModel';
 import {MatTabsModule} from '@angular/material/tabs';
+import { FunctionalityDto } from '../../dto/FunctionalityDto';
+import { FunctionalityService } from '../../services/functionality.service';
+import { EditFunctionalityComponent } from './edit-functionality/edit-functionality.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @Component({
   selector: 'app-assessment-setup',
@@ -32,22 +36,32 @@ import {MatTabsModule} from '@angular/material/tabs';
     MatButtonModule, 
     MatSortModule, 
     MatInputModule,
-    MatTabsModule
+    MatTabsModule,
+    FlexLayoutModule
   ],
   templateUrl: './assessment-setup.component.html',
   styleUrl: './assessment-setup.component.scss'
 })
 export class AssessmentSetupComponent {
 
-  displayedColumns: string[] = ['pillarName', 'pillarCategoryCount', 'action'];
+  displayedColumns: string[] = ['pillarName', 'pillarCategoryCount', 'actions'];
   dataSource!: MatTableDataSource<AssessmentPillar>;
+  functionalityDataSource!: MatTableDataSource<FunctionalityDto>;
+
+  functionalities: FunctionalityDto[] = [];
+  functionalityDisplayedColumns: string[] = ['hptuName', 'functionalityOrder', 'description', 'actions'];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
 
   pillars?: AssessmentPillar[];
-  constructor(public dialog: MatDialog, private pillarService: PillarsService, private router: Router, private gs: GlobalService) { }
+  constructor(
+    public dialog: MatDialog, 
+    private pillarService: PillarsService, 
+    private router: Router, 
+    private gs: GlobalService,
+    private functionalityService: FunctionalityService) { }
 
   openNewPillarDialog() {
     const dialogRef = this.dialog.open(CreatePillarComponent);
@@ -82,6 +96,31 @@ export class AssessmentSetupComponent {
       });
   }
 
+  openNewFunctionalityDialog() {
+    const dialogRef = this.dialog.open(EditFunctionalityComponent, {
+      width: '400px',
+      data: { isEditMode: false }
+    });
+
+    dialogRef.afterClosed().subscribe({
+      next: (res) => {
+          this.loadFunctionalities();
+      }
+    });
+  }
+
+  deleteFunctionality(id: number): void {
+    this.functionalityService.deleteFunctionality(id).subscribe(() => {
+      this.loadFunctionalities();
+    });
+  }
+
+  loadFunctionalities(): void {
+    this.functionalityService.getFunctionalities().subscribe(data => {
+      this.functionalities = data;
+    });
+  }
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -93,10 +132,15 @@ export class AssessmentSetupComponent {
 
   ngOnInit(): void {
     this.getAvailablePillars();
+    this.loadFunctionalities();
   }
 
   openPillarCategories(pillarId: any){
     this.router.navigateByUrl('/assessment-setup/pillars/'+pillarId+'/categories')
+  }
+
+  addQuestionSummary(summaryId: any){
+    this.router.navigateByUrl(`/assessment-setup/functionalities/${summaryId}`)
   }
 
   deletePillar(pillarId: number): void {

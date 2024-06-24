@@ -5,8 +5,9 @@ import com.hptu.functionality.dto.FunctionalityDto;
 import org.mapstruct.Mapper;
 
 import java.util.List;
+import org.mapstruct.NullValueMappingStrategy;
 
-@Mapper(componentModel = "spring", uses = QuestionSummaryMapper.class)
+@Mapper(componentModel = "spring", uses = QuestionSummaryMapper.class, nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
 public interface FunctionalityMapper {
 
     FunctionalityDto toDto(Functionality functionality);
