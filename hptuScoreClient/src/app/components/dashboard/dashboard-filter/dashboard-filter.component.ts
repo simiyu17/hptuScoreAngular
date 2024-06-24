@@ -11,6 +11,7 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-dashboard-filter',
@@ -43,7 +44,7 @@ export class DashboardFilterComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private utilService: UtilService,
     private gs: GlobalService,
-    private router: Router,
+    private authService: AuthService,
     private dialogRef: MatDialogRef<DashboardFilterComponent>, 
   ) { 
     this.createFIlterForm();
@@ -77,6 +78,7 @@ export class DashboardFilterComponent implements OnInit {
   onSubmitEditPillar(): void {
     if (this.filterFormGroup.valid) {
       this.utilService.onAssessmentDataReceived(this.filterFormGroup.value)
+      this.authService.storeUserCurrentDashBoardFilters(this.filterFormGroup.value)
       this.dialogRef.close();
     }
   }

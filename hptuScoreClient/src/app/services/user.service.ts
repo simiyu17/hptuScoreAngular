@@ -24,7 +24,7 @@ export class UserService {
   }
 
   updateUserPassword(userPassDto: {password: string, newPass: string, passConfirm: string}): Observable<any> {
-    return this.httpClient.post(`${this.globalService.BASE_API_URL}/users/change-password`, JSON.stringify(userPassDto));
+    return this.httpClient.put(`${this.globalService.BASE_API_URL}/users/change-password`, JSON.stringify(userPassDto));
   }
 
   getUserById(userId: number): Observable<any> {

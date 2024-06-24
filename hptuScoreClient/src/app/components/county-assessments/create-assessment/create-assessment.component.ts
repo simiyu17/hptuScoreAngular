@@ -198,11 +198,7 @@ export class CreateAssessmentComponent implements OnInit {
           
         },
         error: (error) => {
-          if (error.error.message) {
-            alert(error.error.message);
-          }
-          this.gs.openSnackBar(`An error occured ${error.error}`, "Dismiss");
-          console.log(error)
+          this.gs.openSnackBar(`An error occured ${error.error.detail}`, "Dismiss");
         }
       });
   }

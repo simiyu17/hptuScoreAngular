@@ -48,10 +48,11 @@ export class ChangePasswordComponent {
     this.userSevice.updateUserPassword(this.userPassChangeForm.value).subscribe({
       next: (response) => {
         this.authResponse = response
+        this.gs.openSnackBar("Password changed sucessfully!!", "Dismiss");
         this.authService.doLogout();
 
       }, error: (error: HttpErrorResponse) => {
-          this.gs.openSnackBar(`An error occured: ${error.error.message}`, "Dismiss");     
+          this.gs.openSnackBar(`An error occured: ${error.error.detail}`, "Dismiss");     
       }
     });
   }

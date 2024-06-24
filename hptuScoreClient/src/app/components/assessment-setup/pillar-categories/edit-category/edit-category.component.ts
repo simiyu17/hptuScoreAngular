@@ -94,12 +94,7 @@ export class EditCategoryComponent implements OnInit{
             this.dialogRef.close();
           },
           error: (error) => {
-            console.log(error)
-            if (error.error.message) {
-              alert(error.error.message);
-            }
-            this.gs.openSnackBar(`An error occured ${error.error}`, "Dismiss");
-            console.log(error)
+            this.gs.openSnackBar(`An error occured ${error.error.detail}`, "Dismiss");
           }
         });
       }else {
@@ -110,12 +105,7 @@ export class EditCategoryComponent implements OnInit{
             this.dialogRef.close();
           },
           error: (error) => {
-            console.log(error)
-            if (error.error.message) {
-              alert(error.error.message);
-            }
-            this.gs.openSnackBar(`An error occured ${error.error}`, "Dismiss");
-            console.log(error)
+            this.gs.openSnackBar(`An error occured ${error.error.detail}`, "Dismiss");
           }
         });
       }

@@ -11,6 +11,7 @@ import { UtilService } from '../../../services/util.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CountyAssessmentMetaData } from '../../../models/CountyAssessmentMetaData';
 import { Subscription } from 'rxjs';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-pillar-detailed',
@@ -43,6 +44,7 @@ export class PillarDetailedComponent implements OnInit{
     private dashBoardService: DashboardService,
     private router: ActivatedRoute,
     private utilService: UtilService,
+    private authService: AuthService,
     private destroyRef: DestroyRef
     ) { }
 
@@ -96,18 +98,9 @@ export class PillarDetailedComponent implements OnInit{
 
 
   ngOnInit(): void {
-   // console.log(this.router.snapshot)
-    this.metaDataId = this.router.snapshot.paramMap.get('meta-id');
-    this.pillarName = this.router.snapshot.paramMap.get('pillar-name');
-    
     this.sub = this.router.queryParams.subscribe(params => {
-      console.log(params)
-      const pillar = params['pillarName'];
-      const year = params['assessmentYear'];
-      const quarter = params['assessmentQuarter'];
-      const county = params['countyCode'];
-      if(pillar){
-        this.getCountyAssessmentSummaryV3(pillar, {assessmentYear: '2023', assessmentQuarter: null, countyCode: null, assessmentLevel: null});
+      if(params['pillarName']){
+        this.getCountyAssessmentSummaryV3(params['pillarName'], this.authService.retrieveUserCurrentDashBoardFilters());
       }
       });
     

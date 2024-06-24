@@ -120,6 +120,6 @@ public class AssessmentPillar extends BaseEntity implements Comparable<Assessmen
 
     @Override
     public int compareTo(AssessmentPillar o) {
-        return Integer.compare(this.getPillarOrder(), o.getPillarOrder());
+        return Integer.compare(this.pillarOrder, o.getPillarOrder());
     }
 }

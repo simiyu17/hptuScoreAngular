@@ -17,6 +17,7 @@ import { AssessmentPillar } from '../../models/AssessmentPillar';
 import { PillarsService } from '../../services/pillars.service';
 import { GlobalService } from '../../services/global.service';
 import { ConfirmDialogModel } from '../../models/ConfirmDialogModel';
+import {MatTabsModule} from '@angular/material/tabs';
 
 @Component({
   selector: 'app-assessment-setup',
@@ -30,7 +31,8 @@ import { ConfirmDialogModel } from '../../models/ConfirmDialogModel';
     MatPaginatorModule,
     MatButtonModule, 
     MatSortModule, 
-    MatInputModule
+    MatInputModule,
+    MatTabsModule
   ],
   templateUrl: './assessment-setup.component.html',
   styleUrl: './assessment-setup.component.scss'

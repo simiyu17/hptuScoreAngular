@@ -10,6 +10,7 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -46,6 +47,7 @@ public class CountyAssessment extends BaseEntity {
     public static final String META_DATA_ID_FIELD = "metaData";
     public static final String COUNTY_CODE_FIELD = "countyCode";
     
+    @Setter
     @ManyToOne
     @JoinColumn(name = "meta_data_id")
     @JsonIgnore
@@ -63,34 +65,6 @@ public class CountyAssessment extends BaseEntity {
         this.maxScore = maxScore;
         this.scoreRemarks = scoreRemarks;
 	}
-
-    public void setPillarName(String pillarName) {
-        this.pillarName = pillarName;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public void setChoiceText(String choiceText) {
-        this.choiceText = choiceText;
-    }
-
-    public void setChoiceScore(BigDecimal choiceScore) {
-        this.choiceScore = choiceScore;
-    }
-
-    public void setMetaData(CountyAssessmentMetaData metaData) {
-        this.metaData = metaData;
-    }
-
-    public void setMaxScore(BigDecimal maxScore) {
-        this.maxScore = maxScore;
-    }
-
-    public void setScoreRemarks(String scoreRemarks) {
-        this.scoreRemarks = scoreRemarks;
-    }
 
     @Override
     public boolean equals(Object o) {

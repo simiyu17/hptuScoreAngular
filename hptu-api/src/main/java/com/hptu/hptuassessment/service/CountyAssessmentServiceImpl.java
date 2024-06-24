@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -124,7 +125,7 @@ public class CountyAssessmentServiceImpl implements CountyAssessmentService {
 		predicates[0] =  criteriaBuilder.equal(assessmentRoot.get(CountyAssessment.META_DATA_ID_FIELD).get("id"), assessmentId);
 		predicates[1] =  criteriaBuilder.equal(assessmentRoot.get(CountyAssessment.PILLAR_FIELD), pillar);
 		TypedQuery<Tuple> typedQuery = entityManager.createQuery(query.where(predicates));
-		typedQuery.getResultList().forEach(t -> result.add(new CountySummaryDto(new CountySummaryDto.Summary("", t.get(0, String.class), t.get(1, BigDecimal.class), t.get(2, BigDecimal.class), BigDecimal.ONE))));
+		typedQuery.getResultList().forEach(t -> result.add(new CountySummaryDto(new CountySummaryDto.Summary("", t.get(0, String.class), t.get(1, BigDecimal.class).setScale(2, RoundingMode.HALF_UP), t.get(2, BigDecimal.class).setScale(2, RoundingMode.HALF_UP), BigDecimal.ONE), false)));
 		return  result;
 	}catch (Exception e){
 		throw new CountyAssessmentException(e.getMessage());
@@ -143,7 +144,7 @@ public class CountyAssessmentServiceImpl implements CountyAssessmentService {
 		Predicate[] predicates = new Predicate[1];
 		predicates[0] =  criteriaBuilder.equal(assessmentRoot.get(CountyAssessment.META_DATA_ID_FIELD).get("id"), assessmentId);
 		TypedQuery<Tuple> typedQuery = entityManager.createQuery(query.where(predicates));
-		typedQuery.getResultList().forEach(t -> result.add(new CountySummaryDto(new CountySummaryDto.Summary(t.get(0, String.class), "", t.get(1, BigDecimal.class), t.get(2, BigDecimal.class), BigDecimal.ONE))));
+		typedQuery.getResultList().forEach(t -> result.add(new CountySummaryDto(new CountySummaryDto.Summary(t.get(0, String.class), "", t.get(1, BigDecimal.class).setScale(2, RoundingMode.HALF_UP), t.get(2, BigDecimal.class).setScale(2, RoundingMode.HALF_UP), BigDecimal.ONE), false)));
 		return  result;
 	}catch (Exception e){
 		throw new CountyAssessmentException(e.getMessage());
@@ -215,11 +216,11 @@ public class CountyAssessmentServiceImpl implements CountyAssessmentService {
 			List<ReportByPillar.PillarDataPointModel> summaryDataPoints;
 			final var countyCount = countyNumber;
 			if (groupByPillar){
-				typedQuery.getResultList().forEach(t -> countySummaryDtos.add(new CountySummaryDto(new CountySummaryDto.Summary(t.get(0, String.class), "", t.get(1, BigDecimal.class), t.get(2, BigDecimal.class), countyCount))));
+				typedQuery.getResultList().forEach(t -> countySummaryDtos.add(new CountySummaryDto(new CountySummaryDto.Summary(t.get(0, String.class), "", t.get(1, BigDecimal.class).setScale(2, RoundingMode.HALF_UP), t.get(2, BigDecimal.class).setScale(2, RoundingMode.HALF_UP), countyCount), false)));
 				summaryDataPoints = countySummaryDtos.stream()
 						.map(s -> new ReportByPillar.PillarDataPointModel(s.getPillarName(), s.getScorePercent())).toList();
 			}else {
-				typedQuery.getResultList().forEach(t -> countySummaryDtos.add(new CountySummaryDto(new CountySummaryDto.Summary("", t.get(0, String.class), t.get(1, BigDecimal.class), t.get(2, BigDecimal.class), countyCount))));
+				typedQuery.getResultList().forEach(t -> countySummaryDtos.add(new CountySummaryDto(new CountySummaryDto.Summary("", t.get(0, String.class), t.get(1, BigDecimal.class).setScale(2, RoundingMode.HALF_UP), t.get(2, BigDecimal.class).setScale(2, RoundingMode.HALF_UP), countyCount), false)));
 				summaryDataPoints = countySummaryDtos.stream()
 						.map(s -> new ReportByPillar.PillarDataPointModel(s.getCategory(), s.getChoiceScore())).toList();
 			}

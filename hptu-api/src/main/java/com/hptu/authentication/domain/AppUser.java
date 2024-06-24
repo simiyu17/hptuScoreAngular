@@ -48,7 +48,7 @@ public class AppUser extends BaseEntity {
     }
 
     private AppUser(String firstName, String lastName, String username,
-                    String designation, String cellPhone, boolean isActive, boolean isAdmin, PasswordEncoder encoder) {
+                    String designation, String cellPhone, boolean isActive, boolean forceChangePass, boolean isAdmin, PasswordEncoder encoder) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -56,6 +56,7 @@ public class AppUser extends BaseEntity {
         this.designation = designation;
         this.cellPhone = cellPhone;
         this.isActive = isActive;
+        this.forceChangePass = forceChangePass;
         this.isAdmin = isAdmin;
     }
 
@@ -68,7 +69,7 @@ public class AppUser extends BaseEntity {
     }
 
     public static AppUser createUser(UserDto userDto, PasswordEncoder encoder){
-        return new AppUser(userDto.firstName(), userDto.lastName(), userDto.username(), userDto.designation(), userDto.cellPhone(), userDto.isActive(), userDto.isAdmin(), encoder);
+        return new AppUser(userDto.firstName(), userDto.lastName(), userDto.username(), userDto.designation(), userDto.cellPhone(), userDto.isActive(), true, userDto.isAdmin(), encoder);
     }
 
     public void updateUser(UserDto userDto){

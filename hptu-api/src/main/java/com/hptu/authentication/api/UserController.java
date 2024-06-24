@@ -28,9 +28,9 @@ public class UserController {
     private final UserService userService;
 
     @PutMapping("change-password")
-    public ResponseEntity<String> changePassword(@Valid @RequestBody UserPassChangeDto changePasswordDto){
+    public ResponseEntity<ApiResponseDto> changePassword(@Valid @RequestBody UserPassChangeDto changePasswordDto){
         this.userService.updateUserPassword(changePasswordDto);
-        return new ResponseEntity<>("Password successfully updated !!", HttpStatus.OK);
+        return new ResponseEntity<>(new ApiResponseDto(true, "Password successfully updated !!"), HttpStatus.OK);
     }
 
     @GetMapping

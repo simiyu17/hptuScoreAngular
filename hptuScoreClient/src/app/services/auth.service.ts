@@ -5,6 +5,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { UserRole } from '../models/UserRole';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { CountyAssessmentMetaData } from '../models/CountyAssessmentMetaData';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class AuthService {
   USER_ROLE: UserRole = UserRole.NONE;
   AUTH_TOKEN_KEY: string = 'auth_token';
   USER_DETAILS_KEY: string = 'user_details';
+  FORCE_PASS_CHANGE: string = 'force_change_password';
   jwtService: JwtHelperService = new JwtHelperService();
 
   constructor(private httpClient: HttpClient, private globalService: GlobalService, private router: Router) { }
@@ -22,7 +24,9 @@ export class AuthService {
 
   public setLocalStorageValue = (key : string, value: any): void => localStorage.setItem(key, value)
 
-  public getAuthToken = (): string | null => localStorage.getItem(this.AUTH_TOKEN_KEY);
+  public getLocalStorageValue = (key: string): string | null => localStorage.getItem(key);
+
+  public getAuthToken = (): string | null => this.getLocalStorageValue(this.AUTH_TOKEN_KEY);
 
   public clearLocalStorageValue = (): void => localStorage.clear();
   
@@ -32,6 +36,7 @@ export class AuthService {
     if(token){
       this.setLocalStorageValue(this.AUTH_TOKEN_KEY, token);
       this.setLocalStorageValue(this.USER_DETAILS_KEY, this.decodeAuthToken()['user']);
+      this.setLocalStorageValue(this.FORCE_PASS_CHANGE, this.decodeAuthToken()[this.FORCE_PASS_CHANGE]);
     }
   };
 
@@ -58,4 +63,22 @@ export class AuthService {
     this.clearLocalStorageValue();
     this.router.navigateByUrl("/login");
   }
+
+
+  public storeUserCurrentDashBoardFilters = (ass: CountyAssessmentMetaData) : void => {
+    if(ass){
+      this.setLocalStorageValue('assessmentYearDashBoardFilter', ass.assessmentYear);
+      this.setLocalStorageValue('assessmentQuarterDashBoardFilter', ass.assessmentQuarter);
+      this.setLocalStorageValue('countyCodeDashBoardFilter', ass.countyCode);
+    }
+  };
+
+  public retrieveUserCurrentDashBoardFilters = () : CountyAssessmentMetaData => {
+    return {
+      assessmentYear: this.getLocalStorageValue('assessmentYearDashBoardFilter'), 
+      assessmentQuarter: this.getLocalStorageValue('assessmentQuarterDashBoardFilter'), 
+      countyCode: this.getLocalStorageValue('countyCodeDashBoardFilter'), 
+      assessmentLevel: null
+    }
+  };
 }

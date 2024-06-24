@@ -37,6 +37,7 @@ public class CountyAssessmentController {
         for (CountyAssessmentMetaData ass : this.countyAssessmentService.getAvailableCountyAssessmentMetaDatas()) {
             if (limit-- == 0) break;
             ass.setCountyName(CommonUtil.getCountyByCode(ass.getCountyCode()));
+            ass.setAssessmentQuarter(getPeriodMonths(ass.getAssessmentQuarter()));
             list.add(ass);
         }
         return new ResponseEntity<>(list, HttpStatus.OK);
@@ -73,5 +74,15 @@ public class CountyAssessmentController {
     public ResponseEntity<ApiResponseDto> deleteAssessmentById(@PathVariable("assessmentId") Long assessmentId){
         countyAssessmentService.deleteCountyAssessmentMetaData(assessmentId);
         return new ResponseEntity<>(new ApiResponseDto(true, "Assessment Deleted !!"), HttpStatus.NO_CONTENT);
+    }
+
+    private String getPeriodMonths(String quarterName){
+        return switch (quarterName){
+            case "Q1" -> "Jan - Mar";
+            case "Q2" -> "Apr - June";
+            case "Q3" -> "Jul - Sep";
+            case "Q4" -> "Oct - Dec";
+            default -> "";
+        };
     }
 }

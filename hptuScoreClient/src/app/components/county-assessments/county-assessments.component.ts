@@ -19,6 +19,7 @@ import { DashboardFilterComponent } from '../dashboard/dashboard-filter/dashboar
 import { UtilService } from '../../services/util.service';
 import { ConfirmDialogModel } from '../../models/ConfirmDialogModel';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
+import {MatTabsModule} from '@angular/material/tabs';
 
 @Component({
   selector: 'app-county-assessments',
@@ -33,7 +34,8 @@ import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.
     MatButtonModule,
     MatSortModule,
     MatInputModule,
-    RouterLink
+    RouterLink,
+    MatTabsModule
   ],
   templateUrl: './county-assessments.component.html',
   styleUrl: './county-assessments.component.scss'

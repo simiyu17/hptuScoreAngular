@@ -61,7 +61,7 @@ export class EditUserComponent {
             this.dialogRef.close();
           },
           error: (error) => {
-            this.gs.openSnackBar(`An error occured ${error.error.message}`, "Dismiss");
+            this.gs.openSnackBar(`An error occured ${error.error.detail}`, "Dismiss");
           }
         });
       }else {
@@ -72,7 +72,7 @@ export class EditUserComponent {
             this.dialogRef.close();
           },
           error: (error) => {
-            this.gs.openSnackBar(`An error occured ${error.error.message}`, "Dismiss");
+            this.gs.openSnackBar(`An error occured ${error.error.detail}`, "Dismiss");
           }
         });
       }

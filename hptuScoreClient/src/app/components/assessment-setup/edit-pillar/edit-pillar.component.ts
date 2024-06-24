@@ -52,7 +52,7 @@ export class EditPillarComponent {
             this.dialogRef.close();
           },
           error: (error) => {
-            this.gs.openSnackBar(`An error occured: ${error.error.message}`, "Dismiss");
+            this.gs.openSnackBar(`An error occured: ${error.error.detail}`, "Dismiss");
           }
         });
     }

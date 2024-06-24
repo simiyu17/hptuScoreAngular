@@ -67,6 +67,7 @@ public class UserServiceImpl implements UserService{
         final var currentUser = currentUser();
         if (this.passwordEncoder.matches(userPassChangeDto.password(), currentUser.getPassword())){
             currentUser.setPassword(this.passwordEncoder.encode(userPassChangeDto.newPass()));
+            currentUser.setForceChangePass(false);
         }else {
             throw new UserNotFoundException("Invalid current password!!");
         }

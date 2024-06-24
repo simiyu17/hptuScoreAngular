@@ -1,5 +1,6 @@
 package com.hptu.shared.exception;
 
+import com.hptu.authentication.exception.UserNotFoundException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -40,6 +41,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ErrorResponse unAuthenticatedException(BadCredentialsException ex) {
         return ErrorResponse.builder(ex, HttpStatus.UNAUTHORIZED, ex.getMessage())
                 .title("User Not Authenticated")
+                .property(TIME_STAMP, Instant.now())
+                .build();
+    }
+
+    @ExceptionHandler(value = { UserNotFoundException.class})
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    public ErrorResponse unAuthenticatedException(UserNotFoundException ex) {
+        return ErrorResponse.builder(ex, HttpStatus.UNAUTHORIZED, ex.getMessage())
+                .title("User Not Found")
                 .property(TIME_STAMP, Instant.now())
                 .build();
     }

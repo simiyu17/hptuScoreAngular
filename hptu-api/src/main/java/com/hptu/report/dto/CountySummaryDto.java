@@ -24,12 +24,12 @@ public class CountySummaryDto implements Serializable {
     public CountySummaryDto() {
     }
 
-    public CountySummaryDto(Summary summary) {
+    public CountySummaryDto(Summary summary, boolean isVersion2) {
         this.pillarName = summary.pillar();
         this.category = summary.category();
         this.maxScore = summary.maxScore();
         this.choiceScore = summary.choiceScore();
-        if (BigDecimal.ZERO.compareTo(summary.countiesNumber()) < 0){
+        if (BigDecimal.ZERO.compareTo(summary.countiesNumber()) < 0 && !isVersion2){
             this.maxScore = (this.choiceScore).divide(summary.countiesNumber(), 4, RoundingMode.HALF_UP);
             this.choiceScore = (this.choiceScore).divide(summary.countiesNumber(), 4, RoundingMode.HALF_UP);
         }
@@ -47,6 +47,8 @@ public class CountySummaryDto implements Serializable {
             this.remark = "Below Average";
         }
     }
+
+
 
     public record Summary(String pillar, String category, BigDecimal maxScore, BigDecimal choiceScore,
                           BigDecimal countiesNumber) {

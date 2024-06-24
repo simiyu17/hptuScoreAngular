@@ -16,6 +16,8 @@ import { MatInputModule } from '@angular/material/input';
 import { UtilService } from '../../services/util.service';
 import { CountyAssessmentMetaData } from '../../models/CountyAssessmentMetaData';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AuthService } from '../../services/auth.service';
+import {MatTabsModule} from '@angular/material/tabs';
 
 @Component({
   selector: 'app-dashboard',
@@ -29,7 +31,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     MatTooltipModule,
     SafePipe,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatTabsModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
@@ -49,7 +52,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private dashBoardService: DashboardService,
     private router: Router,
     private utilService: UtilService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private authService: AuthService
   ) {   }
 
 
@@ -57,7 +61,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(DashboardFilterComponent);
     dialogRef.afterClosed().subscribe({
       next: (res) => {
-        this.getCountyAssessmentSummary();
+        this.getCountyAssessmentSummaryV2();
       }
     });
   }
@@ -83,8 +87,26 @@ export class DashboardComponent implements OnInit, OnDestroy {
     })
   }
 
+  getCountyAssessmentSummaryV2 = () => {
+      this.dashBoardService.getCountyAssessmentSummaryByPillar(this.authService.retrieveUserCurrentDashBoardFilters(), null)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          this.countuAssessmentSummaries = response.summary;
+          this.pillarSummaries = response.summary
+          this.dataSource = new MatTableDataSource(this.countuAssessmentSummaries);
+          this.countuAssessmentSummaryBarChartDataPoints = [...response.summaryDataPoints];
+          if (this.countuAssessmentSummaries?.length > 0) {
+            this.exportToExcel(this.authService.retrieveUserCurrentDashBoardFilters());
+          }
+        },
+        error: (error) => { }
+      })
+  }
+
+
   ngOnInit(): void {
-    this.getCountyAssessmentSummary();
+    this.getCountyAssessmentSummaryV2();
   }
 
   exportToExcel(ass?: CountyAssessmentMetaData): void {
@@ -102,20 +124,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   openPillarDetails(summary: CountySummaryDto): void {
-    //this.router.navigateByUrl(`/dashboard/${summary.pillarName}`)
+    this.router.navigate(['/dashboard/pillar-summary'], {queryParams: {
+      pillarName: summary.pillarName
+    }})
     
-
-    this.utilService.currentAssessmentData()
-    .pipe(takeUntilDestroyed(this.destroyRef))
-    .subscribe((ass: CountyAssessmentMetaData | null) => {
-      console.log(ass)
-      this.router.navigate(['/dashboard/pillar-summary'], {queryParams: {
-        assessmentYear: ass ? ass.assessmentYear : null, 
-        assessmentQuarter: ass?.assessmentQuarter, 
-        countyCode: ass?.countyCode, 
-        pillarName: summary.pillarName
-      }})
-    })
   }
 
   ngOnDestroy(): void {
