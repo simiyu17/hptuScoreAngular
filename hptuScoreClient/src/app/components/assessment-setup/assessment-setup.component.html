@@ -109,6 +109,11 @@
             aria-tooltip="Button that displays and hides a tooltip triggered by other buttons">
               <mat-icon color="primary">add</mat-icon>
             </button>
+            <button mat-icon-button (click)="viewQuestionSummary(element)" #tooltip="matTooltip"
+            matTooltip="View Questions" matTooltipPosition="above"
+            aria-tooltip="Button that displays and hides a tooltip triggered by other buttons">
+              <mat-icon color="primary">launch</mat-icon>
+            </button>
           </td>
         </ng-container>
     

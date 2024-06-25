@@ -33,7 +33,7 @@ export const routes: Routes = [
                 loadComponent: () => import('./components/assessment-setup/pillar-categories/pillar-categories.component').then(c => c.PillarCategoriesComponent)
             },
             {
-                path: 'functionalities/:id',
+                path: 'functionalities',
                 loadComponent: () => import('./components/assessment-setup/question-summary-list/question-summary-list.component').then(c => c.QuestionSummaryListComponent)
             },
             {

@@ -10,6 +10,9 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatListModule } from '@angular/material/list';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { CommonModule } from '@angular/common';
+import { QuestionSummaryDto } from '../../../dto/QuestionSummaryDto';
+import { FunctionalityDto } from '../../../dto/FunctionalityDto';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-question-summary-list',
@@ -33,12 +36,23 @@ import { CommonModule } from '@angular/common';
 export class QuestionSummaryListComponent implements OnInit {
   questionSummaryForm!: FormGroup;
   dataSource!: MatTableDataSource<any>;
-  displayedColumns: string[] = ['id', 'summary', 'minimumPreviousQuestionScore', 'questionOrderNumber', 'functionalityId'];
-  expandedElement: any | null;
+  displayedColumns: string[] = ['summary', 'minimumPreviousQuestionScore', 'questionOrderNumber', 'functionalityId', 'actions'];
+  questionSummaryList: QuestionSummaryDto[] = [];
+  expandedElement: Map<number, boolean> = new Map<number, boolean>();
+  currentFunctionality!: FunctionalityDto;
 
-  constructor(private fb: FormBuilder) { }
+
+  constructor(private fb: FormBuilder, private router: Router) {
+    const navigation = this.router.getCurrentNavigation();
+    this.currentFunctionality = navigation?.extras?.state?.['functionality']
+    console.log(this.currentFunctionality)
+   }
 
   ngOnInit(): void {
+    this.questionSummaryList = this.currentFunctionality.questions;
+    this.expandedElement.set(this.questionSummaryList.length - 1, false);
+    console.log(this.questionSummaryList)
+   
     this.questionSummaryForm = this.fb.group({
       id: [''],
       summary: [''],
@@ -78,6 +92,10 @@ export class QuestionSummaryListComponent implements OnInit {
       summaryColor: [''],
       questionSummaryId: ['']
     }));
+  }
+
+  toggleExpanded(index: number) {
+    this.expandedElement.set(index, !this.expandedElement.get(index));
   }
 
   onSubmit(): void {

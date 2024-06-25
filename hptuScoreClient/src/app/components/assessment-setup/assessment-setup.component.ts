@@ -140,7 +140,12 @@ export class AssessmentSetupComponent {
   }
 
   addQuestionSummary(summaryId: any){
-    this.router.navigateByUrl(`/assessment-setup/functionalities/${summaryId}`)
+    this.router.navigateByUrl(`/assessment-setup/functionalities/${summaryId}/add-summary-question`)
+  }
+
+  viewQuestionSummary(functionality: FunctionalityDto){
+    console.log(functionality)
+    this.router.navigate(['/assessment-setup/functionalities'], {state: { functionality}})
   }
 
   deletePillar(pillarId: number): void {

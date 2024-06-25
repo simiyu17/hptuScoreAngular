@@ -5,8 +5,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({ providedIn: 'root' })
 export class GlobalService {
-  API_HOST = 'localhost';
-  API_PORT = '8082';
+  API_HOST = '20.254.141.197';
+  API_PORT = '5441';
   BASE_API_URL: string = `http://${this.API_HOST}:${this.API_PORT}/hptu/api/v1`;
   BASE_API_URL_V2: string = `http://${this.API_HOST}:${this.API_PORT}/hptu/api/v2`;
   BASE_KEY_CLOAK_URL: string = 'http://localhost:8081/auth';
