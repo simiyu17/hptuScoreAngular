@@ -80,5 +80,86 @@
   </div>
 </div>
   </mat-tab>
-  <mat-tab label="HPTU Functionality Performance"> Content 2 </mat-tab>
+  <mat-tab label="HPTU Functionality Performance"> 
+    
+    <div class="assessments-content">
+
+      <div class="create-new-assessment">
+          <a mat-raised-button [routerLink]="['new-hptu']" [disabled]="!canPerformAssessment">
+              Perform A New Assessment
+          </a>
+          @if (!canPerformAssessment) {
+              <p>You can not perform an assessment as pillar configurations are incomplete or invalid !!!</p>
+              <h4>(Each Pillar must have at least one category to perform an assessment)</h4>
+          }
+          
+      </div>
+    
+      <div class="assessments-table-content">
+        <mat-toolbar>
+          <span>County Assessments</span>
+          <span class="assessment-toolbar-spacer"></span>
+          <button mat-raised-button (click)="openAssessmentFilterDialog()">
+            Search For A specific Assessment
+          </button>
+        </mat-toolbar>
+    
+        <div class="assessments-table">
+    
+          <table mat-table [dataSource]="dataSource" matSort>
+    
+            <!-- countyName Column -->
+            <ng-container matColumnDef="countyName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> County Name </th>
+              <td mat-cell *matCellDef="let row"> {{row.countyName}} </td>
+            </ng-container>
+    
+            <!-- assessmentYear Column -->
+            <ng-container matColumnDef="assessmentYear">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Year </th>
+              <td mat-cell *matCellDef="let row"> {{row.assessmentYear}} </td>
+            </ng-container>
+    
+            <!-- assessmentQuarter Column -->
+            <ng-container matColumnDef="assessmentQuarter">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Quarter </th>
+              <td mat-cell *matCellDef="let row"> {{row.assessmentQuarter}} </td>
+            </ng-container>
+    
+            <!-- assessmentLevel Column -->
+            <ng-container matColumnDef="assessmentLevel">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Assessment Level </th>
+              <td mat-cell *matCellDef="let row"> {{row.assessmentLevel}} </td>
+            </ng-container>
+    
+            <!-- Action Column -->
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> </th>
+              <td mat-cell *matCellDef="let row">
+                <button mat-icon-button (click)="deleteAssessment(row.id)" #tooltip="matTooltip"
+                  matTooltip="Delete Assessment" matTooltipPosition="above"
+                  aria-tooltip="Button that displays and hides a tooltip triggered by other buttons">
+                  <mat-icon color="warn">delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+    
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    
+            <!-- Row shown when there is no matching data. -->
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="4">No data matching the filter</td>
+            </tr>
+          </table>
+    
+          <mat-paginator [pageSizeOptions]="[5, 10, 15]" aria-label="Select page of assessments"></mat-paginator>
+    
+    
+        </div>
+    
+      </div>
+    </div>
+
+  </mat-tab>
 </mat-tab-group>

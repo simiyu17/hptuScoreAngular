@@ -36,7 +36,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class QuestionSummaryListComponent implements OnInit {
   questionSummaryForm!: FormGroup;
   dataSource!: MatTableDataSource<any>;
-  displayedColumns: string[] = ['summary', 'minimumPreviousQuestionScore', 'questionOrderNumber', 'functionalityId', 'actions'];
+  displayedColumns: string[] = ['summary', 'minimumPreviousQuestionScore', 'questionOrderNumber', 'actions'];
   questionSummaryList: QuestionSummaryDto[] = [];
   expandedElement: Map<number, boolean> = new Map<number, boolean>();
   currentFunctionality!: FunctionalityDto;

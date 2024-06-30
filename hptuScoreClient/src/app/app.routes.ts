@@ -53,6 +53,10 @@ export const routes: Routes = [
             {
                 path: 'new',
                 loadComponent: () => import('./components/county-assessments/create-assessment/create-assessment.component').then(c => c.CreateAssessmentComponent)
+            },
+            {
+                path: 'new-hptu',
+                loadComponent: () => import('./components/hptu-assessment/assessment/assessment.component').then(c => c.AssessmentComponent)
             }
         ]
     }, 
