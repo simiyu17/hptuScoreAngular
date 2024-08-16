@@ -5,7 +5,7 @@
 <div class="dashboard-content">
   <div class="main-assessment-graph">
     <app-assessment-graph
-      [countuAssessmentSummaryBarChartDataPoints]="countuAssessmentSummaryBarChartDataPoints"></app-assessment-graph>
+      [countuAssessmentSummaryBarChartDataPoints]="countyAssessmentSummaryBarChartDataPoints"></app-assessment-graph>
   </div>
   <div class="main-assessment-summary-table">
     <div class="pillars-summary-table-content">
@@ -83,5 +83,70 @@
   </div>
 </div>
   </mat-tab>
-  <mat-tab label="HPTU Functionality Performance"> Content 2 </mat-tab>
+  <mat-tab label="HPTU Functionality Performance"> 
+    
+    <div class="dashboard-content">
+      <div class="main-assessment-graph">
+        <app-hptu-assessment-graph
+          [countuAssessmentSummaryBarChartDataPoints]="hptuCountyAssessmentSummaryBarChartDataPoints"></app-hptu-assessment-graph>
+      </div>
+      <div class="main-assessment-summary-table">
+        <div class="pillars-summary-table-content">
+          <mat-toolbar>
+            <span>Pillars</span>
+            <span class="pillar-toolbar-spacer"></span>
+    
+            <button mat-raised-button (click)="openHptuAssessmentFilterDialog()">
+              Filter Dashboard
+            </button>
+          </mat-toolbar>
+    
+          <div class="pillars-summary-table">
+            <table mat-table [dataSource]="hptuDdataSource">
+    
+              <!-- functionalityName Column -->
+              <ng-container matColumnDef="functionalityName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Functionality Name </th>
+                <td mat-cell *matCellDef="let row"> {{row.functionalityName}} </td>
+              </ng-container>
+    
+              <!-- maxScore Column -->
+              <ng-container matColumnDef="maxScore">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Max score</th>
+                <td mat-cell *matCellDef="let row"> {{row.maxScore}} </td>
+              </ng-container>
+    
+              <!-- attainedScore Column -->
+              <ng-container matColumnDef="attainedScore">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Score Attained </th>
+                <td mat-cell *matCellDef="let row"> {{row.attainedScore}} </td>
+              </ng-container>
+    
+              <!-- Action Column -->
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> </th>
+                <td mat-cell *matCellDef="let row">
+                  <button mat-icon-button (click)="openPillarDetails(row)" #tooltip="matTooltip"
+                    matTooltip="Functionality performance" matTooltipPosition="above"
+                    aria-tooltip="Button that displays and hides a tooltip triggered by other buttons">
+                    <mat-icon color="primary">launch</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+    
+              <tr mat-header-row *matHeaderRowDef="hptuDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: hptuDisplayedColumns;"></tr>
+    
+              <!-- Row shown when there is no matching data. -->
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="4">No data available</td>
+              </tr>
+            </table>
+    
+          </div>
+    
+        </div>
+      </div>
+    </div>
+  </mat-tab>
 </mat-tab-group>

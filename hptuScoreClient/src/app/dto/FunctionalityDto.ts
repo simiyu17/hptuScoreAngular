@@ -1,3 +1,4 @@
+import { FormArray } from "@angular/forms";
 import { QuestionSummaryDto } from "./QuestionSummaryDto";
 
 export interface FunctionalityDto {

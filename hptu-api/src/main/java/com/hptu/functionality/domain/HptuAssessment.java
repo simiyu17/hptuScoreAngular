@@ -1,31 +1,24 @@
 package com.hptu.functionality.domain;
 
-import com.hptu.functionality.dto.HptuAssessmentDto;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.hptu.report.dto.HptuCountyAssessmentDto;
 import com.hptu.shared.domain.BaseEntity;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
 import java.util.List;
 
 
 @Getter
 @Entity
-@Table(name = "assessments", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "county_code", "assessment_date" }, name = "HPTU_ASSESSMENT_UNIQUE")
-})
+@Table(name = "county_hptu_assessments")
 public class HptuAssessment extends BaseEntity {
-
-    @Column(name = "county_code", nullable = false)
-    private String countyCode;
-
-    @Column(name = "assessment_date", nullable = false)
-    private LocalDate assessmentDate;
 
     private String functionalityName;
 
@@ -33,18 +26,28 @@ public class HptuAssessment extends BaseEntity {
 
     private String questionName;
 
-    private Integer attainedScore;
+    private BigDecimal attainedScore;
 
-    private Integer maxScore;
+    private BigDecimal maxScore;
 
     private String summaryColor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference("hptuAssessmentMetaData")
+    private HptuAssessmentMetaData hptuAssessmentMetaData;
+
+    public static final String FUNCTIONALITY_NAME_FIELD = "functionalityName";
+    public static final String QUESTION_SUMMARY_FIELD = "questionSummary";
+    public static final String META_DATA_ID_FIELD = "hptuAssessmentMetaData";
+    public static final String COUNTY_CODE_FIELD = "countyCode";
+    public static final String ASSESSMENT_DATE_FIELD = "assessmentDate";
+    public static final String ATTAINED_SCORE_FIELD = "attainedScore";
+    public static final String MAX_SCORE_FIELD = "maxScore";
 
     public HptuAssessment() {
     }
 
-    private HptuAssessment(String countyCode, LocalDate assessmentDate, String functionalityName, String questionSummary, String questionName, Integer attainedScore, Integer maxScore, String summaryColor) {
-        this.countyCode = countyCode;
-        this.assessmentDate = assessmentDate;
+    private HptuAssessment(String functionalityName, String questionSummary, String questionName, BigDecimal attainedScore, BigDecimal maxScore, String summaryColor) {
         this.functionalityName = functionalityName;
         this.questionSummary = questionSummary;
         this.questionName = questionName;
@@ -53,14 +56,10 @@ public class HptuAssessment extends BaseEntity {
         this.summaryColor = summaryColor;
     }
 
-    public static HptuAssessment createAssessment(HptuAssessmentDto assessmentDto){
-        return new HptuAssessment(assessmentDto.countyCode(), assessmentDto.assessmentDate(), assessmentDto.functionalityName(), assessmentDto.questionSummary(), assessmentDto.questionName(), assessmentDto.attainedScore(), assessmentDto.maxScore(), assessmentDto.summaryColor());
-    }
-
-    public static List<HptuAssessment> createAssessments(List<HptuAssessmentDto> assessmentDtos){
-        return assessmentDtos.stream()
-                .map(assessmentDto -> new HptuAssessment(assessmentDto.countyCode(), assessmentDto.assessmentDate(), assessmentDto.functionalityName(), assessmentDto.questionSummary(),
-                        assessmentDto.questionName(), assessmentDto.attainedScore(), assessmentDto.maxScore(), assessmentDto.summaryColor())).toList();
+    public static List<HptuAssessment> createAssessments(final HptuCountyAssessmentDto assessmentDto){
+        return assessmentDto.assessments().stream()
+                .map(assessment -> new HptuAssessment(assessment.functionalityName(), assessment.questionSummary(),
+                        assessment.questionName(), assessment.attainedScore(), assessment.maxScore(), assessment.summaryColor())).toList();
     }
 
     @Override
@@ -72,14 +71,13 @@ public class HptuAssessment extends BaseEntity {
         HptuAssessment asessment = (HptuAssessment) o;
 
         return new EqualsBuilder()
-                .appendSuper(super.equals(o)).append(getId(), asessment.getCountyCode())
-                .append(getAssessmentDate(), asessment.getAssessmentDate())
+                .appendSuper(super.equals(o)).append(getId(), asessment.getHptuAssessmentMetaData())
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .appendSuper(super.hashCode()).append(getId()).append(getCountyCode()).append(getAssessmentDate()).toHashCode();
+                .appendSuper(super.hashCode()).append(getId()).append(getHptuAssessmentMetaData()).toHashCode();
     }
 }

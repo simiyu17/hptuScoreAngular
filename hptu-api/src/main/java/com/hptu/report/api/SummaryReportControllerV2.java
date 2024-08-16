@@ -6,6 +6,7 @@ import com.hptu.hptuassessment.service.CountyAssessmentService;
 import com.hptu.hptuassessment.service.CountyAssessmentServiceV2;
 import com.hptu.report.dto.CountyAssessmentResultDetailedDto;
 import com.hptu.report.dto.CountySummaryDto;
+import com.hptu.report.dto.HptuCountyAssessmentResultDetailedDto;
 import com.hptu.shared.dto.ApiResponseDto;
 import com.hptu.util.CommonUtil;
 import com.hptu.util.ExcelGenerator;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +36,13 @@ public class SummaryReportControllerV2 {
     public ResponseEntity<List<CountyDto>> getAvailablePillars(){
         return new ResponseEntity<>(CommonUtil.getKenyanCounties(), HttpStatus.OK);
 
+    }
+
+    @GetMapping("county-hptu-assessments-summary")
+    public ResponseEntity<HptuCountyAssessmentResultDetailedDto> getCountyHPTUAssessmentSummary(@RequestParam(value = "countyCode", required = false) String countyCode,
+                                                                                                @RequestParam(value = "assessmentDate", required = false) String assessmentDate,
+                                                                                                @RequestParam(value = "functionalityName", required = false) String functionalityName){
+        return new ResponseEntity<>(this.assessmentService.getCountyHPTUAssessmentPerformanceSummary(countyCode, assessmentDate, functionalityName), HttpStatus.OK);
     }
 
     @GetMapping("county-assessments-summary")

@@ -2,6 +2,8 @@ package com.hptu.hptuassessment.service;
 
 
 import com.hptu.authentication.domain.AppUser;
+import com.hptu.functionality.domain.HptuAssessmentMetaData;
+import com.hptu.functionality.domain.HptuAssessmentMetaDataRepository;
 import com.hptu.hptuassessment.domain.CountyAssessment;
 import com.hptu.hptuassessment.domain.CountyAssessmentMetaData;
 import com.hptu.hptuassessment.domain.CountyAssessmentMetaDataRepository;
@@ -9,6 +11,7 @@ import com.hptu.hptuassessment.exception.CountyAssessmentException;
 import com.hptu.report.dto.CountyAssessmentDto;
 import com.hptu.report.dto.CountyAssessmentResultDetailedDto;
 import com.hptu.report.dto.CountySummaryDto;
+import com.hptu.report.dto.HptuCountyAssessmentDto;
 import com.hptu.report.dto.ReportByPillar;
 import com.hptu.shared.domain.BaseEntity;
 import com.hptu.util.CommonUtil;
@@ -20,7 +23,10 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,26 +43,37 @@ import static com.hptu.hptuassessment.domain.CountyAssessment.COUNTY_CODE_FIELD;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CountyAssessmentServiceImpl implements CountyAssessmentService {
-	
+
 	private final CountyAssessmentMetaDataRepository assessmentRepository;
+	private final HptuAssessmentMetaDataRepository hptuAssessmentMetaDataRepository;
 
 	private final EntityManager entityManager;
 
 
 	@Transactional
 	@Override
-	public CountyAssessmentMetaData createCountyAssessment(CountyAssessmentDto countyAssessmentDto){
+	public void createCountyAssessment(CountyAssessmentDto countyAssessmentDto){
 		try{
 		CountyAssessmentMetaData metaData = CountyAssessmentMetaData.createCountyAssessmentMetaData(countyAssessmentDto.assessmentMetaDataDto());
 		List<CountyAssessment> assessments = countyAssessmentDto.assessments().stream()
 				.map(a -> new CountyAssessment(a.pillarName(), a.category(), a.choiceText(), a.choiceScore(), a.maxScore(), a.scoreRemarks())).toList();
 		areAssessmentsValid(assessments);
 		metaData.addAssessments(assessments);
-		return this.assessmentRepository.save(metaData);
-	}catch (Exception e){
-		throw new CountyAssessmentException(e.getMessage());
+            this.assessmentRepository.save(metaData);
+        }catch (Exception e){
+			throw new CountyAssessmentException(e.getMessage());
+		}
 	}
+
+	@Override
+	public void createCountyHPTUAssessment(HptuCountyAssessmentDto countyAssessmentDto) {
+		try {
+			hptuAssessmentMetaDataRepository.save(HptuAssessmentMetaData.createAssessments(countyAssessmentDto));
+		}catch (Exception e){
+			throw new CountyAssessmentException(e.getMessage());
+		}
 	}
 
 	private void areAssessmentsValid(List<CountyAssessment> assessments){

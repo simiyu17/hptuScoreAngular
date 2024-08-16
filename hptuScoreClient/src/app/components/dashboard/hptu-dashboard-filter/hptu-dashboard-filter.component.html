@@ -1,0 +1,36 @@
+<div class="filter-assessment-content">
+    <div mat-dialog-title class="form-header">
+      <h2>Assessment Filter</h2>
+    </div>
+    <div>
+    <form [formGroup]="filterFormGroup" (ngSubmit)="onSubmitEditPillar()">
+    <div mat-dialog-content class="mat-typography">
+
+      <div class="form-row">  
+        <mat-form-field appearance="fill">
+            <mat-label>Choose assessment date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="assessmentDate" (dateChange)="changeDatePicker()" required>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+            <mat-label>Select County</mat-label>
+            <mat-select formControlName="countyCode">
+              @for (county of counties; track county) {
+                <mat-option [value]="county.countyCode">{{county.name}}</mat-option>
+              }
+            </mat-select>
+        </mat-form-field>
+      </div>
+  
+    </div>
+    <div mat-dialog-actions align="end" class="form-btns">
+      <button mat-raised-button mat-dialog-close>Cancel</button>
+      <button mat-raised-button cdkFocusInitial type="submit">Submit</button>
+    </div>
+  </form>
+  </div>
+  </div>

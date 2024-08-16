@@ -8,12 +8,15 @@ import com.hptu.hptuassessment.domain.CountyAssessmentMetaData;
 import com.hptu.report.dto.CountyAssessmentDto;
 import com.hptu.report.dto.CountyAssessmentResultDetailedDto;
 import com.hptu.report.dto.CountySummaryDto;
+import com.hptu.report.dto.HptuCountyAssessmentDto;
 
 import java.util.List;
 
 public interface CountyAssessmentService {
 
-	CountyAssessmentMetaData createCountyAssessment(CountyAssessmentDto countyAssessmentDto);
+	void createCountyAssessment(CountyAssessmentDto countyAssessmentDto);
+
+	void createCountyHPTUAssessment(HptuCountyAssessmentDto countyAssessmentDto);
 	
 	CountyAssessmentMetaData addCountyAssessmentDetails(Long assessmentId, List<CountyAssessment> assessments);
 

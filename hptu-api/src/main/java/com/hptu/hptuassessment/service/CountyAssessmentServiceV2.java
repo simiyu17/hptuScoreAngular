@@ -8,6 +8,7 @@ import com.hptu.hptuassessment.domain.CountyAssessmentMetaData;
 import com.hptu.report.dto.CountyAssessmentDto;
 import com.hptu.report.dto.CountyAssessmentResultDetailedDto;
 import com.hptu.report.dto.CountySummaryDto;
+import com.hptu.report.dto.HptuCountyAssessmentResultDetailedDto;
 
 import java.util.List;
 
@@ -34,4 +35,6 @@ public interface CountyAssessmentServiceV2 {
 	CountyAssessmentResultDetailedDto getAssessmentSummary(String countyCode, String assessmentQuarter, String assessmentYear);
 
 	CountyAssessmentResultDetailedDto getAssessmentPerformanceSummary(String assessmentYear, String countyCode, String assessmentQuarter, String pillar);
+
+	HptuCountyAssessmentResultDetailedDto getCountyHPTUAssessmentPerformanceSummary(String countyCode, String assessmentDate, String functionalityName);
 }

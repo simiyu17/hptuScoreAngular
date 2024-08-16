@@ -18,6 +18,9 @@ import { CountyAssessmentMetaData } from '../../models/CountyAssessmentMetaData'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../services/auth.service';
 import {MatTabsModule} from '@angular/material/tabs';
+import { HptuAssessmentGraphComponent } from "./hptu-assessment-graph/hptu-assessment-graph.component";
+import { HptuCountySummaryDto } from '../../dto/HptuCountySummaryDto';
+import { HptuDashboardFilterComponent } from './hptu-dashboard-filter/hptu-dashboard-filter.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -32,18 +35,24 @@ import {MatTabsModule} from '@angular/material/tabs';
     SafePipe,
     MatFormFieldModule,
     MatInputModule,
-    MatTabsModule
-  ],
+    MatTabsModule,
+    HptuAssessmentGraphComponent
+],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['pillarName', 'maxScore', 'choiceScore', 'scorePercent', 'remark', 'action'];
+  hptuDisplayedColumns: string[] = ['functionalityName', 'maxScore', 'attainedScore', 'action'];
   dataSource!: MatTableDataSource<CountySummaryDto>;
-  countuAssessmentSummaries: CountySummaryDto[] | any[] = [];
+  hptuDdataSource!: MatTableDataSource<HptuCountySummaryDto>;
+  countyAssessmentSummaries: CountySummaryDto[] | any[] = [];
+  hptuCountyAssessmentSummaries: HptuCountySummaryDto[] | any[] = [];
   pillarSummaries: any[] = [];
-  countuAssessmentSummaryBarChartDataPoints?: { x: string, y: number }[];
+  functionalitySummaries: any[] = [];
+  countyAssessmentSummaryBarChartDataPoints?: { x: string, y: number }[];
+  hptuCountyAssessmentSummaryBarChartDataPoints?: { x: string, y: number }[];
   excelBase64String?: string;
   
   filteredAssessment?: any;
@@ -61,42 +70,30 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(DashboardFilterComponent);
     dialogRef.afterClosed().subscribe({
       next: (res) => {
-        this.getCountyAssessmentSummaryV2();
+        this.getCountyAssessmentSummary();
+      }
+    });
+  }
+
+  openHptuAssessmentFilterDialog() {
+    const dialogRef = this.dialog.open(HptuDashboardFilterComponent);
+    dialogRef.afterClosed().subscribe({
+      next: (res) => {
+        this.getHPTUCountyAssessmentSummary();
       }
     });
   }
 
   getCountyAssessmentSummary = () => {
-    this.utilService.currentAssessmentData()
-    .pipe(takeUntilDestroyed(this.destroyRef))
-    .subscribe((ass: CountyAssessmentMetaData) => {
-      this.dashBoardService.getCountyAssessmentSummaryByPillar(ass, null)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (response) => {
-          this.countuAssessmentSummaries = response.summary;
-          this.pillarSummaries = response.summary
-          this.dataSource = new MatTableDataSource(this.countuAssessmentSummaries);
-          this.countuAssessmentSummaryBarChartDataPoints = [...response.summaryDataPoints];
-          if (this.countuAssessmentSummaries?.length > 0) {
-            this.exportToExcel(ass);
-          }
-        },
-        error: (error) => { }
-      })
-    })
-  }
-
-  getCountyAssessmentSummaryV2 = () => {
       this.dashBoardService.getCountyAssessmentSummaryByPillar(this.authService.retrieveUserCurrentDashBoardFilters(), null)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
-          this.countuAssessmentSummaries = response.summary;
+          this.countyAssessmentSummaries = response.summary;
           this.pillarSummaries = response.summary
-          this.dataSource = new MatTableDataSource(this.countuAssessmentSummaries);
-          this.countuAssessmentSummaryBarChartDataPoints = [...response.summaryDataPoints];
-          if (this.countuAssessmentSummaries?.length > 0) {
+          this.dataSource = new MatTableDataSource(this.countyAssessmentSummaries);
+          this.countyAssessmentSummaryBarChartDataPoints = [...response.summaryDataPoints];
+          if (this.countyAssessmentSummaries?.length > 0) {
             this.exportToExcel(this.authService.retrieveUserCurrentDashBoardFilters());
           }
         },
@@ -104,9 +101,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
       })
   }
 
+  getHPTUCountyAssessmentSummary = () => {
+    this.dashBoardService.getHPTUCountyAssessmentSummary(null, null, null)
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe({
+      next: (response) => {
+        this.hptuCountyAssessmentSummaries = response.summary;
+        this.functionalitySummaries = response.summary
+        this.hptuDdataSource = new MatTableDataSource(this.hptuCountyAssessmentSummaries);
+        this.hptuCountyAssessmentSummaryBarChartDataPoints = [...response.summaryDataPoints];
+      },
+      error: (error) => { }
+    })
+}
+
 
   ngOnInit(): void {
-    this.getCountyAssessmentSummaryV2();
+    this.getCountyAssessmentSummary();
+    this.getHPTUCountyAssessmentSummary();
   }
 
   exportToExcel(ass?: CountyAssessmentMetaData): void {

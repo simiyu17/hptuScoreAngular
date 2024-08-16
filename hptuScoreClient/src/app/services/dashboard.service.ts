@@ -40,4 +40,19 @@ export class DashboardService {
     }
     return this.httpClient.get(`${this.globalService.BASE_API_URL_V2}/reports/county-assessments-summary-excel?countyCode=${assessment?.countyCode}&assessmentQuarter=${assessment?.assessmentQuarter}&assessmentYear=${assessment?.assessmentYear}`);
   }
+
+  getHPTUCountyAssessmentSummary = (countyCode: string | null, assessmentDate: string | null, functionalityName: string | null): Observable<any> => {
+    if(!countyCode){
+      return this.httpClient.get(`${this.globalService.BASE_API_URL_V2}/reports/county-hptu-assessments-summary`);
+    }
+    let queryParams = `countyCode=${countyCode}`
+    if(assessmentDate){
+      queryParams = `${queryParams}&assessmentDate=${assessmentDate}`
+    }
+    if(functionalityName){
+      queryParams = `${queryParams}&functionalityName=${functionalityName}`
+    }
+   
+    return this.httpClient.get(`${this.globalService.BASE_API_URL_V2}/reports/county-hptu-assessments-summary?${queryParams}`);
+  }
 }

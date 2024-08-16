@@ -1,0 +1,38 @@
+.filter-assessment-content {
+    display: grid;
+    grid-template-rows: 50px auto;
+    min-width: 700px;
+    max-width: 1500px;
+
+    .form-header {
+        grid-row-start: 1;
+        grid-row-end: 2;
+        display: flex;
+        justify-content: center;
+        align-content: center;
+    }
+}
+
+
+.form-fields {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding-top: 10px;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.form-row mat-form-field {
+    width: 100%;
+}
+
+mat-form-field {
+    margin-right: 12px;
+}

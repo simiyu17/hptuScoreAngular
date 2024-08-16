@@ -2,6 +2,7 @@ package com.hptu.hptuassessment.service;
 
 
 import com.hptu.authentication.domain.AppUser;
+import com.hptu.functionality.domain.HptuAssessment;
 import com.hptu.hptuassessment.domain.CountyAssessment;
 import com.hptu.hptuassessment.domain.CountyAssessmentMetaData;
 import com.hptu.hptuassessment.domain.CountyAssessmentMetaDataRepository;
@@ -9,6 +10,8 @@ import com.hptu.hptuassessment.exception.CountyAssessmentException;
 import com.hptu.report.dto.CountyAssessmentDto;
 import com.hptu.report.dto.CountyAssessmentResultDetailedDto;
 import com.hptu.report.dto.CountySummaryDto;
+import com.hptu.report.dto.HptuCountyAssessmentResultDetailedDto;
+import com.hptu.report.dto.HptuCountySummaryDto;
 import com.hptu.report.dto.ReportByPillar;
 import com.hptu.shared.domain.BaseEntity;
 import com.hptu.util.CommonUtil;
@@ -26,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -226,6 +230,52 @@ public class CountyAssessmentServiceV2Impl implements CountyAssessmentServiceV2 
 		}catch (Exception e){
 			throw new CountyAssessmentException(e.getMessage());
 		}
+	}
+
+	@Override
+	public HptuCountyAssessmentResultDetailedDto getCountyHPTUAssessmentPerformanceSummary(String countyCode, String assessmentDate, String functionalityName) {
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Tuple> query = criteriaBuilder.createQuery(Tuple.class);
+		Root<HptuAssessment> assessmentRoot = query.from(HptuAssessment.class);
+
+		var predicateList = new ArrayList<Predicate>();
+		var assessmentYear = String.valueOf(LocalDate.now(ZoneId.systemDefault()).getYear());
+		var summaryTitle = String.format("Assessment Summary For Year %s", assessmentYear);
+		if (StringUtils.isBlank(functionalityName)){
+			query.groupBy(assessmentRoot.get(HptuAssessment.FUNCTIONALITY_NAME_FIELD));
+			query.multiselect(assessmentRoot.get(HptuAssessment.FUNCTIONALITY_NAME_FIELD), criteriaBuilder.avg(assessmentRoot.get(HptuAssessment.MAX_SCORE_FIELD)), criteriaBuilder.avg(assessmentRoot.get(HptuAssessment.ATTAINED_SCORE_FIELD)));
+		}else {
+			query.groupBy(assessmentRoot.get(HptuAssessment.QUESTION_SUMMARY_FIELD));
+			query.multiselect(assessmentRoot.get(HptuAssessment.QUESTION_SUMMARY_FIELD), criteriaBuilder.avg(assessmentRoot.get(HptuAssessment.MAX_SCORE_FIELD)), criteriaBuilder.avg(assessmentRoot.get(HptuAssessment.ATTAINED_SCORE_FIELD)));
+			predicateList.add(criteriaBuilder.equal(assessmentRoot.get(HptuAssessment.FUNCTIONALITY_NAME_FIELD), functionalityName));
+		}
+
+
+		if (StringUtils.isNotBlank(countyCode)){
+			predicateList.add(criteriaBuilder.equal(assessmentRoot.get(HptuAssessment.META_DATA_ID_FIELD).get(HptuAssessment.COUNTY_CODE_FIELD), countyCode));
+			summaryTitle = String.format("Assessment Summary For %s County,  Year %s", CommonUtil.getCountyByCode(countyCode), assessmentYear);
+		}
+		if (StringUtils.isNotBlank(assessmentDate)){
+			predicateList.add(criteriaBuilder.equal(assessmentRoot.get(HptuAssessment.META_DATA_ID_FIELD).get(HptuAssessment.ASSESSMENT_DATE_FIELD), LocalDate.parse(assessmentDate)));
+			summaryTitle = String.format("Assessment Summary For %s County,  Date %s", CommonUtil.getCountyByCode(countyCode), assessmentDate);
+		} /*else {
+			predicateList.add(criteriaBuilder.between(assessmentRoot.get(HptuAssessment.META_DATA_ID_FIELD).get(HptuAssessment.ASSESSMENT_DATE_FIELD), LocalDate.of(Integer.parseInt(assessmentYear), Month.JANUARY, 1), LocalDate.of(Integer.parseInt(assessmentYear), Month.DECEMBER, 31)));
+			summaryTitle = String.format("Assessment Summary For %s County,  Year %s", CommonUtil.getCountyByCode(countyCode), assessmentYear);
+		}*/
+
+		TypedQuery<Tuple> typedQuery = entityManager.createQuery(query.where(predicateList.toArray(new Predicate[0])));
+		var countySummaryDtos = new ArrayList<HptuCountySummaryDto>();
+		List<ReportByPillar.PillarDataPointModel> summaryDataPoints;
+		if (StringUtils.isBlank(functionalityName)){
+			typedQuery.getResultList().forEach(t -> countySummaryDtos.add(new HptuCountySummaryDto(t.get(0, String.class), "", "", BigDecimal.valueOf(t.get(1, Double.class)), BigDecimal.valueOf(t.get(2, Double.class)), "yellow")));
+			summaryDataPoints = countySummaryDtos.stream()
+					.map(s -> new ReportByPillar.PillarDataPointModel(s.getFunctionalityName(), s.getAttainedScore())).toList();
+		}else {
+			typedQuery.getResultList().forEach(t -> countySummaryDtos.add(new HptuCountySummaryDto("", t.get(0, String.class), "",  BigDecimal.valueOf(t.get(1, Double.class)), BigDecimal.valueOf(t.get(2, Double.class)), "green")));
+			summaryDataPoints = countySummaryDtos.stream()
+					.map(s -> new ReportByPillar.PillarDataPointModel(s.getQuestionSummary(), s.getAttainedScore())).toList();
+		}
+		return  new HptuCountyAssessmentResultDetailedDto(countySummaryDtos, summaryDataPoints, summaryTitle);
 	}
 
 

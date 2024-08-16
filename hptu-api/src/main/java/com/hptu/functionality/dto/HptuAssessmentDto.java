@@ -2,12 +2,9 @@ package com.hptu.functionality.dto;
 
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.math.BigDecimal;
 
 public record HptuAssessmentDto(
-         String countyCode,
-
-         LocalDate assessmentDate,
 
          String functionalityName,
 
@@ -15,15 +12,13 @@ public record HptuAssessmentDto(
 
          String questionName,
 
-         Integer attainedScore,
+         BigDecimal attainedScore,
 
-         Integer maxScore,
+         BigDecimal maxScore,
 
-         String summaryColor
-) implements Serializable, Comparable<HptuAssessmentDto> {
+         String summaryColor,
 
-    @Override
-    public int compareTo(HptuAssessmentDto o) {
-        return this.assessmentDate.compareTo(o.assessmentDate());
-    }
-}
+         Long questionSummaryId,
+
+         Long functionalityId
+) implements Serializable {}

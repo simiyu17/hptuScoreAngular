@@ -4,6 +4,7 @@ import { GlobalService } from './global.service';
 import { CountyAssessmentDto } from '../dto/CountyAssessmentDto';
 import { Observable } from 'rxjs';
 import { CountyAssessmentMetaData } from '../models/CountyAssessmentMetaData';
+import { HptuCountyAssessmentDto } from '../dto/HptuCountyAssessmentDto';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,10 @@ export class CountyAssessmentService {
 
   createCountyAssessment(assessment: CountyAssessmentDto): Observable<any> {
     return this.httpClient.post(`${this.globalService.BASE_API_URL}/county-assessments`, JSON.stringify(assessment));
+  }
+
+  createCountyHPTUAssessment(assessment: HptuCountyAssessmentDto): Observable<any> {
+    return this.httpClient.post(`${this.globalService.BASE_API_URL}/county-hptu-assessments`, JSON.stringify(assessment));
   }
 
   getCountyAssessmentByCountyYearAndQuater(assessment: CountyAssessmentMetaData): Observable<any> {
