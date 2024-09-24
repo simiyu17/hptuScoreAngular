@@ -3,7 +3,7 @@ COPY . /home/hptu
 WORKDIR /home/hptu
 # Copy the Gradle wrapper and build.gradle files
 # COPY gradlew ./
-RUN ls
+RUN ls ../
 COPY gradle ./gradle
 # Make sure the gradlew script is executable
 RUN chmod +x ./gradlew
