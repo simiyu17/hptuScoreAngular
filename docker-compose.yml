@@ -17,7 +17,7 @@ services:
     container_name: hptu_app
     build:
       context: https://github.com/simiyu17/hptuScoreAngular.git
-      dockerfile: ./hptu_api/Dockerfile
+      dockerfile: ./hptu-api/Dockerfile
       args:
         GITHUB_TOKEN: ${GITHUB_TOKEN}
     restart: on-failure
