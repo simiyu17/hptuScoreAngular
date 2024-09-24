@@ -1,0 +1,52 @@
+version: '3.9'
+services:
+  postgres_hptu_db:
+    container_name: postgres_hptu_db
+    image: postgres:15.4-alpine
+    environment:
+      - POSTGRES_PASSWORD=S3cretHptu@#321
+      - POSTGRES_USER=hptu_user
+      - POSTGRES_DB=hptu_db
+    networks:
+      - hptu-app-network
+    volumes:
+      - /data/hptuData:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+  hptu_app:
+    container_name: hptu_app
+    build:
+      context: https://github.com/simiyu17/hptuScoreAngular.git
+      dockerfile: ./hptu_api/Dockerfile
+      args:
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
+    restart: on-failure
+    networks:
+      - hptu-app-network
+    environment:
+      - POSTGRESQL_HOST=postgres_hptu_db
+      - POSTGRESQL_PORT=5432
+      - POSTGRESQL_USER=hptu_user
+      - POSTGRESQL_PASSWORD=S3cretHptu@#321
+      - POSTGRESQL_DATABASE=hptu_db
+    depends_on:
+      - postgres_hptu_db
+    ports:
+      - "8082:8082"
+  hptu_ui:
+    container_name: hptu_ui
+    build:
+      context: https://github.com/simiyu17/hptuScoreAngular.git
+      dockerfile: ./hptuScoreClient/Dockerfile
+      args:
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
+    restart: on-failure
+    networks:
+      - hptu-app-network
+    depends_on:
+      - hptu_app
+    ports:
+      - "80:80"
+networks:
+  hptu-app-network:
+    driver: bridge

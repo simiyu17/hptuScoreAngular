@@ -1,33 +1,36 @@
-# Use official node image as the base image
-FROM node:lts as build
 
-ADD ./package.json /tmp/package.json
-RUN cd /tmp && npm config set fetch-retry-mintimeout 600000 && npm config set fetch-retry-maxtimeout 1200000 && npm install
-RUN mkdir -p /usr/local/app && cp -a /tmp/node_modules /usr/local/app/
+# Stage 1: Build the Angular app
+FROM node:18-alpine AS build
 
-WORKDIR /usr/local/app
+# Set working directory
+WORKDIR /app
 
-# Add the source code from the app to the container
-COPY ./ /usr/local/app/
+# Install dependencies
+COPY package*.json ./
+RUN npm install --force
 
-# Generate the build of the application
-RUN npm run build --prod
+# Copy the rest of the application files
+COPY . .
 
-# Stage 2: Serve app with nginx server
-# Use official nginx image as the base image
-FROM nginx:latest
+# Build the Angular app
+RUN npm run build -- --configuration production
 
-# Copy the build output to replace the default nginx contents.
-COPY --from=build /usr/local/app/dist/hptu-score-client/browser /usr/share/nginx/html
+# Stage 2: Serve the app with Nginx
+FROM nginx:alpine
 
-# This line is IMPORTANT, we will breakdown it on a minute.
-COPY ./entrypoint.sh /usr/local/app/entrypoint.sh
+# Remove the default Nginx welcome page
+RUN rm /usr/share/nginx/html/*
 
-# Copy the nginx conf that we created to the container
-COPY ./nginx.conf  /etc/nginx/conf.d/default.conf
+# Copy the build output to Nginx's HTML directory
+COPY --from=build /app/dist/hptu-score-client/browser /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Create NGINX cache directory
+RUN mkdir -p /var/cache/nginx/client_temp
+# Set ownership of NGINX cache directory
+RUN chown -R nginx:nginx /var/cache/nginx
 
-# Expose ports
-EXPOSE 80 443 6006 4200
+# Expose port 80
+EXPOSE 80
 
-RUN chmod +x /usr/local/app/entrypoint.sh
-ENTRYPOINT [ "/usr/local/app/entrypoint.sh" ]
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
