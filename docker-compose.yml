@@ -16,8 +16,8 @@ services:
   hptu_app:
     container_name: hptu_app
     build:
-      context: https://github.com/simiyu17/hptuScoreAngular.git
-      dockerfile: ./hptu-api/Dockerfile
+      context: https://github.com/simiyu17/hptuScoreAngular.git#:hptu-api
+      dockerfile: Dockerfile
       args:
         GITHUB_TOKEN: ${GITHUB_TOKEN}
     restart: on-failure
@@ -36,8 +36,8 @@ services:
   hptu_ui:
     container_name: hptu_ui
     build:
-      context: https://github.com/simiyu17/hptuScoreAngular.git
-      dockerfile: ./hptuScoreClient/Dockerfile
+      context: https://github.com/simiyu17/hptuScoreAngular.git#:hptuScoreClient
+      dockerfile: Dockerfile
       args:
         GITHUB_TOKEN: ${GITHUB_TOKEN}
     restart: on-failure
