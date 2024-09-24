@@ -2,7 +2,7 @@ FROM eclipse-temurin:21-alpine
 COPY . /home/hptu
 WORKDIR /home/hptu
 # Copy the Gradle wrapper and build.gradle files
-COPY gradlew ./
+# COPY gradlew ./
 COPY gradle ./gradle
 # Make sure the gradlew script is executable
 RUN chmod +x ./gradlew
