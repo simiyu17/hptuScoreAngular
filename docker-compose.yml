@@ -1,22 +1,22 @@
-version: '3.9'
+version: '3.9' 
 services:
   postgres_hptu_db:
     container_name: postgres_hptu_db
     image: postgres:15.4-alpine
-    environment:
-      - POSTGRES_PASSWORD=S3cretHptu@#321
+    environment:  
+      - POSTGRES_PASSWORD=S3cretHptu
       - POSTGRES_USER=hptu_user
-      - POSTGRES_DB=hptu_db
+      - POSTGRES_DB=hptu_score
     networks:
       - hptu-app-network
-    volumes:
-      - /data/hptuData:/var/lib/postgresql/data
     ports:
       - "5433:5432"
+    volumes:
+      - hptu_data:/var/lib/postgresql/data
   hptu_app:
     container_name: hptu_app
     build:
-      context: https://github.com/simiyu17/hptuScoreAngular.git#:hptu-api
+      context: https://github.com/simiyu17/hptuScoreAngular.git#main:hptu-api 
       dockerfile: Dockerfile
       args:
         GITHUB_TOKEN: ${GITHUB_TOKEN}
@@ -27,16 +27,17 @@ services:
       - POSTGRESQL_HOST=postgres_hptu_db
       - POSTGRESQL_PORT=5432
       - POSTGRESQL_USER=hptu_user
-      - POSTGRESQL_PASSWORD=S3cretHptu@#321
-      - POSTGRESQL_DATABASE=hptu_db
+      - POSTGRESQL_PASSWORD=S3cretHptu
+      - POSTGRESQL_DATABASE=hptu_score
     depends_on:
       - postgres_hptu_db
     ports:
-      - "8082:8082"
-  hptu_ui:
-    container_name: hptu_ui
+      - "8089:8089"
+  hptu_app_ui:
+    container_name: hptu_app_ui
     build:
-      context: https://github.com/simiyu17/hptuScoreAngular.git#:hptuScoreClient
+      context: https://github.com/simiyu17/hptuScoreAngular.git#main:hptuScoreClient
+
       dockerfile: Dockerfile
       args:
         GITHUB_TOKEN: ${GITHUB_TOKEN}
@@ -46,7 +47,10 @@ services:
     depends_on:
       - hptu_app
     ports:
-      - "80:80"
+      - "4200:80"
 networks:
   hptu-app-network:
     driver: bridge
+volumes:
+  hptu_data:
+    driver: local
