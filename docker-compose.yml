@@ -1,4 +1,4 @@
-version: '3.9'  
+version: '3.9' 
 services:
   postgres_hptu_db:
     container_name: postgres_hptu_db
@@ -37,6 +37,7 @@ services:
     container_name: hptu_app_ui
     build:
       context: https://github.com/simiyu17/hptuScoreAngular.git#main:hptuScoreClient
+
       dockerfile: Dockerfile
       args:
         GITHUB_TOKEN: ${GITHUB_TOKEN}
